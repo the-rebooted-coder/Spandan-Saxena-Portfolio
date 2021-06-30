@@ -1,2 +1,2 @@
-# Spandan-Saxena-Portfolio
-GitHub Repository Hosting my Personal Portfolio live
+# My Online Portfolio
+GitHub Repository Hosting my Personal Portfolio live, for the ones who connect with me online :)
