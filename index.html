@@ -1,559 +1,561 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spandan Saxena | Software Developer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- RESET & VARIABLES --- */
+        :root {
+            --bg-dark: #050505;
+            --text-dark: #ffffff;
+            --bg-light: #ffffff;
+            --text-light: #050505;
+            --cursor-size: 20px;
+        }
 
-  <title>Spandan Saxena</title>
-  <meta name="description" content="Personal Website of Mr. Spandan Saxena"/>
-  <meta property="og:title" content="Spandan Saxena" />
-<meta property="og:description" content="Personal Website of Mr. Spandan Saxena" />
-<meta property="og:image" content="https://i.ibb.co/Gspf44z/spandan.png" />
-     <!-- Chrome, Firefox OS and Opera -->
-<meta name="theme-color" content="#000000">
-    <!-- iOS Safari -->
-<meta name="apple-mobile-web-app-status-bar-style" content="#000000">
-  <meta content="Spandan Saxena" name="keywords">
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none; /* Hide default cursor */
+        }
 
-  <!-- Favicons -->
-  <link href="assets/img/favicon.png" rel="icon">
-  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+        html {
+            scroll-behavior: smooth;
+        }
 
-  <!-- Vendor CSS Files -->
-  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-  <link href="assets/vendor/ionicons/css/ionicons.min.css" rel="stylesheet">
-  <link href="assets/vendor/owl.carousel/assets/owl.carousel.min.css" rel="stylesheet">
-  <link href="assets/vendor/venobox/venobox.css" rel="stylesheet">
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
 
-  <!-- Template Main CSS File -->
-  <link href="assets/css/style.css" rel="stylesheet">
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* --- SMART CURSOR (INVERTS COLORS) --- */
+        .cursor-dot,
+        .cursor-outline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+            mix-blend-mode: difference; /* THIS IS THE MAGIC */
+            background-color: white; 
+        }
+
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+        }
+
+        .cursor-outline {
+            width: 40px;
+            height: 40px;
+            border: 1px solid white; /* Border color will invert via mix-blend-mode */
+            background-color: transparent;
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
+
+        /* Hover effect */
+        body.hovering .cursor-outline {
+            width: 70px;
+            height: 70px;
+            background-color: white; /* Solid fill on hover, inverts to opposite of BG */
+            opacity: 1;
+        }
+
+        body.hovering .cursor-dot {
+            opacity: 0;
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            mix-blend-mode: difference; /* Inverts nav text over any background */
+            color: white; 
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            position: relative;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 1px;
+            bottom: -5px;
+            left: 0;
+            background-color: white;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* --- SECTIONS & FLIPPING THEME --- */
+        section {
+            min-height: 100vh;
+            padding: 100px 10%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+
+        /* Dark Sections */
+        .section-dark {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        /* Light Sections */
+        .section-light {
+            background-color: var(--bg-light);
+            color: var(--text-light);
+        }
+
+        .section-title {
+            font-size: 4rem;
+            margin-bottom: 4rem;
+            opacity: 0.05;
+            position: absolute;
+            top: 10%;
+            right: 5%;
+            z-index: 0;
+            pointer-events: none;
+            text-transform: uppercase;
+        }
+
+        /* --- HERO --- */
+        #hero {
+            height: 100vh;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        .hero-text {
+            z-index: 2;
+        }
+
+        .hero-text h1 {
+            font-size: 5.5rem;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-text p {
+            font-size: 1.5rem;
+            font-weight: 300;
+            opacity: 0.8;
+            max-width: 600px;
+            border-left: 2px solid currentColor;
+            padding-left: 20px;
+        }
+
+        /* --- WORK & RECOGNITION (LIST STYLES) --- */
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2.5rem 0;
+            border-bottom: 1px solid rgba(125, 125, 125, 0.2);
+            transition: padding 0.3s ease;
+        }
+
+        .list-item:hover {
+            padding: 2.5rem 1rem;
+            background-color: rgba(125, 125, 125, 0.05);
+        }
+
+        .list-title {
+            font-size: 1.8rem;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .list-meta {
+            font-size: 1rem;
+            opacity: 0.6;
+            text-align: right;
+        }
+        
+        .list-role {
+            display: block;
+            font-size: 0.9rem;
+            font-family: 'Outfit', sans-serif;
+            margin-top: 5px;
+            opacity: 0.8;
+        }
+
+        /* --- PROJECTS (CHAT BUBBLES) --- */
+        /* In this section, we want chat bubbles to pop against the Black background */
+        
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .chat-bubble {
+            max-width: 75%;
+            padding: 2.5rem;
+            border-radius: 2rem;
+            position: relative;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Specific styling for Black BG section bubbles */
+        .section-dark .chat-bubble {
+            background-color: #111;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        .section-light .chat-bubble {
+            background-color: #f4f4f4;
+            color: black;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        /* Left Bubble */
+        .chat-left {
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        /* Right Bubble */
+        .chat-right {
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+            text-align: right;
+        }
+
+        .chat-bubble.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .project-title {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .project-desc {
+            font-size: 1.1rem;
+            opacity: 0.7;
+            margin-bottom: 1.5rem;
+            font-weight: 300;
+        }
+
+        .project-link {
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 1px solid currentColor;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .project-link:hover {
+            background-color: white;
+            color: black;
+        }
+        
+        .section-light .project-link:hover {
+            background-color: black;
+            color: white;
+        }
+
+        /* --- FOOTER & CONTACT --- */
+        .footer-brand {
+            margin-top: 5rem;
+            font-size: 0.9rem;
+            opacity: 0.5;
+            font-family: monospace;
+            letter-spacing: 2px;
+        }
+
+        .social-grid {
+            display: flex;
+            gap: 2rem;
+            margin-top: 3rem;
+            justify-content: center;
+        }
+        
+        .social-link {
+            font-size: 1.2rem;
+            border-bottom: 1px solid transparent;
+            padding-bottom: 5px;
+        }
+        
+        .social-link:hover {
+            border-bottom: 1px solid currentColor;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .hero-text h1 { font-size: 3.5rem; }
+            .section-title { font-size: 3rem; top: 5%; }
+            .chat-bubble { max-width: 90%; padding: 1.5rem; }
+            nav { padding: 1.5rem 5%; }
+            .nav-links { display: none; } /* Mobile Menu omitted for clean single-file */
+            .list-item { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+            .list-meta { text-align: left; }
+        }
+    </style>
 </head>
+<body>
 
-<body id="page-top">
+    <div class="cursor-dot" data-cursor-dot></div>
+    <div class="cursor-outline" data-cursor-outline></div>
 
-  <!-- ======= Header/ Navbar ======= -->
-  <nav class="navbar navbar-b navbar-trans navbar-expand-md fixed-top" id="mainNav">
-    <div class="container">
-      <a class="navbar-brand js-scroll" href="#page-top">Spandan Saxena</a>
-      <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarDefault" aria-controls="navbarDefault" aria-expanded="false" aria-label="Toggle navigation">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-      <div class="navbar-collapse collapse justify-content-end" id="navbarDefault">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link js-scroll active" href="index.html">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link js-scroll" href="#about">About</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link js-scroll" href="#work">Highlights</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link js-scroll" href="#contact">Contact Me</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-
-  <!-- ======= Intro Section ======= -->
-  <div id="home" class="intro route bg-image" style="background-image: url(assets/img/intro-bg.png)">
-    <div class="overlay-itro"></div>
-    <div class="intro-content display-table">
-      <div class="table-cell">
-        <div class="container">
-          <!--<p class="display-6 color-d">Hello, world!</p>-->
-          <h1 class="intro-title mb-4">I am Spandan Saxena</h1>
-          <p class="intro-subtitle"><span class="text-slider-items">Student,Android Developer,Designer,Singer,Writer,EVERYTHING</span><strong class="text-slider"></strong></p>
-          <!-- <p class="pt-3"><a class="btn btn-primary btn js-scroll px-4" href="#about" role="button">Learn More</a></p> -->
+    <nav>
+        <div class="logo hover-trigger">SPANDAN.</div>
+        <div class="nav-links">
+            <a href="#work" class="hover-trigger">Experience</a>
+            <a href="#projects" class="hover-trigger">Projects</a>
+            <a href="#recognition" class="hover-trigger">Recognition</a>
+            <a href="#contact" class="hover-trigger">Contact</a>
         </div>
-      </div>
-    </div>
-  </div><!-- End Intro Section -->
+    </nav>
 
-  <main id="main">
-
-    <!-- ======= About Section ======= -->
-    <section id="about" class="about-mf sect-pt4 route">
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="box-shadow-full">
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="row">
-                    <div class="col-sm-6 col-md-5">
-                      <div class="about-img">
-                        <img src="https://i.ibb.co/5BDWSTx/testimonial-2.jpg" class="img-fluid rounded b-shadow-a" alt="Image of Spandan Saxena">
-                      </div>
-                    </div>
-                    <div class="col-sm-6 col-md-7">
-                      <div class="about-info">
-                        <p><span class="title-s">Name: </span> <span>Spandan Saxena</span></p>
-                        <p><span class="title-s">Profile: </span> <span>Student | Developer</span></p>
-                        <p><span class="title-s">Email: </span><span><a href="mailto:connectwithspandan@gmail.com">connectwithspandan@gmail.com</a></span></p>
-                        <p><span class="title-s">Phone: </span> <span><a href="tel:+917000580097">7000580097</a></span></p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="skill-mf">
-                    <p class="title-s">Skill</p>
-                    <span>Android Development</span> <span class="pull-right">75%</span>
-                    <div class="progress">
-                      <div class="progress-bar" role="progressbar" style="width: 85%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <span>HTML & CSS</span> <span class="pull-right">67%</span>
-                    <div class="progress">
-                      <div class="progress-bar" role="progressbar" style="width: 75%" aria-valuenow="67" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <span>Designing</span> <span class="pull-right">50%</span>
-                    <div class="progress">
-                      <div class="progress-bar" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <span>English Proficiency</span> <span class="pull-right">90%</span>
-                    <div class="progress">
-                      <div class="progress-bar" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="about-me pt-4 pt-md-0">
-                    <div class="title-box-2">
-                      <h5 class="title-left">
-                        About me
-                      </h5>
-                    </div>
-                    <p class="lead">
-                     A Student.<br><br>
-                        Yes, And this is my personal address on the internet that revoles only and only around me.
-                        <br><br>Developed by Me<br>Maintained by Me.
-                    </p>
-                      <blockquote><h5>Winning should be a habit...</h5></blockquote>
-                    <p class="lead">
-                       and if you ever happen to see my name on a competion list, be sure to congratulate me! 
-                    </p>
-                    <p class="lead">
-                     I do even like a lot of stuff and even making a lot of stuff ranging from <b>Android Apps</b> to <b>CAD Models</b> to <b>Paintings</b> and what not!<br><br>
-                        Do you know a thing which I can't do? 🤔
-<br>Be sure to tell me! <br>Rest Assured I'll do learn that too :) <br><br> </p><h6>Okay! seems enough for an introduction, let's dive in...</h6>
-                   
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+    <section id="hero" class="section-dark">
+        <div class="hero-text" data-speed="0.2">
+            <h1>Software<br><i>Developer</i></h1>
+            <p>From Logic to Launch.</p>
         </div>
-      </div>
-    </section><!-- End About Section -->
-    <!-- ======= Counter Section ======= -->
-    <div class="section-counter paralax-mf bg-image" style="background-image: url(assets/img/counters-bg.jpg)">
-      <div class="overlay-mf"></div>
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-3 col-lg-3">
-            <div class="counter-box counter-box pt-4 pt-md-0">
-              <div class="counter-ico">
-                <span class="ico-circle"><i class="ion-checkmark-round"></i></span>
-              </div>
-              <div class="counter-num">
-                <p class="counter">50</p>
-                <span class="counter-text">CUSTOM TESTS</span>
-              </div>
+    </section>
+
+    <section id="work" class="section-light">
+        <div class="section-title">Experience</div>
+        
+        <div class="list-item hover-trigger">
+            <div>
+                <span class="list-title">IBM</span>
+                <span class="list-role">Application Developer</span>
             </div>
-          </div>
-          <div class="col-sm-3 col-lg-3">
-            <div class="counter-box pt-4 pt-md-0">
-              <div class="counter-ico">
-                <span class="ico-circle"><i class="ion-ios-calendar-outline"></i></span>
-              </div>
-              <div class="counter-num">
-                <p class="counter">15</p>
-                <span class="counter-text">GitHub Repositories</span>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-3 col-lg-3">
-            <div class="counter-box pt-4 pt-md-0">
-              <div class="counter-ico">
-                <span class="ico-circle"><i class="ion-ios-people"></i></span>
-              </div>
-              <div class="counter-num">
-                <p class="counter">60</p>
-                <span class="counter-text">COMPETITIONS</span>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-3 col-lg-3">
-            <div class="counter-box pt-4 pt-md-0">
-              <div class="counter-ico">
-                <span class="ico-circle"><i class="ion-ribbon-a"></i></span>
-              </div>
-              <div class="counter-num">
-                <p class="counter">42</p>
-                <span class="counter-text">AWARDS WON</span>
-              </div>
-            </div>
-          </div>
+            <span class="list-meta">2023 - Current</span>
         </div>
-      </div>
-    </div><!-- End Counter Section -->
 
-    <!-- ======= Portfolio Section ======= -->
-     
-    <section id="work" class="portfolio-mf sect-pt4 route">
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="title-box text-center">
-              <h3 class="title-a">
-                HIGHLIGHTS
-              </h3>
-              <p class="subtitle-a">
-                You Just Can't Resist to Look Upon Some Orignals of Mine!
-              </p>
-              <div class="line-mf"></div>
+        <div class="list-item hover-trigger">
+            <div>
+                <span class="list-title">NIT Jaipur</span>
+                <span class="list-role">Research Intern</span>
             </div>
-          </div>
+            <span class="list-meta">2022 - 2023</span>
         </div>
-        <div class="row">
-          <div class="col-md-4">
-            <div class="work-box">
-              <a href="assets/img/work-1.jpg" data-gall="portfolioGallery" class="venobox">
-                <div class="work-img">
-                  <img src="assets/img/work-1.jpg" alt="" class="img-fluid">
-                </div>
-              </a>
-              <div class="work-content">
-                <div class="row">
-                  <div class="col-sm-8">
-                    <h2 class="w-title">Kaagaz</h2>
-                    <div class="w-more">
-                      <span class="w-ctegory">Android App</span> / <span class="w-date">15 May 2020</span>
-                    </div>
-                  </div>
-                  <div class="col-sm-4">
-                    <div class="w-like">
-                      <a href="https://play.google.com/store/apps/details?id=com.aaxena.kaagaz"> <span class="ion-ios-plus-outline"></span></a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="work-box">
-              <a href="assets/img/work-2.jpg" data-gall="portfolioGallery" class="venobox">
-                <div class="work-img">
-                  <img src="assets/img/work-2.jpg" alt="Covid Tracker" class="img-fluid">
-                </div>
-              </a>
-              <div class="work-content">
-                <div class="row">
-                  <div class="col-sm-8">
-                    <h2 class="w-title">Covid Tracker</h2>
-                    <div class="w-more">
-                      <span class="w-ctegory">Application</span> / <span class="w-date">28 Apr. 2020</span>
-                    </div>
-                  </div>
-                  <div class="col-sm-4">
-                    <div class="w-like">
-                      <a href="https://github.com/the-rebooted-coder/Covid19Tracker"> <span class="ion-ios-plus-outline"></span></a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="work-box">
-              <a href="assets/img/work-8.jpg" data-gall="portfolioGallery" class="venobox">
-                <div class="work-img">
-                  <img src="assets/img/work-8.jpg" alt="GAIL PATA" class="img-fluid">
-                </div>
-              </a>
-              <div class="work-content">
-                <div class="row">
-                  <div class="col-sm-8">
-                    <h2 class="w-title">GAIL Officer's Association</h2>
-                    <div class="w-more">
-                      <span class="w-ctegory">Android App</span> / <span class="w-date">17 Jul. 2020</span>
-                    </div>
-                  </div>
-                  <div class="col-sm-4">
-                    <div class="w-like">
-                      <a href="https://play.google.com/store/apps/details?id=com.aaxena.gailofficersassociation"> <span class="ion-ios-plus-outline"></span></a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-            <div class="col-md-4">
-            <div class="work-box">
-              <a href="assets/img/work-9.jpg" data-gall="portfolioGallery" class="venobox">
-                <div class="work-img">
-                  <img src="assets/img/work-9.jpg" alt="GOA-PATA" class="img-fluid">
-                </div>
-              </a>
-              <div class="work-content">
-                <div class="row">
-                  <div class="col-sm-8">
-                    <h2 class="w-title">GOA-PATA</h2>
-                    <div class="w-more">
-                      <span class="w-ctegory">Web Site</span> / <span class="w-date">20 Jul. 2020</span>
-                    </div>
-                  </div>
-                  <div class="col-sm-4">
-                    <div class="w-like">
-                      <a href="https://www.goapata.com/"> <span class="ion-ios-plus-outline"></span></a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="work-box">
-              <a href="assets/img/work-7.jpg" data-gall="portfolioGallery" class="venobox">
-                <div class="work-img">
-                  <img src="assets/img/work-7.jpg" alt="FreeCAD-eureka" class="img-fluid">
-                </div>
-              </a>
-              <div class="work-content">
-                <div class="row">
-                  <div class="col-sm-8">
-                    <h2 class="w-title">FreeCAD Eureka</h2>
-                    <div class="w-more">
-                      <span class="w-ctegory">Computer Aided Designing</span> / <span class="w-date">23 Jul. 2020</span>
-                    </div>
-                  </div>
-                  <div class="col-sm-4">
-                    <div class="w-like">
-                      <a href="https://github.com/the-rebooted-coder/FreeCAD-eureka"> <span class="ion-ios-plus-outline"></span></a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="work-box">
-              <a href="assets/img/work-3.jpg" data-gall="portfolioGallery" class="venobox">
-                <div class="work-img">
-                  <img src="assets/img/work-10.jpg" alt="" class="img-fluid">
-                </div>
-              </a>
-              <div class="work-content">
-                <div class="row">
-                  <div class="col-sm-8">
-                    <h2 class="w-title">Take Notes</h2>
-                    <div class="w-more">
-                      <span class="w-ctegory">Android App</span> / <span class="w-date">14 Sept. 2020</span>
-                    </div>
-                  </div>
-                  <div class="col-sm-4">
-                    <div class="w-like">
-                      <a href="https://github.com/the-rebooted-coder/Take-Notes"> <span class="ion-ios-plus-outline"></span></a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="work-box">
-              <a href="assets/img/work-3.jpg" data-gall="portfolioGallery" class="venobox">
-                <div class="work-img">
-                  <img src="assets/img/work-3.jpg" alt="" class="img-fluid">
-                </div>
-              </a>
-              <div class="work-content">
-                <div class="row">
-                  <div class="col-sm-8">
-                    <h2 class="w-title">Abhikalpana Sanitisation Tunnel</h2>
-                    <div class="w-more">
-                      <span class="w-ctegory">FreeCAD Design</span> / <span class="w-date">20 June 2020</span>
-                    </div>
-                  </div>
-                  <div class="col-sm-4">
-                    <div class="w-like">
-                      <a href="https://github.com/the-rebooted-coder/Abhikalpana"> <span class="ion-ios-plus-outline"></span></a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="work-box">
-              <a href="assets/img/work-4.jpg" data-gall="portfolioGallery" class="venobox">
-                <div class="work-img">
-                  <img src="assets/img/work-4.jpg" alt="Portfolio" class="img-fluid">
-                </div>
-              </a>
-              <div class="work-content">
-                <div class="row">
-                  <div class="col-sm-8">
-                    <h2 class="w-title">My Portfolio</h2>
-                    <div class="w-more">
-                      <span class="w-ctegory">Web Site</span> / <span class="w-date">10 Feb. 2020</span>
-                    </div>
-                  </div>
-                  <div class="col-sm-4">
-                    <div class="w-like">
-                      <a href="https://spandansaxena.codes/"> <span class="ion-ios-plus-outline"></span></a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="work-box">
-              <a href="assets/img/work-5.jpg" data-gall="portfolioGallery" class="venobox">
-                <div class="work-img">
-                  <img src="assets/img/work-5.jpg" alt="" class="img-fluid">
-                </div>
-              </a>
-              <div class="work-content">
-                <div class="row">
-                  <div class="col-sm-8">
-                    <h2 class="w-title">The Painting</h2>
-                    <div class="w-more">
-                      <span class="w-ctegory">Canvas Art</span> / <span class="w-date">21 June 2020</span>
-                    </div>
-                  </div>
-                  <div class="col-sm-4">
-                    <div class="w-like">
-                      <a href="https://www.dropbox.com/s/i6ane75i85v1fly/The%20Painting.jpg?dl=0"> <span class="ion-ios-plus-outline"></span></a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="work-box">
-              <a href="assets/img/work-6.jpg" data-gall="portfolioGallery" class="venobox">
-                <div class="work-img">
-                  <img src="assets/img/work-6.jpg" alt="" class="img-fluid">
-                </div>
-              </a>
-              <div class="work-content">
-                <div class="row">
-                  <div class="col-sm-8">
-                    <h2 class="w-title">GitHub Profile</h2>
-                    <div class="w-more">
-                      <span class="w-ctegory">Profile</span> / <span class="w-date">05 Sept. 2019</span>
-                    </div>
-                  </div>
-                  <div class="col-sm-4">
-                    <div class="w-like">
-                      <a href="https://github.com/the-rebooted-coder"> <span class="ion-ios-plus-outline"></span></a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
 
+        <div class="list-item hover-trigger">
+            <div>
+                <span class="list-title">Unacademy</span>
+                <span class="list-role">Software Developer Intern</span>
+            </div>
+            <span class="list-meta">Internship</span>
         </div>
-      </div>
-    </section><!-- End Portfolio Section -->
+    </section>
 
-    <!-- ======= Contact Section ======= -->
-    <section class="paralax-mf footer-paralax bg-image sect-mt4 route" style="background-image: url(assets/img/overlay-bg.jpg)">
-      <div class="overlay-mf"></div>
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="contact-mf">
-              <div id="contact" class="box-shadow-full">
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="title-box-2">
-                      <h5 class="title-left">
-                      Reach Me!
-                      </h5>
-                    </div>
-                    <div>
-                   <div class="typeform-widget" data-url="https://form.typeform.com/to/CtofErOp" style="width: 100%; height: 500px;"></div> <script> (function() { var qs,js,q,s,d=document, gi=d.getElementById, ce=d.createElement, gt=d.getElementsByTagName, id="typef_orm", b="https://embed.typeform.com/"; if(!gi.call(d,id)) { js=ce.call(d,"script"); js.id=id; js.src=b+"embed.js"; q=gt.call(d,"script")[0]; q.parentNode.insertBefore(js,q) } })() </script> <div style="font-family: Sans-Serif;font-size: 12px;color: #999;opacity: 0.5; padding-top: 5px;"> powered by <a href="https://admin.typeform.com/signup?utm_campaign=CtofErOp&utm_source=typeform.com-01EA9WQNNC7NKZ0EN942KQB2KK-professional&utm_medium=typeform&utm_content=typeform-embedded-poweredbytypeform&utm_term=EN" style="color: #999" target="_blank">Typeform</a> </div>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="title-box-2 pt-4 pt-md-0">
-                      <h5 class="title-left">
-                        Let's Get in Touch
-                      </h5>
-                    </div>
-                    <div class="more-info">
-                      <p class="lead">
-                       Any Idea? <br> Suggestion? <br>Anything Else?<br>
-                      </p>
-                        <h5>Find me Here!</h5>
-                      <ul class="list-ico">
-                        <li><span class="ion-ios-telephone"></span><a href="tel:+917000580097">7000580097</a></li>
-                        <li><span class="ion-email"></span><a href="mailto:connectwithspandan@gmail.com">connectwithspandan@gmail.com</a></li>
-                      </ul>
-                    </div>
-                      <!--
-                    <div class="socials">
-                      <ul>
-                        <li><a href=""><span class="ico-circle"><i class="ion-social-facebook"></i></span></a></li>
-                        <li><a href=""><span class="ico-circle"><i class="ion-social-instagram"></i></span></a></li>
-                        <li><a href=""><span class="ico-circle"><i class="ion-social-twitter"></i></span></a></li>
-                        <li><a href=""><span class="ico-circle"><i class="ion-social-pinterest"></i></span></a></li>
-                      </ul>
-                    </div>
--->
-                  </div>
-                </div>
-              </div>
+    <section id="projects" class="section-dark">
+        <div class="section-title">Projects</div>
+        <div class="chat-container">
+            
+            <div class="chat-bubble chat-left hover-trigger">
+                <h3 class="project-title">The Day Grid</h3>
+                <p class="project-desc">Time is finite. Your wallpaper was wasting it.</p>
+                <a href="https://github.com/the-rebooted-coder/The-Day-Grid" target="_blank" class="project-link">View Repo</a>
             </div>
-          </div>
-        </div>
-      </div>
-    </section><!-- End Contact Section -->
 
-  </main><!-- End #main -->
-
-  <!-- ======= Footer ======= -->
-  <footer>
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-12">
-          <div class="copyright-box">
-            <p class="copyright">&copy; Copyright <strong>Spandan Saxena</strong>.</p>
-            <div class="credits">
-              Designed Proudly By <a href="https://spandansaxena.xyz/">Spandan Saxena</a>
+            <div class="chat-bubble chat-right hover-trigger">
+                <h3 class="project-title">Legacy to Modern Rebase</h3>
+                <p class="project-desc">Because code from 2003 deserves a second chance.</p>
+                <span class="project-link" style="opacity:0.5; cursor: not-allowed;">IBM Confidential</span>
             </div>
-          </div>
+
+            <div class="chat-bubble chat-left hover-trigger">
+                <h3 class="project-title">Safe Charge</h3>
+                <p class="project-desc">Your charger can’t be trusted. This app can.</p>
+                <a href="https://play.google.com/store/apps/details?id=com.onesilicondiode.batterywise&pcampaignid=web_share" target="_blank" class="project-link">Play Store</a>
+            </div>
+
+             <div class="chat-bubble chat-right hover-trigger">
+                <h3 class="project-title">Mail Canon</h3>
+                <p class="project-desc">Upload a CSV. We do the spamming. Legally.</p>
+                <a href="https://github.com/the-rebooted-coder/Mail-Canon" target="_blank" class="project-link">View Repo</a>
+            </div>
+
+            <div class="chat-bubble chat-left hover-trigger">
+                <h3 class="project-title">Forecasted</h3>
+                <p class="project-desc">AI-powered stock predictions. Confidence sold separately.</p>
+                <a href="https://github.com/the-rebooted-coder/Forecasted" target="_blank" class="project-link">View Repo</a>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="https://github.com/the-rebooted-coder" target="_blank" class="project-link hover-trigger">More on GitHub</a>
+            </div>
         </div>
-      </div>
-    </div>
-  </footer><!-- End  Footer -->
+    </section>
 
-  <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
-  <div id="preloader"></div>
+    <section id="recognition" class="section-light">
+        <div class="section-title">Recognition</div>
 
-  <!-- Vendor JS Files -->
-  <script src="assets/vendor/jquery/jquery.min.js"></script>
-  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/vendor/jquery.easing/jquery.easing.min.js"></script>
-  <script src="assets/vendor/php-email-form/validate.js"></script>
-  <script src="assets/vendor/waypoints/jquery.waypoints.min.js"></script>
-  <script src="assets/vendor/counterup/jquery.counterup.min.js"></script>
-  <script src="assets/vendor/owl.carousel/owl.carousel.min.js"></script>
-  <script src="assets/vendor/typed.js/typed.min.js"></script>
-  <script src="assets/vendor/venobox/venobox.min.js"></script>
+        <div class="list-item hover-trigger">
+            <div>
+                <span class="list-title">Converge Runnerup</span>
+                <span class="list-role">IBM</span>
+            </div>
+            <span class="list-meta">2025</span>
+        </div>
 
-  <script src="assets/js/main.js"></script>
+        <div class="list-item hover-trigger">
+            <div>
+                <span class="list-title">GEMs of Development</span>
+                <span class="list-role">IBM India</span>
+            </div>
+            <span class="list-meta">2025</span>
+        </div>
 
+        <div class="list-item hover-trigger">
+            <div>
+                <span class="list-title">Top Performer Gratitude</span>
+                <span class="list-role">IBM</span>
+            </div>
+            <span class="list-meta">2026</span>
+        </div>
+    </section>
+
+    <section id="contact" class="section-dark" style="text-align: center; align-items: center;">
+        <h2 style="font-size: 3rem; margin-bottom: 2rem;">Let's Build.</h2>
+        <p style="font-size: 1.2rem; opacity: 0.8; max-width: 600px; margin-bottom: 2rem;">
+            I build software that actually works, scale systems that don’t fall apart, and ship ideas instead of talking about them.
+        </p>
+        
+        <a href="mailto:connectwithspandan@gmail.com" class="project-link hover-trigger" style="font-size: 1.2rem; padding: 1rem 3rem; border-radius: 50px;">
+            connectwithspandan@gmail.com
+        </a>
+
+        <div class="social-grid">
+            <a href="https://www.linkedin.com/in/spandn/" target="_blank" class="social-link hover-trigger">LinkedIn</a>
+            <a href="https://github.com/the-rebooted-coder" target="_blank" class="social-link hover-trigger">GitHub</a>
+            <a href="https://www.instagram.com/simply.spandan/" target="_blank" class="social-link hover-trigger">Instagram</a>
+        </div>
+
+        <div class="footer-brand">
+            An S² Labs Product 🥼
+        </div>
+    </section>
+
+    <script>
+        // --- CUSTOM CURSOR LOGIC ---
+        const cursorDot = document.querySelector('[data-cursor-dot]');
+        const cursorOutline = document.querySelector('[data-cursor-outline]');
+        const hoverTriggers = document.querySelectorAll('.hover-trigger');
+
+        window.addEventListener('mousemove', function (e) {
+            const posX = e.clientX;
+            const posY = e.clientY;
+
+            // Dot follows instantly
+            cursorDot.style.left = `${posX}px`;
+            cursorDot.style.top = `${posY}px`;
+
+            // Outline follows with slight delay
+            cursorOutline.animate({
+                left: `${posX}px`,
+                top: `${posY}px`
+            }, { duration: 500, fill: "forwards" });
+        });
+
+        // Hover States
+        hoverTriggers.forEach(trigger => {
+            trigger.addEventListener('mouseenter', () => {
+                document.body.classList.add('hovering');
+            });
+            trigger.addEventListener('mouseleave', () => {
+                document.body.classList.remove('hovering');
+            });
+        });
+
+        // --- PARALLAX EFFECT ---
+        document.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            
+            // Subtle Parallax for Hero Text
+            const heroText = document.querySelector('.hero-text');
+            if(heroText) {
+                heroText.style.transform = `translateY(${scrollY * 0.2}px)`;
+            }
+        });
+
+        // --- SCROLL ANIMATIONS (Chat Bubbles) ---
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: "0px"
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.chat-bubble').forEach(bubble => {
+            observer.observe(bubble);
+        });
+
+    </script>
 </body>
-
 </html>
