@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Spandan Saxena | Software Developer</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,14 +27,18 @@
 
         html {
             scroll-behavior: smooth;
+            overflow-x: hidden; /* CRITICAL FIX: Prevents side scrolling */
+            width: 100%;
         }
 
         body {
             background-color: var(--bg-dark);
             color: var(--text-dark);
             font-family: 'Outfit', sans-serif;
-            overflow-x: hidden;
+            overflow-x: hidden; /* CRITICAL FIX */
+            width: 100%;
             line-height: 1.6;
+            position: relative;
         }
 
         h1, h2, h3, h4 {
@@ -47,7 +51,7 @@
             color: inherit;
         }
 
-        /* --- SMART CURSOR (INVERTS COLORS) --- */
+        /* --- SMART CURSOR --- */
         .cursor-dot,
         .cursor-outline {
             position: fixed;
@@ -57,7 +61,7 @@
             border-radius: 50%;
             z-index: 9999;
             pointer-events: none;
-            mix-blend-mode: difference; /* THIS IS THE MAGIC */
+            mix-blend-mode: difference;
             background-color: white; 
         }
 
@@ -69,7 +73,7 @@
         .cursor-outline {
             width: 40px;
             height: 40px;
-            border: 1px solid white; /* Border color will invert via mix-blend-mode */
+            border: 1px solid white;
             background-color: transparent;
             transition: width 0.2s, height 0.2s, background-color 0.2s;
         }
@@ -78,7 +82,7 @@
         body.hovering .cursor-outline {
             width: 70px;
             height: 70px;
-            background-color: white; /* Solid fill on hover, inverts to opposite of BG */
+            background-color: white;
             opacity: 1;
         }
 
@@ -96,7 +100,7 @@
             justify-content: space-between;
             align-items: center;
             z-index: 100;
-            mix-blend-mode: difference; /* Inverts nav text over any background */
+            mix-blend-mode: difference;
             color: white; 
         }
 
@@ -134,7 +138,7 @@
             width: 100%;
         }
 
-        /* --- SECTIONS & FLIPPING THEME --- */
+        /* --- SECTIONS --- */
         section {
             min-height: 100vh;
             padding: 100px 10%;
@@ -143,22 +147,23 @@
             flex-direction: column;
             justify-content: center;
             transition: background-color 0.5s ease, color 0.5s ease;
+            width: 100%; /* Ensure section doesn't overflow */
+            overflow: hidden; /* Keep children inside */
         }
 
-        /* Dark Sections */
         .section-dark {
             background-color: var(--bg-dark);
             color: var(--text-dark);
         }
 
-        /* Light Sections */
         .section-light {
             background-color: var(--bg-light);
             color: var(--text-light);
         }
 
         .section-title {
-            font-size: 4rem;
+            /* Responsive font size: minimum 3rem, preferred 10vw, max 8rem */
+            font-size: clamp(3rem, 10vw, 8rem); 
             margin-bottom: 4rem;
             opacity: 0.05;
             position: absolute;
@@ -167,27 +172,35 @@
             z-index: 0;
             pointer-events: none;
             text-transform: uppercase;
+            white-space: nowrap; /* Prevent breaking to new lines */
         }
 
-        /* --- HERO --- */
+        /* --- HERO & IMAGE TRAIL --- */
         #hero {
             height: 100vh;
             align-items: flex-start;
             justify-content: center;
+            position: relative;
+            overflow: hidden; 
         }
 
         .hero-text {
-            z-index: 2;
+            z-index: 10;
+            position: relative;
+            pointer-events: none;
+            width: 100%;
         }
 
         .hero-text h1 {
-            font-size: 5.5rem;
+            /* Responsive Font Size for Hero */
+            font-size: clamp(3.5rem, 8vw, 6.5rem); 
             line-height: 1.1;
             margin-bottom: 1.5rem;
+            word-wrap: break-word;
         }
 
         .hero-text p {
-            font-size: 1.5rem;
+            font-size: clamp(1rem, 2vw, 1.5rem);
             font-weight: 300;
             opacity: 0.8;
             max-width: 600px;
@@ -195,7 +208,29 @@
             padding-left: 20px;
         }
 
-        /* --- WORK & RECOGNITION (LIST STYLES) --- */
+        /* The Trail Images */
+        .trail-image {
+            position: absolute;
+            width: 200px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            pointer-events: none;
+            transform: translate(-50%, -50%) scale(0.5);
+            opacity: 0;
+            z-index: 1; 
+            animation: popInFadeOut 1s forwards;
+            filter: grayscale(100%);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        @keyframes popInFadeOut {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8) rotate(var(--rot)); }
+            20% { opacity: 0.8; transform: translate(-50%, -50%) scale(1) rotate(var(--rot)); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(1) rotate(var(--rot)); }
+        }
+
+        /* --- WORK & LISTS --- */
         .list-item {
             display: flex;
             justify-content: space-between;
@@ -203,6 +238,7 @@
             padding: 2.5rem 0;
             border-bottom: 1px solid rgba(125, 125, 125, 0.2);
             transition: padding 0.3s ease;
+            width: 100%;
         }
 
         .list-item:hover {
@@ -211,14 +247,16 @@
         }
 
         .list-title {
-            font-size: 1.8rem;
+            font-size: clamp(1.2rem, 4vw, 1.8rem);
             font-family: 'Playfair Display', serif;
         }
 
         .list-meta {
-            font-size: 1rem;
+            font-size: 0.9rem;
             opacity: 0.6;
             text-align: right;
+            white-space: nowrap; /* Keep dates on one line */
+            margin-left: 1rem;
         }
         
         .list-role {
@@ -229,9 +267,7 @@
             opacity: 0.8;
         }
 
-        /* --- PROJECTS (CHAT BUBBLES) --- */
-        /* In this section, we want chat bubbles to pop against the Black background */
-        
+        /* --- PROJECTS --- */
         .chat-container {
             display: flex;
             flex-direction: column;
@@ -255,7 +291,6 @@
             backdrop-filter: blur(10px);
         }
 
-        /* Specific styling for Black BG section bubbles */
         .section-dark .chat-bubble {
             background-color: #111;
             box-shadow: 0 10px 40px rgba(0,0,0,0.5);
@@ -267,36 +302,14 @@
             border: 1px solid rgba(0,0,0,0.1);
         }
 
-        /* Left Bubble */
-        .chat-left {
-            align-self: flex-start;
-            border-bottom-left-radius: 4px;
-        }
+        .chat-left { align-self: flex-start; border-bottom-left-radius: 4px; }
+        .chat-right { align-self: flex-end; border-bottom-right-radius: 4px; text-align: right; }
 
-        /* Right Bubble */
-        .chat-right {
-            align-self: flex-end;
-            border-bottom-right-radius: 4px;
-            text-align: right;
-        }
+        .chat-bubble.visible { opacity: 1; transform: translateY(0); }
 
-        .chat-bubble.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .project-title {
-            font-size: 1.8rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .project-desc {
-            font-size: 1.1rem;
-            opacity: 0.7;
-            margin-bottom: 1.5rem;
-            font-weight: 300;
-        }
-
+        .project-title { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        .project-desc { font-size: 1rem; opacity: 0.7; margin-bottom: 1.5rem; font-weight: 300; }
+        
         .project-link {
             font-size: 0.85rem;
             font-weight: 600;
@@ -309,51 +322,54 @@
             display: inline-block;
         }
 
-        .project-link:hover {
-            background-color: white;
-            color: black;
-        }
-        
-        .section-light .project-link:hover {
-            background-color: black;
-            color: white;
-        }
+        .project-link:hover { background-color: white; color: black; }
+        .section-light .project-link:hover { background-color: black; color: white; }
 
-        /* --- FOOTER & CONTACT --- */
-        .footer-brand {
-            margin-top: 5rem;
-            font-size: 0.9rem;
-            opacity: 0.5;
-            font-family: monospace;
-            letter-spacing: 2px;
-        }
+        /* --- FOOTER --- */
+        .footer-brand { margin-top: 5rem; font-size: 0.9rem; opacity: 0.5; font-family: monospace; letter-spacing: 2px; }
+        .social-grid { display: flex; gap: 2rem; margin-top: 3rem; justify-content: center; flex-wrap: wrap; }
+        .social-link { font-size: 1.2rem; border-bottom: 1px solid transparent; padding-bottom: 5px; }
+        .social-link:hover { border-bottom: 1px solid currentColor; }
 
-        .social-grid {
-            display: flex;
-            gap: 2rem;
-            margin-top: 3rem;
-            justify-content: center;
-        }
-        
-        .social-link {
-            font-size: 1.2rem;
-            border-bottom: 1px solid transparent;
-            padding-bottom: 5px;
-        }
-        
-        .social-link:hover {
-            border-bottom: 1px solid currentColor;
-        }
-
-        /* --- RESPONSIVE --- */
+        /* --- RESPONSIVE FIXES (MOBILE) --- */
         @media (max-width: 768px) {
-            .hero-text h1 { font-size: 3.5rem; }
-            .section-title { font-size: 3rem; top: 5%; }
+            /* Relax the padding so text has room */
+            section { padding: 80px 5%; }
+            
+            /* Make section titles smaller so they don't bleed out */
+            .section-title { 
+                top: 5%; 
+                right: 5%; 
+                font-size: 3.5rem; /* Explicit mobile size */
+                opacity: 0.08;
+            }
+
             .chat-bubble { max-width: 90%; padding: 1.5rem; }
+            
             nav { padding: 1.5rem 5%; }
-            .nav-links { display: none; } /* Mobile Menu omitted for clean single-file */
-            .list-item { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
-            .list-meta { text-align: left; }
+            .nav-links { display: none; } /* Mobile Menu omitted */
+            
+            /* Stack list items vertically */
+            .list-item { 
+                flex-direction: column; 
+                align-items: flex-start; 
+                gap: 0.5rem; 
+            }
+            .list-meta { 
+                text-align: left; 
+                margin-left: 0;
+                font-size: 0.85rem;
+                opacity: 0.5;
+            }
+            .list-item:hover {
+                padding: 2.5rem 0; /* Reset hover padding shift on mobile to avoid wobble */
+            }
+
+            /* Disable trail on mobile for performance & touch handling */
+            .trail-image { display: none; } 
+            
+            .cursor-dot, .cursor-outline { display: none; } /* Hide custom cursor on touch devices */
+            * { cursor: auto; } /* Restore default pointer */
         }
     </style>
 </head>
@@ -449,28 +465,16 @@
 
     <section id="recognition" class="section-light">
         <div class="section-title">Recognition</div>
-
         <div class="list-item hover-trigger">
-            <div>
-                <span class="list-title">Converge Runnerup</span>
-                <span class="list-role">IBM</span>
-            </div>
+            <div><span class="list-title">Converge Runnerup</span><span class="list-role">IBM</span></div>
             <span class="list-meta">2025</span>
         </div>
-
         <div class="list-item hover-trigger">
-            <div>
-                <span class="list-title">GEMs of Development</span>
-                <span class="list-role">IBM India</span>
-            </div>
+            <div><span class="list-title">GEMs of Development</span><span class="list-role">IBM India</span></div>
             <span class="list-meta">2025</span>
         </div>
-
         <div class="list-item hover-trigger">
-            <div>
-                <span class="list-title">Top Performer Gratitude</span>
-                <span class="list-role">IBM</span>
-            </div>
+            <div><span class="list-title">Top Performer Gratitude</span><span class="list-role">IBM</span></div>
             <span class="list-meta">2026</span>
         </div>
     </section>
@@ -480,24 +484,35 @@
         <p style="font-size: 1.2rem; opacity: 0.8; max-width: 600px; margin-bottom: 2rem;">
             I build software that actually works, scale systems that don’t fall apart, and ship ideas instead of talking about them.
         </p>
-        
         <a href="mailto:connectwithspandan@gmail.com" class="project-link hover-trigger" style="font-size: 1.2rem; padding: 1rem 3rem; border-radius: 50px;">
             connectwithspandan@gmail.com
         </a>
-
         <div class="social-grid">
             <a href="https://www.linkedin.com/in/spandn/" target="_blank" class="social-link hover-trigger">LinkedIn</a>
             <a href="https://github.com/the-rebooted-coder" target="_blank" class="social-link hover-trigger">GitHub</a>
             <a href="https://www.instagram.com/simply.spandan/" target="_blank" class="social-link hover-trigger">Instagram</a>
         </div>
-
-        <div class="footer-brand">
-            An S² Labs Product 🥼
-        </div>
+        <div class="footer-brand">An S² Labs Product 🥼</div>
     </section>
 
     <script>
-        // --- CUSTOM CURSOR LOGIC ---
+        // --- CONFIGURATION ---
+        const imageSources = [
+            "https://i.ibb.co/1Vmw65c/poster-1-spandan.png", 
+            "https://i.ibb.co/7xxg2HwS/poster-2-spandan.png",
+            "https://i.ibb.co/NgrK3wx9/poster-3-spandan.png",
+            "https://i.ibb.co/1fKX3zQD/poster-4-spandan.png",
+            "https://i.ibb.co/yc96f8P3/poster-5-spandan.png",
+	    "https://i.ibb.co/qFW4Wjnw/poster-6-spandan.png",
+            "https://i.ibb.co/DP7VG34R/poster-7-spandan.png",
+            "https://i.ibb.co/XfDCNP7q/poster-8-spandan.png",
+            "https://i.ibb.co/nMMXgkjp/poster-9-spandan.png",
+            "https://i.ibb.co/hFxCyx4W/poster-10-spandan.png",
+            "https://i.ibb.co/MkGRvdJw/poster-11-spandan.png"
+        ];
+
+        // --- CUSTOM CURSOR ---
+        // Only active if mouse is detected (Desktop)
         const cursorDot = document.querySelector('[data-cursor-dot]');
         const cursorOutline = document.querySelector('[data-cursor-outline]');
         const hoverTriggers = document.querySelectorAll('.hover-trigger');
@@ -505,56 +520,68 @@
         window.addEventListener('mousemove', function (e) {
             const posX = e.clientX;
             const posY = e.clientY;
-
-            // Dot follows instantly
             cursorDot.style.left = `${posX}px`;
             cursorDot.style.top = `${posY}px`;
-
-            // Outline follows with slight delay
             cursorOutline.animate({
                 left: `${posX}px`,
                 top: `${posY}px`
             }, { duration: 500, fill: "forwards" });
         });
 
-        // Hover States
         hoverTriggers.forEach(trigger => {
-            trigger.addEventListener('mouseenter', () => {
-                document.body.classList.add('hovering');
-            });
-            trigger.addEventListener('mouseleave', () => {
-                document.body.classList.remove('hovering');
-            });
+            trigger.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+            trigger.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
         });
 
-        // --- PARALLAX EFFECT ---
+        // --- IMAGE TRAIL EFFECT (HERO ONLY) ---
+        // Disabled on mobile via CSS for performance
+        const heroSection = document.getElementById('hero');
+        let lastX = 0;
+        let lastY = 0;
+        let imageIndex = 0;
+
+        heroSection.addEventListener('mousemove', (e) => {
+            // Check if screen is wide enough (skip on mobile)
+            if (window.innerWidth < 768) return;
+
+            if (Math.abs(e.clientX - lastX) < 100 && Math.abs(e.clientY - lastY) < 100) return;
+
+            lastX = e.clientX;
+            lastY = e.clientY;
+
+            const img = document.createElement('img');
+            img.src = imageSources[imageIndex % imageSources.length];
+            img.className = 'trail-image';
+            
+            const randomRot = Math.random() * 20 - 10; 
+            img.style.setProperty('--rot', `${randomRot}deg`);
+            
+            img.style.left = `${e.clientX}px`;
+            img.style.top = `${e.clientY}px`;
+
+            heroSection.appendChild(img);
+
+            setTimeout(() => {
+                img.remove();
+            }, 1000);
+
+            imageIndex++;
+        });
+
+        // --- PARALLAX & SCROLL ---
         document.addEventListener('scroll', () => {
             const scrollY = window.scrollY;
-            
-            // Subtle Parallax for Hero Text
             const heroText = document.querySelector('.hero-text');
-            if(heroText) {
-                heroText.style.transform = `translateY(${scrollY * 0.2}px)`;
-            }
+            if(heroText) heroText.style.transform = `translateY(${scrollY * 0.2}px)`;
         });
-
-        // --- SCROLL ANIMATIONS (Chat Bubbles) ---
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: "0px"
-        };
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
+                if (entry.isIntersecting) entry.target.classList.add('visible');
             });
-        }, observerOptions);
+        }, { threshold: 0.1 });
 
-        document.querySelectorAll('.chat-bubble').forEach(bubble => {
-            observer.observe(bubble);
-        });
+        document.querySelectorAll('.chat-bubble').forEach(bubble => observer.observe(bubble));
 
     </script>
 </body>
