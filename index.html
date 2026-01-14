@@ -23,6 +23,7 @@
             padding: 0;
             box-sizing: border-box;
             cursor: none; /* Hide default cursor */
+            -webkit-tap-highlight-color: transparent;
         }
 
         html {
@@ -39,6 +40,8 @@
             width: 100%;
             line-height: 1.6;
             position: relative;
+            /* Extra padding bottom for mobile nav */
+            padding-bottom: 0;
         }
 
         h1, h2, h3, h4 {
@@ -84,7 +87,7 @@
         }
         body.hovering .cursor-dot { opacity: 0; }
 
-        /* --- NAVIGATION --- */
+        /* --- NAVIGATION (DESKTOP) --- */
         nav {
             position: fixed;
             top: 0;
@@ -93,7 +96,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            z-index: 100;
+            z-index: 100; /* Highest Z-Index for UI */
             mix-blend-mode: difference;
             color: white; 
         }
@@ -122,6 +125,47 @@
         }
 
         .nav-links a:hover::after { width: 100%; }
+
+        /* --- BOTTOM NAV (MOBILE ONLY) --- */
+        .bottom-nav {
+            display: none; /* Hidden on desktop */
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 400px;
+            background: rgba(20, 20, 20, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 25px;
+            padding: 15px 25px;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 999;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .bottom-nav a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.7rem;
+            color: #aaa;
+            gap: 5px;
+            transition: color 0.3s;
+        }
+
+        .bottom-nav a.active, .bottom-nav a:hover {
+            color: #fff;
+        }
+
+        .bottom-nav svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
 
         /* --- SECTIONS --- */
         section {
@@ -161,10 +205,11 @@
             overflow: hidden; 
         }
 
+        /* FIXED: Text layer above images */
         .hero-text {
-            z-index: 10;
+            z-index: 10; 
             position: relative;
-            pointer-events: none;
+            pointer-events: none; /* Allows mouse to trigger trail below */
             width: 100%;
         }
 
@@ -184,7 +229,7 @@
             padding-left: 20px;
         }
 
-        /* TRAIL IMAGES (Fading Background) */
+        /* TRAIL IMAGES (Background Layer) */
         .trail-image {
             position: absolute;
             width: 200px;
@@ -194,13 +239,13 @@
             pointer-events: none;
             transform: translate(-50%, -50%) scale(0.5);
             opacity: 0;
-            z-index: 1; 
+            z-index: 1; /* Lowest Z-Index: Behind Text */
             animation: popInFadeOut 1s forwards;
             filter: grayscale(100%);
             border: 1px solid rgba(255,255,255,0.2);
         }
 
-        /* PERSISTENT CARD (Interactive) */
+        /* PERSISTENT CARD (Interactive Layer) */
         .persistent-card {
             position: absolute;
             width: 240px;
@@ -208,7 +253,7 @@
             border-radius: 10px;
             transform: translate(-50%, -50%) scale(0.5) rotate(var(--rot));
             opacity: 0;
-            z-index: 5; /* Starts below text (10) */
+            z-index: 5; /* Below text (10), Above Trail (1) */
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             cursor: pointer;
             pointer-events: auto; /* Clickable */
@@ -224,15 +269,13 @@
             transition: transform 0.3s ease;
         }
 
-        /* State: Active (Popped In) */
         .persistent-card.active {
             opacity: 1;
             transform: translate(-50%, -50%) scale(1) rotate(var(--rot));
         }
 
-        /* State: Hover (Zoom & Bring to Front) */
         .persistent-card:hover {
-            z-index: 20; /* Pop ABOVE text when interacted with */
+            z-index: 20; /* Pop ABOVE text only when interacting */
             border-color: #fff;
             transform: translate(-50%, -50%) scale(1.1) rotate(0deg) !important;
         }
@@ -243,10 +286,10 @@
             100% { opacity: 0; transform: translate(-50%, -50%) scale(1) rotate(var(--rot)); }
         }
 
-        /* --- TOAST NOTIFICATION (Mocking Message) --- */
+        /* --- TOAST NOTIFICATION --- */
         .toast-message {
             position: fixed;
-            bottom: 40px;
+            bottom: 100px; /* Higher on mobile to clear nav */
             left: 50%;
             transform: translateX(-50%) translateY(20px);
             background: #ffffff;
@@ -372,11 +415,14 @@
 
         /* --- RESPONSIVE --- */
         @media (max-width: 768px) {
+            body { padding-bottom: 80px; } /* Space for bottom nav */
             section { padding: 80px 5%; }
             .section-title { top: 5%; right: 5%; font-size: 3.5rem; opacity: 0.08; }
             .chat-bubble { max-width: 90%; padding: 1.5rem; }
             nav { padding: 1.5rem 5%; }
-            .nav-links { display: none; }
+            .nav-links { display: none; } /* Hide top nav links */
+            .bottom-nav { display: flex; } /* Show bottom nav */
+            
             .list-item { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
             .list-meta { text-align: left; margin-left: 0; font-size: 0.85rem; opacity: 0.5; }
             .list-item:hover { padding: 2.5rem 0; }
@@ -405,6 +451,25 @@
             <a href="#contact" class="hover-trigger">Contact</a>
         </div>
     </nav>
+
+    <div class="bottom-nav">
+        <a href="#work">
+            <svg viewBox="0 0 24 24"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/></svg>
+            <span>Exp</span>
+        </a>
+        <a href="#projects">
+            <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg>
+            <span>Projects</span>
+        </a>
+        <a href="#recognition">
+            <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <span>Awards</span>
+        </a>
+        <a href="#contact">
+            <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+            <span>Contact</span>
+        </a>
+    </div>
 
     <section id="hero" class="section-dark">
         <div class="hero-text" data-speed="0.2">
@@ -496,27 +561,20 @@
     </section>
 
     <script>
-        // --- DATA CONFIGURATION ---
         const projectData = [
             { src: "https://i.ibb.co/1Vmw65c/poster-1-spandan.png", link: "https://github.com/the-rebooted-coder/The-Day-Grid" },
             { src: "https://i.ibb.co/7xxg2HwS/poster-2-spandan.png", link: "https://github.com/the-rebooted-coder/BatteryWise" },
             { src: "https://i.ibb.co/NgrK3wx9/poster-3-spandan.png", link: "https://github.com/the-rebooted-coder/Mail-Canon" },
-            
-            // SPECIAL: IBM Confidential (isConfidential flag)
             { src: "https://i.ibb.co/1fKX3zQD/poster-4-spandan.png", link: "#", isConfidential: true },
-            
             { src: "https://i.ibb.co/yc96f8P3/poster-5-spandan.png", link: "https://github.com/the-rebooted-coder/Forecasted" },
             { src: "https://i.ibb.co/qFW4Wjnw/poster-6-spandan.png", link: "https://github.com/the-rebooted-coder/What-s-In" },
             { src: "https://i.ibb.co/DP7VG34R/poster-7-spandan.png", link: "https://github.com/the-rebooted-coder/knack" },
             { src: "https://i.ibb.co/XfDCNP7q/poster-8-spandan.png", link: "https://github.com/the-rebooted-coder/Hanuman-Chalisa-Lyrical" },
             { src: "https://i.ibb.co/nMMXgkjp/poster-9-spandan.png", link: "https://github.com/the-rebooted-coder/Digital-Desk" },
             { src: "https://i.ibb.co/hFxCyx4W/poster-10-spandan.png", link: "https://github.com/the-rebooted-coder/Kaagaz-Dynamic-Desktop" },
-            
-            // SPECIAL: Email Link (Funny Header)
             { src: "https://i.ibb.co/MkGRvdJw/poster-11-spandan.png", link: "mailto:connectwithspandan@gmail.com?subject=I%20clicked%20the%20secret%2011th%20card%20and%20all%20I%20got%20was%20this%20email%20draft" }
         ];
 
-        // --- CUSTOM CURSOR ---
         const cursorDot = document.querySelector('[data-cursor-dot]');
         const cursorOutline = document.querySelector('[data-cursor-outline]');
         const hoverTriggers = document.querySelectorAll('.hover-trigger');
@@ -539,7 +597,6 @@
 
         hoverTriggers.forEach(addHoverListeners);
 
-        // --- TRAIL & FREEZE LOGIC ---
         const heroSection = document.getElementById('hero');
         let lastX = 0;
         let lastY = 0;
@@ -590,14 +647,13 @@
             card.href = data.link;
             card.className = 'persistent-card hover-trigger';
             
-            // SPECIAL LOGIC: Handle "Confidential" clicks
             if (data.isConfidential) {
                 card.addEventListener('click', (e) => {
                     e.preventDefault();
                     showToast();
                 });
             } else {
-                card.target = "_blank"; // Normal behavior for other links
+                card.target = "_blank"; 
             }
             
             const img = document.createElement('img');
@@ -620,18 +676,15 @@
             addHoverListeners(card);
         }
 
-        // --- TOAST FUNCTION ---
         function showToast() {
             const toast = document.getElementById('mockToast');
             toast.classList.add('show');
-            
             clearTimeout(toastTimeout);
             toastTimeout = setTimeout(() => {
                 toast.classList.remove('show');
-            }, 4000); // Hide after 4 seconds
+            }, 4000);
         }
 
-        // --- PARALLAX & SCROLL ---
         document.addEventListener('scroll', () => {
             const scrollY = window.scrollY;
             const heroText = document.querySelector('.hero-text');
@@ -645,7 +698,6 @@
         }, { threshold: 0.1 });
 
         document.querySelectorAll('.chat-bubble').forEach(bubble => observer.observe(bubble));
-
     </script>
 </body>
 </html>
