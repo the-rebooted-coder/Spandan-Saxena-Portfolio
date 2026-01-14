@@ -54,8 +54,6 @@
         }
 
         /* --- CUSTOM TEXT SELECTION (SMART INVERT) --- */
-        
-        /* Default (for Dark Backgrounds): Select = White BG, Black Text */
         ::selection {
             background-color: #ffffff;
             color: #000000;
@@ -66,7 +64,6 @@
             color: #000000;
         }
 
-        /* For Light Sections & Comic Bubbles: Select = Black BG, White Text */
         .section-light ::selection,
         .chat-bubble ::selection {
             background-color: #000000;
@@ -614,7 +611,6 @@
             element.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
         }
         
-        // Specific highlighter logic for chat bubbles
         function addHighlighterListeners(element) {
             element.addEventListener('mouseenter', () => document.body.classList.add('highlighting'));
             element.addEventListener('mouseleave', () => document.body.classList.remove('highlighting'));
@@ -786,6 +782,27 @@
         }, { threshold: 0.1 });
 
         document.querySelectorAll('.chat-bubble').forEach(bubble => observer.observe(bubble));
+
+        // --- TAB MOCKERY LOGIC ---
+        const originalTitle = document.title;
+        const funnyTitles = [
+            "Come back, coward.",
+            "I saw that.",
+            "Cheating on me?",
+            "You're making a mistake.",
+            "Boring tab, isn't it?",
+            "Traitor.",
+            "I have cookies. (Lies)"
+        ];
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                const randomTitle = funnyTitles[Math.floor(Math.random() * funnyTitles.length)];
+                document.title = randomTitle;
+            } else {
+                document.title = originalTitle;
+            }
+        });
     </script>
 </body>
 </html>
