@@ -67,13 +67,16 @@
             background-color: white; 
         }
         .cursor-dot { width: 8px; height: 8px; }
+        
         .cursor-outline {
             width: 40px;
             height: 40px;
             border: 1px solid white;
             background-color: transparent;
-            transition: width 0.2s, height 0.2s, background-color 0.2s;
+            transition: width 0.2s, height 0.2s, background-color 0.2s, border-color 0.2s;
         }
+
+        /* Standard Hover (Zoom) */
         body.hovering .cursor-outline {
             width: 70px;
             height: 70px;
@@ -81,6 +84,18 @@
             opacity: 1;
         }
         body.hovering .cursor-dot { opacity: 0; }
+
+        /* --- HIGHLIGHTER MODE (Yellow Effect) --- */
+        /* Logic: Blue (0,0,255) Diff White (255,255,255) = Yellow (255,255,0) */
+        body.highlighting .cursor-outline {
+            width: 80px;
+            height: 80px;
+            background-color: #0000FF; /* Pure Blue triggers Yellow on White */
+            border-color: transparent;
+            opacity: 1;
+        }
+        body.highlighting .cursor-dot { opacity: 0; }
+
 
         /* --- NAVIGATION --- */
         nav {
@@ -221,7 +236,7 @@
             padding-left: 20px;
         }
 
-        /* --- TRAIL & CARD ELEMENTS --- */
+        /* --- TRAIL & CARD --- */
         .trail-image {
             position: absolute;
             width: 200px;
@@ -287,11 +302,11 @@
         }
         .toast-message.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-        /* --- FIXED: UNIFORM COMIC BUBBLES --- */
+        /* --- COMIC STYLE BUBBLES --- */
         .chat-container {
             display: flex;
             flex-direction: column;
-            gap: 4rem; /* Spacing for the tails */
+            gap: 4rem; 
             width: 100%;
             max-width: 800px;
             margin: 0 auto;
@@ -305,131 +320,88 @@
             padding: 2.5rem;
             background: #ffffff;
             color: #000000;
-            border: 3px solid #000000; /* Bold Outline */
+            border: 3px solid #000000;
             border-radius: 20px;
-            box-shadow: 8px 8px 0px #000000; /* Hard Pop-Art Shadow */
+            box-shadow: 8px 8px 0px #000000;
             opacity: 0;
             transform: translateY(30px);
             transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        /* Dark Mode Section Overrides */
-        .section-dark .chat-bubble {
-            /* Kept white for contrast against dark bg, classic comic style */
-            background: #ffffff; 
-            color: #000000;
-        }
-        /* Light Mode Section Overrides - Just to be safe */
-        .section-light .chat-bubble {
+        .section-dark .chat-bubble, .section-light .chat-bubble {
             background: #ffffff;
             color: #000000;
         }
 
-        /* --- ALTERNATING LAYOUT (Left / Right) --- */
-        
-        /* Odd Children: Left Side */
+        /* Alternating Alignment */
         .chat-bubble:nth-child(odd) {
             align-self: flex-start;
             margin-right: auto;
-            border-bottom-left-radius: 0; /* Corner for tail */
+            border-bottom-left-radius: 0;
         }
-
-        /* Even Children: Right Side */
         .chat-bubble:nth-child(even) {
             align-self: flex-end;
             margin-left: auto;
             text-align: right;
-            border-bottom-right-radius: 0; /* Corner for tail */
+            border-bottom-right-radius: 0;
         }
 
-        /* --- TAILS (The little triangles) --- */
-        
-        /* Base for tails */
+        /* Tails */
         .chat-bubble::after, .chat-bubble::before {
             content: '';
             position: absolute;
-            width: 0;
-            height: 0;
+            width: 0; height: 0;
             border-style: solid;
         }
 
-        /* Left Bubble Tail */
+        /* Left Tail */
         .chat-bubble:nth-child(odd)::before {
-            /* The black outline of the tail */
-            bottom: -23px; /* border width + extra */
-            left: -3px; /* align with left border */
+            bottom: -23px; left: -3px;
             border-width: 20px 20px 0 0;
             border-color: #000000 transparent transparent transparent;
         }
         .chat-bubble:nth-child(odd)::after {
-            /* The white fill of the tail */
-            bottom: -17px;
-            left: 0px;
+            bottom: -17px; left: 0px;
             border-width: 17px 17px 0 0;
             border-color: #ffffff transparent transparent transparent;
         }
 
-        /* Right Bubble Tail */
+        /* Right Tail */
         .chat-bubble:nth-child(even)::before {
-            /* The black outline */
-            bottom: -23px;
-            right: -3px;
+            bottom: -23px; right: -3px;
             border-width: 20px 0 0 20px;
             border-color: #000000 transparent transparent transparent;
         }
         .chat-bubble:nth-child(even)::after {
-            /* The white fill */
-            bottom: -17px;
-            right: 0px;
+            bottom: -17px; right: 0px;
             border-width: 17px 0 0 17px;
             border-color: #ffffff transparent transparent transparent;
         }
 
-
-        .chat-bubble.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .chat-bubble.visible { opacity: 1; transform: translateY(0); }
         
-        /* Hover Effect */
         .chat-bubble:hover {
             transform: translateY(-5px);
-            box-shadow: 12px 12px 0px #000000; /* Shadow grows */
+            box-shadow: 12px 12px 0px #000000;
         }
-
 
         .project-title { font-size: 2rem; margin-bottom: 0.5rem; font-weight: 700; font-family: 'Playfair Display', serif; }
         .project-desc { font-size: 1.1rem; margin-bottom: 1.5rem; font-weight: 400; font-family: 'Outfit', sans-serif; }
         
         .project-link {
-            font-size: 0.8rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border: 2px solid black;
-            padding: 10px 24px;
-            border-radius: 50px;
-            transition: all 0.3s;
-            display: inline-block;
-            background-color: white;
-            color: black;
+            font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+            border: 2px solid black; padding: 10px 24px; border-radius: 50px;
+            transition: all 0.3s; display: inline-block; background-color: white; color: black;
             box-shadow: 2px 2px 0px #000;
         }
         .project-link:hover { 
-            background-color: black; 
-            color: white; 
-            box-shadow: 4px 4px 0px rgba(255,255,255,0.5);
+            background-color: black; color: white; box-shadow: 4px 4px 0px rgba(255,255,255,0.5);
         }
 
         /* --- LISTS --- */
         .list-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 2.5rem 0;
-            border-bottom: 1px solid rgba(125, 125, 125, 0.2);
-            transition: padding 0.3s ease;
-            width: 100%;
+            display: flex; justify-content: space-between; align-items: center; padding: 2.5rem 0;
+            border-bottom: 1px solid rgba(125, 125, 125, 0.2); transition: padding 0.3s ease; width: 100%;
         }
         .list-item:hover { padding: 2.5rem 1rem; background-color: rgba(125, 125, 125, 0.05); }
         .list-title { font-size: clamp(1.2rem, 4vw, 1.8rem); font-family: 'Playfair Display', serif; }
@@ -523,27 +495,27 @@
     <section id="projects" class="section-dark">
         <div class="section-title">Projects</div>
         <div class="chat-container">
-            <div class="chat-bubble hover-trigger">
+            <div class="chat-bubble hover-bubble">
                 <h3 class="project-title">The Day Grid</h3>
                 <p class="project-desc">Time is finite. Your wallpaper was wasting it.</p>
                 <a href="https://github.com/the-rebooted-coder/The-Day-Grid" target="_blank" class="project-link">View Repo</a>
             </div>
-            <div class="chat-bubble hover-trigger">
+            <div class="chat-bubble hover-bubble">
                 <h3 class="project-title">Legacy to Modern Rebase</h3>
                 <p class="project-desc">Because code from 2003 deserves a second chance.</p>
                 <span class="project-link" style="opacity:0.5; cursor: not-allowed; border-color: #777; color: #777;">IBM Confidential</span>
             </div>
-            <div class="chat-bubble hover-trigger">
+            <div class="chat-bubble hover-bubble">
                 <h3 class="project-title">Safe Charge</h3>
                 <p class="project-desc">Your charger can’t be trusted. This app can.</p>
                 <a href="https://play.google.com/store/apps/details?id=com.onesilicondiode.batterywise&pcampaignid=web_share" target="_blank" class="project-link">Play Store</a>
             </div>
-             <div class="chat-bubble hover-trigger">
+             <div class="chat-bubble hover-bubble">
                 <h3 class="project-title">Mail Canon</h3>
                 <p class="project-desc">Upload a CSV. We do the spamming. Legally.</p>
                 <a href="https://github.com/the-rebooted-coder/Mail-Canon" target="_blank" class="project-link">View Repo</a>
             </div>
-            <div class="chat-bubble hover-trigger">
+            <div class="chat-bubble hover-bubble">
                 <h3 class="project-title">Forecasted</h3>
                 <p class="project-desc">AI-powered stock predictions. Confidence sold separately.</p>
                 <a href="https://github.com/the-rebooted-coder/Forecasted" target="_blank" class="project-link">View Repo</a>
@@ -604,6 +576,7 @@
         const cursorDot = document.querySelector('[data-cursor-dot]');
         const cursorOutline = document.querySelector('[data-cursor-outline]');
         const hoverTriggers = document.querySelectorAll('.hover-trigger');
+        const bubbleTriggers = document.querySelectorAll('.hover-bubble');
 
         window.addEventListener('mousemove', function (e) {
             const posX = e.clientX;
@@ -620,8 +593,15 @@
             element.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
             element.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
         }
+        
+        // Specific highlighter logic for chat bubbles
+        function addHighlighterListeners(element) {
+            element.addEventListener('mouseenter', () => document.body.classList.add('highlighting'));
+            element.addEventListener('mouseleave', () => document.body.classList.remove('highlighting'));
+        }
 
         hoverTriggers.forEach(addHoverListeners);
+        bubbleTriggers.forEach(addHighlighterListeners);
 
         const mobileNav = document.getElementById('mobileNav');
         const navItems = mobileNav.querySelectorAll('.nav-item');
