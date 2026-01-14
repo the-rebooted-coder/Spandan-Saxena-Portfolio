@@ -164,7 +164,7 @@
         .hero-text {
             z-index: 10;
             position: relative;
-            pointer-events: none; /* Allows clicks to pass through text to images below */
+            pointer-events: none;
             width: 100%;
         }
 
@@ -203,7 +203,7 @@
         /* PERSISTENT CARD (Interactive) */
         .persistent-card {
             position: absolute;
-            width: 240px; /* Slightly larger */
+            width: 240px;
             height: 150px;
             border-radius: 10px;
             transform: translate(-50%, -50%) scale(0.5) rotate(var(--rot));
@@ -214,7 +214,7 @@
             pointer-events: auto; /* Clickable */
             border: 2px solid rgba(255,255,255,0.8);
             overflow: hidden;
-            display: block; /* Ensure anchor behaves like block */
+            display: block; 
         }
 
         .persistent-card img {
@@ -241,6 +241,33 @@
             0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8) rotate(var(--rot)); }
             20% { opacity: 0.8; transform: translate(-50%, -50%) scale(1) rotate(var(--rot)); }
             100% { opacity: 0; transform: translate(-50%, -50%) scale(1) rotate(var(--rot)); }
+        }
+
+        /* --- TOAST NOTIFICATION (Mocking Message) --- */
+        .toast-message {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: #ffffff;
+            color: #000000;
+            padding: 12px 28px;
+            border-radius: 50px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 10000;
+            box-shadow: 0 10px 40px rgba(255,255,255,0.1);
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .toast-message.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
         }
 
         /* --- WORK & LISTS --- */
@@ -364,6 +391,8 @@
 </head>
 <body>
 
+    <div id="mockToast" class="toast-message">Nice try. It's confidential. Unless you have clearance, keep scrolling.</div>
+
     <div class="cursor-dot" data-cursor-dot></div>
     <div class="cursor-outline" data-cursor-outline></div>
 
@@ -468,18 +497,23 @@
 
     <script>
         // --- DATA CONFIGURATION ---
-             const projectData = [
+        const projectData = [
             { src: "https://i.ibb.co/1Vmw65c/poster-1-spandan.png", link: "https://github.com/the-rebooted-coder/The-Day-Grid" },
             { src: "https://i.ibb.co/7xxg2HwS/poster-2-spandan.png", link: "https://github.com/the-rebooted-coder/BatteryWise" },
             { src: "https://i.ibb.co/NgrK3wx9/poster-3-spandan.png", link: "https://github.com/the-rebooted-coder/Mail-Canon" },
-            { src: "https://i.ibb.co/1fKX3zQD/poster-4-spandan.png", link: "#" },
+            
+            // SPECIAL: IBM Confidential (isConfidential flag)
+            { src: "https://i.ibb.co/1fKX3zQD/poster-4-spandan.png", link: "#", isConfidential: true },
+            
             { src: "https://i.ibb.co/yc96f8P3/poster-5-spandan.png", link: "https://github.com/the-rebooted-coder/Forecasted" },
             { src: "https://i.ibb.co/qFW4Wjnw/poster-6-spandan.png", link: "https://github.com/the-rebooted-coder/What-s-In" },
             { src: "https://i.ibb.co/DP7VG34R/poster-7-spandan.png", link: "https://github.com/the-rebooted-coder/knack" },
             { src: "https://i.ibb.co/XfDCNP7q/poster-8-spandan.png", link: "https://github.com/the-rebooted-coder/Hanuman-Chalisa-Lyrical" },
             { src: "https://i.ibb.co/nMMXgkjp/poster-9-spandan.png", link: "https://github.com/the-rebooted-coder/Digital-Desk" },
             { src: "https://i.ibb.co/hFxCyx4W/poster-10-spandan.png", link: "https://github.com/the-rebooted-coder/Kaagaz-Dynamic-Desktop" },
-            { src: "https://i.ibb.co/MkGRvdJw/poster-11-spandan.png", link: "#" }
+            
+            // SPECIAL: Email Link (Funny Header)
+            { src: "https://i.ibb.co/MkGRvdJw/poster-11-spandan.png", link: "mailto:connectwithspandan@gmail.com?subject=I%20clicked%20the%20secret%2011th%20card%20and%20all%20I%20got%20was%20this%20email%20draft" }
         ];
 
         // --- CUSTOM CURSOR ---
@@ -498,7 +532,6 @@
             }, { duration: 500, fill: "forwards" });
         });
 
-        // Helper to update hover listeners for dynamic elements
         function addHoverListeners(element) {
             element.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
             element.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
@@ -513,11 +546,11 @@
         let imageIndex = 0;
         let interactionTimeout;
         let currentPersistentCard = null;
+        let toastTimeout;
 
         heroSection.addEventListener('mousemove', (e) => {
-            if (window.innerWidth < 768) return; // Skip on mobile
+            if (window.innerWidth < 768) return; 
 
-            // 1. If we start moving, clear any existing persistent card
             if (currentPersistentCard) {
                 currentPersistentCard.style.opacity = '0';
                 currentPersistentCard.style.transform = 'translate(-50%, -50%) scale(0.8)';
@@ -525,15 +558,12 @@
                 currentPersistentCard = null;
             }
 
-            // 2. Clear the "stop" timer
             clearTimeout(interactionTimeout);
 
-            // 3. Distance check for spawning trail images (prevent clustering)
             if (Math.abs(e.clientX - lastX) > 60 || Math.abs(e.clientY - lastY) > 60) {
                 lastX = e.clientX;
                 lastY = e.clientY;
 
-                // Spawn Trail Image (Decorative, fades out)
                 const img = document.createElement('img');
                 img.src = projectData[imageIndex % projectData.length].src;
                 img.className = 'trail-image';
@@ -544,53 +574,61 @@
                 img.style.top = `${e.clientY}px`;
 
                 heroSection.appendChild(img);
-
-                // Cleanup trail image
                 setTimeout(() => img.remove(), 1000);
-                
                 imageIndex++;
             }
 
-            // 4. Set timer: If mouse stops for 200ms, spawn persistent card
             interactionTimeout = setTimeout(() => {
                 spawnPersistentCard(e.clientX, e.clientY);
             }, 200);
         });
 
         function spawnPersistentCard(x, y) {
-            // Use the next image in sequence
             const data = projectData[imageIndex % projectData.length];
             
-            // Create Link Wrapper
             const card = document.createElement('a');
             card.href = data.link;
-            card.target = "_blank"; // Open in new tab
             card.className = 'persistent-card hover-trigger';
             
-            // Create Image
+            // SPECIAL LOGIC: Handle "Confidential" clicks
+            if (data.isConfidential) {
+                card.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showToast();
+                });
+            } else {
+                card.target = "_blank"; // Normal behavior for other links
+            }
+            
             const img = document.createElement('img');
             img.src = data.src;
             card.appendChild(img);
             
-            // Position & Style
             card.style.left = `${x}px`;
             card.style.top = `${y}px`;
             
-            const randomRot = Math.random() * 10 - 5; // Subtle rotation
+            const randomRot = Math.random() * 10 - 5;
             card.style.setProperty('--rot', `${randomRot}deg`);
 
-            // Append & Animate
             heroSection.appendChild(card);
             
-            // Trigger CSS transition
             requestAnimationFrame(() => {
                 card.classList.add('active');
             });
 
             currentPersistentCard = card;
-            
-            // Make sure custom cursor reacts to this new element
             addHoverListeners(card);
+        }
+
+        // --- TOAST FUNCTION ---
+        function showToast() {
+            const toast = document.getElementById('mockToast');
+            toast.classList.add('show');
+            
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 4000); // Hide after 4 seconds
         }
 
         // --- PARALLAX & SCROLL ---
