@@ -82,7 +82,7 @@
         }
         body.hovering .cursor-dot { opacity: 0; }
 
-        /* --- NAVIGATION (DESKTOP) --- */
+        /* --- NAVIGATION --- */
         nav {
             position: fixed;
             top: 0;
@@ -116,11 +116,11 @@
         }
         .nav-links a:hover::after { width: 100%; }
 
-        /* --- BOTTOM NAV (MOBILE - EXPANDING UX) --- */
+        /* --- BOTTOM NAV (MOBILE) --- */
         .bottom-nav {
             display: none;
             position: fixed;
-            bottom: 30px; /* Floating slightly higher */
+            bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
             background: rgba(20, 20, 20, 0.9);
@@ -129,11 +129,9 @@
             z-index: 999;
             box-shadow: 0 10px 40px rgba(0,0,0,0.6);
             border: 1px solid rgba(255,255,255,0.15);
-            
-            /* ANIMATION PROPERTIES */
-            width: 60px; /* Start collapsed */
+            width: 60px;
             height: 60px;
-            border-radius: 30px; /* Circle */
+            border-radius: 30px;
             padding: 0;
             align-items: center;
             justify-content: center;
@@ -141,17 +139,16 @@
             overflow: hidden;
         }
 
-        /* Expanded State */
         .bottom-nav.expanded {
             width: 90%;
             max-width: 400px;
-            border-radius: 25px; /* Pill shape */
+            border-radius: 25px;
             padding: 0 25px;
             justify-content: space-between;
         }
 
         .bottom-nav a {
-            display: none; /* Hidden by default in collapsed */
+            display: none;
             flex-direction: column;
             align-items: center;
             font-size: 0.7rem;
@@ -159,38 +156,14 @@
             gap: 5px;
             transition: color 0.3s, opacity 0.3s;
             opacity: 0;
-            min-width: 50px; /* Touch target */
+            min-width: 50px;
         }
+        .bottom-nav svg { width: 24px; height: 24px; fill: currentColor; }
 
-        .bottom-nav svg {
-            width: 24px;
-            height: 24px;
-            fill: currentColor;
-        }
-
-        /* --- LOGIC FOR ICONS --- */
-        
-        /* 1. If Expanded: Show All, Full Opacity */
-        .bottom-nav.expanded a {
-            display: flex;
-            opacity: 1;
-        }
-
-        /* 2. If Collapsed: Show ONLY the active link */
-        .bottom-nav:not(.expanded) a.active {
-            display: flex;
-            opacity: 1;
-            color: white;
-        }
-        
-        /* 3. If Collapsed: Hide the text label to keep it icon-only */
-        .bottom-nav:not(.expanded) a.active span {
-            display: none;
-        }
-
-        /* Active Color */
+        .bottom-nav.expanded a { display: flex; opacity: 1; }
+        .bottom-nav:not(.expanded) a.active { display: flex; opacity: 1; color: white; }
+        .bottom-nav:not(.expanded) a.active span { display: none; }
         .bottom-nav a.active, .bottom-nav a:hover { color: #fff; }
-
 
         /* --- SECTIONS --- */
         section {
@@ -248,7 +221,7 @@
             padding-left: 20px;
         }
 
-        /* --- TRAIL & CARD --- */
+        /* --- TRAIL & CARD ELEMENTS --- */
         .trail-image {
             position: absolute;
             width: 200px;
@@ -314,61 +287,149 @@
         }
         .toast-message.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-        /* --- COMIC STYLE BUBBLES --- */
+        /* --- FIXED: UNIFORM COMIC BUBBLES --- */
         .chat-container {
             display: flex;
             flex-direction: column;
-            gap: 3rem;
+            gap: 4rem; /* Spacing for the tails */
             width: 100%;
-            max-width: 900px;
+            max-width: 800px;
             margin: 0 auto;
             position: relative;
             z-index: 2;
         }
+
         .chat-bubble {
-            max-width: 75%;
-            padding: 2.5rem;
-            border-radius: 20px;
             position: relative;
+            max-width: 70%;
+            padding: 2.5rem;
+            background: #ffffff;
+            color: #000000;
+            border: 3px solid #000000; /* Bold Outline */
+            border-radius: 20px;
+            box-shadow: 8px 8px 0px #000000; /* Hard Pop-Art Shadow */
             opacity: 0;
-            transform: translateY(50px);
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-            backdrop-filter: blur(10px);
+            transform: translateY(30px);
+            transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
         }
-        .section-dark .chat-bubble { background-color: #1a1a1a; color: white; border: 1px solid rgba(255,255,255,0.05); }
-        .section-light .chat-bubble { background-color: #f4f4f4; color: black; border: 1px solid rgba(0,0,0,0.05); }
 
-        /* Tails */
-        .chat-bubble::before {
-            content: "";
+        /* Dark Mode Section Overrides */
+        .section-dark .chat-bubble {
+            /* Kept white for contrast against dark bg, classic comic style */
+            background: #ffffff; 
+            color: #000000;
+        }
+        /* Light Mode Section Overrides - Just to be safe */
+        .section-light .chat-bubble {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        /* --- ALTERNATING LAYOUT (Left / Right) --- */
+        
+        /* Odd Children: Left Side */
+        .chat-bubble:nth-child(odd) {
+            align-self: flex-start;
+            margin-right: auto;
+            border-bottom-left-radius: 0; /* Corner for tail */
+        }
+
+        /* Even Children: Right Side */
+        .chat-bubble:nth-child(even) {
+            align-self: flex-end;
+            margin-left: auto;
+            text-align: right;
+            border-bottom-right-radius: 0; /* Corner for tail */
+        }
+
+        /* --- TAILS (The little triangles) --- */
+        
+        /* Base for tails */
+        .chat-bubble::after, .chat-bubble::before {
+            content: '';
             position: absolute;
-            bottom: 0;
-            width: 20px;
-            height: 20px;
-            background-color: inherit;
-            z-index: 1;
+            width: 0;
+            height: 0;
+            border-style: solid;
         }
-        .chat-left { align-self: flex-start; border-bottom-left-radius: 0; }
-        .chat-left::before { left: -10px; clip-path: polygon(100% 0, 0% 100%, 100% 100%); }
-        .chat-right { align-self: flex-end; text-align: right; border-bottom-right-radius: 0; }
-        .chat-right::before { right: -10px; clip-path: polygon(0 0, 0% 100%, 100% 100%); }
-        .chat-bubble.visible { opacity: 1; transform: translateY(0); }
 
-        .project-title { font-size: 1.5rem; margin-bottom: 0.5rem; }
-        .project-desc { font-size: 1rem; opacity: 0.7; margin-bottom: 1.5rem; font-weight: 300; }
-        .project-link {
-            font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;
-            border: 1px solid currentColor; padding: 8px 16px; border-radius: 20px;
-            transition: all 0.3s; display: inline-block;
+        /* Left Bubble Tail */
+        .chat-bubble:nth-child(odd)::before {
+            /* The black outline of the tail */
+            bottom: -23px; /* border width + extra */
+            left: -3px; /* align with left border */
+            border-width: 20px 20px 0 0;
+            border-color: #000000 transparent transparent transparent;
         }
-        .project-link:hover { background-color: white; color: black; }
-        .section-light .project-link:hover { background-color: black; color: white; }
+        .chat-bubble:nth-child(odd)::after {
+            /* The white fill of the tail */
+            bottom: -17px;
+            left: 0px;
+            border-width: 17px 17px 0 0;
+            border-color: #ffffff transparent transparent transparent;
+        }
+
+        /* Right Bubble Tail */
+        .chat-bubble:nth-child(even)::before {
+            /* The black outline */
+            bottom: -23px;
+            right: -3px;
+            border-width: 20px 0 0 20px;
+            border-color: #000000 transparent transparent transparent;
+        }
+        .chat-bubble:nth-child(even)::after {
+            /* The white fill */
+            bottom: -17px;
+            right: 0px;
+            border-width: 17px 0 0 17px;
+            border-color: #ffffff transparent transparent transparent;
+        }
+
+
+        .chat-bubble.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Hover Effect */
+        .chat-bubble:hover {
+            transform: translateY(-5px);
+            box-shadow: 12px 12px 0px #000000; /* Shadow grows */
+        }
+
+
+        .project-title { font-size: 2rem; margin-bottom: 0.5rem; font-weight: 700; font-family: 'Playfair Display', serif; }
+        .project-desc { font-size: 1.1rem; margin-bottom: 1.5rem; font-weight: 400; font-family: 'Outfit', sans-serif; }
+        
+        .project-link {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 2px solid black;
+            padding: 10px 24px;
+            border-radius: 50px;
+            transition: all 0.3s;
+            display: inline-block;
+            background-color: white;
+            color: black;
+            box-shadow: 2px 2px 0px #000;
+        }
+        .project-link:hover { 
+            background-color: black; 
+            color: white; 
+            box-shadow: 4px 4px 0px rgba(255,255,255,0.5);
+        }
 
         /* --- LISTS --- */
         .list-item {
-            display: flex; justify-content: space-between; align-items: center; padding: 2.5rem 0;
-            border-bottom: 1px solid rgba(125, 125, 125, 0.2); transition: padding 0.3s ease; width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2.5rem 0;
+            border-bottom: 1px solid rgba(125, 125, 125, 0.2);
+            transition: padding 0.3s ease;
+            width: 100%;
         }
         .list-item:hover { padding: 2.5rem 1rem; background-color: rgba(125, 125, 125, 0.05); }
         .list-title { font-size: clamp(1.2rem, 4vw, 1.8rem); font-family: 'Playfair Display', serif; }
@@ -383,13 +444,14 @@
 
         /* --- RESPONSIVE --- */
         @media (max-width: 768px) {
-            body { padding-bottom: 100px; }
+            body { padding-bottom: 80px; }
             section { padding: 80px 5%; }
             .section-title { top: 5%; right: 5%; font-size: 3.5rem; opacity: 0.08; }
-            .chat-bubble { max-width: 90%; padding: 1.5rem; }
+            .chat-container { gap: 3rem; }
+            .chat-bubble { max-width: 90%; padding: 2rem; }
             nav { padding: 1.5rem 5%; }
             .nav-links { display: none; }
-            .bottom-nav { display: flex; } /* ENABLE BOTTOM NAV */
+            .bottom-nav { display: flex; }
             .list-item { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
             .list-meta { text-align: left; margin-left: 0; font-size: 0.85rem; opacity: 0.5; }
             .list-item:hover { padding: 2.5rem 0; }
@@ -461,27 +523,27 @@
     <section id="projects" class="section-dark">
         <div class="section-title">Projects</div>
         <div class="chat-container">
-            <div class="chat-bubble chat-left hover-trigger">
+            <div class="chat-bubble hover-trigger">
                 <h3 class="project-title">The Day Grid</h3>
                 <p class="project-desc">Time is finite. Your wallpaper was wasting it.</p>
                 <a href="https://github.com/the-rebooted-coder/The-Day-Grid" target="_blank" class="project-link">View Repo</a>
             </div>
-            <div class="chat-bubble chat-right hover-trigger">
+            <div class="chat-bubble hover-trigger">
                 <h3 class="project-title">Legacy to Modern Rebase</h3>
                 <p class="project-desc">Because code from 2003 deserves a second chance.</p>
-                <span class="project-link" style="opacity:0.5; cursor: not-allowed;">IBM Confidential</span>
+                <span class="project-link" style="opacity:0.5; cursor: not-allowed; border-color: #777; color: #777;">IBM Confidential</span>
             </div>
-            <div class="chat-bubble chat-left hover-trigger">
+            <div class="chat-bubble hover-trigger">
                 <h3 class="project-title">Safe Charge</h3>
                 <p class="project-desc">Your charger can’t be trusted. This app can.</p>
                 <a href="https://play.google.com/store/apps/details?id=com.onesilicondiode.batterywise&pcampaignid=web_share" target="_blank" class="project-link">Play Store</a>
             </div>
-             <div class="chat-bubble chat-right hover-trigger">
+             <div class="chat-bubble hover-trigger">
                 <h3 class="project-title">Mail Canon</h3>
                 <p class="project-desc">Upload a CSV. We do the spamming. Legally.</p>
                 <a href="https://github.com/the-rebooted-coder/Mail-Canon" target="_blank" class="project-link">View Repo</a>
             </div>
-            <div class="chat-bubble chat-left hover-trigger">
+            <div class="chat-bubble hover-trigger">
                 <h3 class="project-title">Forecasted</h3>
                 <p class="project-desc">AI-powered stock predictions. Confidence sold separately.</p>
                 <a href="https://github.com/the-rebooted-coder/Forecasted" target="_blank" class="project-link">View Repo</a>
@@ -561,54 +623,42 @@
 
         hoverTriggers.forEach(addHoverListeners);
 
-        // --- MOBILE NAV LOGIC (EXPANDING) ---
         const mobileNav = document.getElementById('mobileNav');
         const navItems = mobileNav.querySelectorAll('.nav-item');
 
-        // 1. Toggle Expand on container click
         mobileNav.addEventListener('click', (e) => {
-            // If clicking the container itself (when collapsed) or an active item when collapsed
             if (!mobileNav.classList.contains('expanded')) {
                 mobileNav.classList.add('expanded');
             }
         });
 
-        // 2. Handle Item Clicks
         navItems.forEach(item => {
             item.addEventListener('click', (e) => {
-                e.stopPropagation(); // Prevent container click
+                e.stopPropagation();
                 if (mobileNav.classList.contains('expanded')) {
-                    // If expanded, allow click to scroll, then collapse
                     mobileNav.classList.remove('expanded');
-                    // Active state will be handled by scroll observer
                 } else {
-                    // If collapsed, expand instead of scrolling (unless it's a different link? No, keeping it simple)
                     mobileNav.classList.add('expanded');
-                    e.preventDefault(); // Don't scroll yet
+                    e.preventDefault();
                 }
             });
         });
 
-        // 3. Close when clicking outside
         document.addEventListener('click', (e) => {
             if (!mobileNav.contains(e.target) && mobileNav.classList.contains('expanded')) {
                 mobileNav.classList.remove('expanded');
             }
         });
 
-        // 4. Scroll Observer for Active State
         const sections = document.querySelectorAll('section');
         const observerOptions = {
-            threshold: 0.3 // Trigger when 30% of section is visible
+            threshold: 0.3 
         };
 
         const navObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    // Remove active from all
                     navItems.forEach(item => item.classList.remove('active'));
-                    
-                    // Add active to current
                     const id = entry.target.getAttribute('id');
                     const activeLink = mobileNav.querySelector(`a[data-target="${id}"]`);
                     if (activeLink) {
@@ -620,16 +670,11 @@
 
         sections.forEach(section => navObserver.observe(section));
         
-        // Initial check: if at top (Hero), default to first item (Exp) for visuals
-        // or ensure nothing is active until we hit 'work'
-        // Logic included in CSS: :not(.expanded) a.active shows. 
-        // If nothing is active (Hero), the bubble might be empty.
-        // Let's force "Exp" to be active if we are in Hero for better UX
         const heroSectionObserver = new IntersectionObserver((entries) => {
              entries.forEach(entry => {
                 if(entry.isIntersecting) {
                      navItems.forEach(item => item.classList.remove('active'));
-                     navItems[0].classList.add('active'); // Default to Experience icon
+                     navItems[0].classList.add('active'); 
                 }
              });
         }, {threshold: 0.5});
@@ -638,7 +683,6 @@
         if(hero) heroSectionObserver.observe(hero);
 
 
-        // --- HERO TRAIL LOGIC ---
         const heroSection = document.getElementById('hero');
         let lastX = 0;
         let lastY = 0;
@@ -659,7 +703,6 @@
 
             clearTimeout(interactionTimeout);
 
-            // Avoid Top Nav
             if (e.clientY < 100) return; 
 
             if (Math.abs(e.clientX - lastX) > 60 || Math.abs(e.clientY - lastY) > 60) {
