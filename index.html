@@ -130,7 +130,7 @@
             background-color: #0000FF; 
             border-color: transparent;
             opacity: 1;
-            border-radius: 50%; /* Ensure it stays round */
+            border-radius: 50%; 
         }
         body.highlighting .cursor-dot { opacity: 0; }
 
@@ -258,9 +258,9 @@
             pointer-events: none;
             width: 100%;
         }
-        /* FIX: Enable pointer events on text so the cursor can "see" it to zap */
+        
         .hero-text h1, .hero-text p {
-            pointer-events: auto;
+            pointer-events: auto; /* Allow text selection */
         }
 
         .hero-text h1 {
@@ -641,12 +641,20 @@
         bubbleTriggers.forEach(addHighlighterListeners);
 
         // --- SMART TEXT CURSOR LOGIC ---
-        // Select all text elements
+        // Zap effect for text elements, ignoring special zones
         const textElements = document.querySelectorAll("p, h1, h2, h3, h4, span, li");
         
         textElements.forEach(el => {
-            // Apply zap only if it's NOT inside a bubble or a link (which have their own states)
-            if (!el.closest('.chat-bubble') && !el.closest('a') && !el.closest('.hover-trigger')) {
+            // Apply zap ONLY if:
+            // 1. Not in a bubble (Highlighter zone)
+            // 2. Not a link (Click zone)
+            // 3. Not a generic hover trigger
+            // 4. Not in Hero section (Poster aesthetic zone)
+            if (!el.closest('.chat-bubble') && 
+                !el.closest('a') && 
+                !el.closest('.hover-trigger') && 
+                !el.closest('#hero')) { 
+                
                 el.addEventListener('mouseenter', () => document.body.classList.add('text-mode'));
                 el.addEventListener('mouseleave', () => document.body.classList.remove('text-mode'));
             }
@@ -817,7 +825,10 @@
         document.querySelectorAll('.chat-bubble').forEach(bubble => observer.observe(bubble));
 
         // --- TAB MOCKERY LOGIC ---
+        // 1. Logic Variables
+        let isRedirecting = false;
         const originalTitle = document.title;
+        
         const funnyTitles = [
             "Come back, coward.",
             "I saw that.",
@@ -828,12 +839,41 @@
             "I have cookies. (Lies)"
         ];
 
+        const supportiveTitles = [
+            "Go get 'em! 🚀",
+            "Building the future...",
+            "Good luck!",
+            "You got this!",
+            "See you soon!"
+        ];
+
+        // 2. Track all link clicks
+        document.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                // If it's an external link or opens in new tab
+                if (link.target === "_blank" || link.href.startsWith('http')) {
+                    isRedirecting = true;
+                    // Reset safety valve
+                    setTimeout(() => isRedirecting = false, 2000);
+                }
+            });
+        });
+
+        // 3. Tab Visibility Handler
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
-                const randomTitle = funnyTitles[Math.floor(Math.random() * funnyTitles.length)];
-                document.title = randomTitle;
+                if (isRedirecting) {
+                    // User clicked a link to leave -> Supportive
+                    const randomSupport = supportiveTitles[Math.floor(Math.random() * supportiveTitles.length)];
+                    document.title = randomSupport;
+                } else {
+                    // User just switched tabs -> Mocking
+                    const randomFunny = funnyTitles[Math.floor(Math.random() * funnyTitles.length)];
+                    document.title = randomFunny;
+                }
             } else {
                 document.title = originalTitle;
+                isRedirecting = false; // Reset flag when they come back
             }
         });
     </script>
