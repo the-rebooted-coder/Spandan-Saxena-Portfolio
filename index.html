@@ -88,17 +88,22 @@
             mix-blend-mode: difference;
             background-color: white; 
         }
-        .cursor-dot { width: 8px; height: 8px; }
+        .cursor-dot { 
+            width: 8px; 
+            height: 8px; 
+            transition: opacity 0.2s;
+        }
         
         .cursor-outline {
             width: 40px;
             height: 40px;
             border: 1px solid white;
             background-color: transparent;
-            transition: width 0.2s, height 0.2s, background-color 0.2s, border-color 0.2s;
+            /* Added transition for width/height/radius for the "Zap" effect */
+            transition: width 0.2s, height 0.2s, background-color 0.2s, border-color 0.2s, border-radius 0.2s;
         }
 
-        /* Hover Zoom */
+        /* 1. LINK HOVER (Big Circle) */
         body.hovering .cursor-outline {
             width: 70px;
             height: 70px;
@@ -107,13 +112,26 @@
         }
         body.hovering .cursor-dot { opacity: 0; }
 
-        /* Highlight Mode (Blue cursor on White BG = Yellow Result) */
+        /* 2. TEXT HOVER (The "Zap" I-Beam Effect) */
+        body.text-mode .cursor-outline {
+            width: 4px;       /* Thin */
+            height: 30px;     /* Tall */
+            border-radius: 2px; /* Pill shape */
+            background-color: white; /* Solid fill */
+            border-color: transparent;
+        }
+        body.text-mode .cursor-dot {
+            opacity: 0; /* Hide the dot */
+        }
+
+        /* 3. HIGHLIGHT MODE (Yellow Effect on Bubbles) */
         body.highlighting .cursor-outline {
             width: 80px;
             height: 80px;
             background-color: #0000FF; 
             border-color: transparent;
             opacity: 1;
+            border-radius: 50%; /* Ensure it stays round */
         }
         body.highlighting .cursor-dot { opacity: 0; }
 
@@ -348,7 +366,6 @@
             transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        /* Ensure bubbles stay white/black even in dark/light sections */
         .section-dark .chat-bubble, .section-light .chat-bubble {
             background: #ffffff;
             color: #000000;
@@ -618,6 +635,19 @@
 
         hoverTriggers.forEach(addHoverListeners);
         bubbleTriggers.forEach(addHighlighterListeners);
+
+        // --- NEW: SMART TEXT CURSOR LISTENERS ---
+        // Select text-heavy elements but exclude things that are already interactive
+        const textElements = document.querySelectorAll("p, h1, h2, h3, h4, span, li");
+        
+        textElements.forEach(el => {
+            // Only apply if it's NOT inside a link or a bubble (which have their own cursors)
+            if (!el.closest('a') && !el.closest('.hover-trigger') && !el.closest('.hover-bubble')) {
+                el.addEventListener('mouseenter', () => document.body.classList.add('text-mode'));
+                el.addEventListener('mouseleave', () => document.body.classList.remove('text-mode'));
+            }
+        });
+
 
         const mobileNav = document.getElementById('mobileNav');
         const navItems = mobileNav.querySelectorAll('.nav-item');
