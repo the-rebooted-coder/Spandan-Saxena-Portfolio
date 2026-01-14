@@ -99,7 +99,6 @@
             height: 40px;
             border: 1px solid white;
             background-color: transparent;
-            /* Added transition for width/height/radius for the "Zap" effect */
             transition: width 0.2s, height 0.2s, background-color 0.2s, border-color 0.2s, border-radius 0.2s;
         }
 
@@ -259,6 +258,11 @@
             pointer-events: none;
             width: 100%;
         }
+        /* FIX: Enable pointer events on text so the cursor can "see" it to zap */
+        .hero-text h1, .hero-text p {
+            pointer-events: auto;
+        }
+
         .hero-text h1 {
             font-size: clamp(3.5rem, 8vw, 6.5rem); 
             line-height: 1.1;
@@ -636,18 +640,17 @@
         hoverTriggers.forEach(addHoverListeners);
         bubbleTriggers.forEach(addHighlighterListeners);
 
-        // --- NEW: SMART TEXT CURSOR LISTENERS ---
-        // Select text-heavy elements but exclude things that are already interactive
+        // --- SMART TEXT CURSOR LOGIC ---
+        // Select all text elements
         const textElements = document.querySelectorAll("p, h1, h2, h3, h4, span, li");
         
         textElements.forEach(el => {
-            // Only apply if it's NOT inside a link or a bubble (which have their own cursors)
-            if (!el.closest('a') && !el.closest('.hover-trigger') && !el.closest('.hover-bubble')) {
+            // Apply zap only if it's NOT inside a bubble or a link (which have their own states)
+            if (!el.closest('.chat-bubble') && !el.closest('a') && !el.closest('.hover-trigger')) {
                 el.addEventListener('mouseenter', () => document.body.classList.add('text-mode'));
                 el.addEventListener('mouseleave', () => document.body.classList.remove('text-mode'));
             }
         });
-
 
         const mobileNav = document.getElementById('mobileNav');
         const navItems = mobileNav.querySelectorAll('.nav-item');
