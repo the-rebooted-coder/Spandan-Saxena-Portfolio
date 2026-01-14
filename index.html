@@ -53,6 +53,31 @@
             color: inherit;
         }
 
+        /* --- CUSTOM TEXT SELECTION (SMART INVERT) --- */
+        
+        /* Default (for Dark Backgrounds): Select = White BG, Black Text */
+        ::selection {
+            background-color: #ffffff;
+            color: #000000;
+            text-shadow: none;
+        }
+        ::-moz-selection {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        /* For Light Sections & Comic Bubbles: Select = Black BG, White Text */
+        .section-light ::selection,
+        .chat-bubble ::selection {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        .section-light ::-moz-selection,
+        .chat-bubble ::-moz-selection {
+            background: #000000;
+            color: #ffffff;
+        }
+
         /* --- SMART CURSOR --- */
         .cursor-dot,
         .cursor-outline {
@@ -76,7 +101,7 @@
             transition: width 0.2s, height 0.2s, background-color 0.2s, border-color 0.2s;
         }
 
-        /* Standard Hover (Zoom) */
+        /* Hover Zoom */
         body.hovering .cursor-outline {
             width: 70px;
             height: 70px;
@@ -85,17 +110,15 @@
         }
         body.hovering .cursor-dot { opacity: 0; }
 
-        /* --- HIGHLIGHTER MODE (Yellow Effect) --- */
-        /* Logic: Blue (0,0,255) Diff White (255,255,255) = Yellow (255,255,0) */
+        /* Highlight Mode (Blue cursor on White BG = Yellow Result) */
         body.highlighting .cursor-outline {
             width: 80px;
             height: 80px;
-            background-color: #0000FF; /* Pure Blue triggers Yellow on White */
+            background-color: #0000FF; 
             border-color: transparent;
             opacity: 1;
         }
         body.highlighting .cursor-dot { opacity: 0; }
-
 
         /* --- NAVIGATION --- */
         nav {
@@ -328,12 +351,13 @@
             transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
+        /* Ensure bubbles stay white/black even in dark/light sections */
         .section-dark .chat-bubble, .section-light .chat-bubble {
             background: #ffffff;
             color: #000000;
         }
 
-        /* Alternating Alignment */
+        /* Alternating */
         .chat-bubble:nth-child(odd) {
             align-self: flex-start;
             margin-right: auto;
@@ -379,11 +403,7 @@
         }
 
         .chat-bubble.visible { opacity: 1; transform: translateY(0); }
-        
-        .chat-bubble:hover {
-            transform: translateY(-5px);
-            box-shadow: 12px 12px 0px #000000;
-        }
+        .chat-bubble:hover { transform: translateY(-5px); box-shadow: 12px 12px 0px #000000; }
 
         .project-title { font-size: 2rem; margin-bottom: 0.5rem; font-weight: 700; font-family: 'Playfair Display', serif; }
         .project-desc { font-size: 1.1rem; margin-bottom: 1.5rem; font-weight: 400; font-family: 'Outfit', sans-serif; }
