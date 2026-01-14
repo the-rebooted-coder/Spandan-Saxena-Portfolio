@@ -27,7 +27,7 @@
 
         html {
             scroll-behavior: smooth;
-            overflow-x: hidden; /* CRITICAL FIX: Prevents side scrolling */
+            overflow-x: hidden;
             width: 100%;
         }
 
@@ -35,7 +35,7 @@
             background-color: var(--bg-dark);
             color: var(--text-dark);
             font-family: 'Outfit', sans-serif;
-            overflow-x: hidden; /* CRITICAL FIX */
+            overflow-x: hidden;
             width: 100%;
             line-height: 1.6;
             position: relative;
@@ -65,11 +65,8 @@
             background-color: white; 
         }
 
-        .cursor-dot {
-            width: 8px;
-            height: 8px;
-        }
-
+        .cursor-dot { width: 8px; height: 8px; }
+        
         .cursor-outline {
             width: 40px;
             height: 40px;
@@ -85,10 +82,7 @@
             background-color: white;
             opacity: 1;
         }
-
-        body.hovering .cursor-dot {
-            opacity: 0;
-        }
+        body.hovering .cursor-dot { opacity: 0; }
 
         /* --- NAVIGATION --- */
         nav {
@@ -104,16 +98,9 @@
             color: white; 
         }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            letter-spacing: -1px;
-        }
+        .logo { font-size: 1.5rem; font-weight: 700; letter-spacing: -1px; }
 
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-        }
+        .nav-links { display: flex; gap: 2rem; }
 
         .nav-links a {
             position: relative;
@@ -134,9 +121,7 @@
             transition: width 0.3s ease;
         }
 
-        .nav-links a:hover::after {
-            width: 100%;
-        }
+        .nav-links a:hover::after { width: 100%; }
 
         /* --- SECTIONS --- */
         section {
@@ -147,22 +132,14 @@
             flex-direction: column;
             justify-content: center;
             transition: background-color 0.5s ease, color 0.5s ease;
-            width: 100%; /* Ensure section doesn't overflow */
-            overflow: hidden; /* Keep children inside */
+            width: 100%;
+            overflow: hidden;
         }
 
-        .section-dark {
-            background-color: var(--bg-dark);
-            color: var(--text-dark);
-        }
-
-        .section-light {
-            background-color: var(--bg-light);
-            color: var(--text-light);
-        }
+        .section-dark { background-color: var(--bg-dark); color: var(--text-dark); }
+        .section-light { background-color: var(--bg-light); color: var(--text-light); }
 
         .section-title {
-            /* Responsive font size: minimum 3rem, preferred 10vw, max 8rem */
             font-size: clamp(3rem, 10vw, 8rem); 
             margin-bottom: 4rem;
             opacity: 0.05;
@@ -172,7 +149,7 @@
             z-index: 0;
             pointer-events: none;
             text-transform: uppercase;
-            white-space: nowrap; /* Prevent breaking to new lines */
+            white-space: nowrap;
         }
 
         /* --- HERO & IMAGE TRAIL --- */
@@ -187,12 +164,11 @@
         .hero-text {
             z-index: 10;
             position: relative;
-            pointer-events: none;
+            pointer-events: none; /* Allows clicks to pass through text to images below */
             width: 100%;
         }
 
         .hero-text h1 {
-            /* Responsive Font Size for Hero */
             font-size: clamp(3.5rem, 8vw, 6.5rem); 
             line-height: 1.1;
             margin-bottom: 1.5rem;
@@ -208,7 +184,7 @@
             padding-left: 20px;
         }
 
-        /* The Trail Images */
+        /* TRAIL IMAGES (Fading Background) */
         .trail-image {
             position: absolute;
             width: 200px;
@@ -222,6 +198,43 @@
             animation: popInFadeOut 1s forwards;
             filter: grayscale(100%);
             border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        /* PERSISTENT CARD (Interactive) */
+        .persistent-card {
+            position: absolute;
+            width: 240px; /* Slightly larger */
+            height: 150px;
+            border-radius: 10px;
+            transform: translate(-50%, -50%) scale(0.5) rotate(var(--rot));
+            opacity: 0;
+            z-index: 5; /* Starts below text (10) */
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            pointer-events: auto; /* Clickable */
+            border: 2px solid rgba(255,255,255,0.8);
+            overflow: hidden;
+            display: block; /* Ensure anchor behaves like block */
+        }
+
+        .persistent-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        /* State: Active (Popped In) */
+        .persistent-card.active {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1) rotate(var(--rot));
+        }
+
+        /* State: Hover (Zoom & Bring to Front) */
+        .persistent-card:hover {
+            z-index: 20; /* Pop ABOVE text when interacted with */
+            border-color: #fff;
+            transform: translate(-50%, -50%) scale(1.1) rotate(0deg) !important;
         }
 
         @keyframes popInFadeOut {
@@ -255,7 +268,7 @@
             font-size: 0.9rem;
             opacity: 0.6;
             text-align: right;
-            white-space: nowrap; /* Keep dates on one line */
+            white-space: nowrap;
             margin-left: 1rem;
         }
         
@@ -304,7 +317,6 @@
 
         .chat-left { align-self: flex-start; border-bottom-left-radius: 4px; }
         .chat-right { align-self: flex-end; border-bottom-right-radius: 4px; text-align: right; }
-
         .chat-bubble.visible { opacity: 1; transform: translateY(0); }
 
         .project-title { font-size: 1.5rem; margin-bottom: 0.5rem; }
@@ -331,45 +343,22 @@
         .social-link { font-size: 1.2rem; border-bottom: 1px solid transparent; padding-bottom: 5px; }
         .social-link:hover { border-bottom: 1px solid currentColor; }
 
-        /* --- RESPONSIVE FIXES (MOBILE) --- */
+        /* --- RESPONSIVE --- */
         @media (max-width: 768px) {
-            /* Relax the padding so text has room */
             section { padding: 80px 5%; }
-            
-            /* Make section titles smaller so they don't bleed out */
-            .section-title { 
-                top: 5%; 
-                right: 5%; 
-                font-size: 3.5rem; /* Explicit mobile size */
-                opacity: 0.08;
-            }
-
+            .section-title { top: 5%; right: 5%; font-size: 3.5rem; opacity: 0.08; }
             .chat-bubble { max-width: 90%; padding: 1.5rem; }
-            
             nav { padding: 1.5rem 5%; }
-            .nav-links { display: none; } /* Mobile Menu omitted */
+            .nav-links { display: none; }
+            .list-item { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+            .list-meta { text-align: left; margin-left: 0; font-size: 0.85rem; opacity: 0.5; }
+            .list-item:hover { padding: 2.5rem 0; }
             
-            /* Stack list items vertically */
-            .list-item { 
-                flex-direction: column; 
-                align-items: flex-start; 
-                gap: 0.5rem; 
-            }
-            .list-meta { 
-                text-align: left; 
-                margin-left: 0;
-                font-size: 0.85rem;
-                opacity: 0.5;
-            }
-            .list-item:hover {
-                padding: 2.5rem 0; /* Reset hover padding shift on mobile to avoid wobble */
-            }
-
-            /* Disable trail on mobile for performance & touch handling */
-            .trail-image { display: none; } 
+            /* Disable trail/cards on mobile */
+            .trail-image, .persistent-card { display: none !important; } 
             
-            .cursor-dot, .cursor-outline { display: none; } /* Hide custom cursor on touch devices */
-            * { cursor: auto; } /* Restore default pointer */
+            .cursor-dot, .cursor-outline { display: none; }
+            * { cursor: auto; }
         }
     </style>
 </head>
@@ -397,28 +386,16 @@
 
     <section id="work" class="section-light">
         <div class="section-title">Experience</div>
-        
         <div class="list-item hover-trigger">
-            <div>
-                <span class="list-title">IBM</span>
-                <span class="list-role">Application Developer</span>
-            </div>
+            <div><span class="list-title">IBM</span><span class="list-role">Application Developer</span></div>
             <span class="list-meta">2023 - Current</span>
         </div>
-
         <div class="list-item hover-trigger">
-            <div>
-                <span class="list-title">NIT Jaipur</span>
-                <span class="list-role">Research Intern</span>
-            </div>
+            <div><span class="list-title">NIT Jaipur</span><span class="list-role">Research Intern</span></div>
             <span class="list-meta">2022 - 2023</span>
         </div>
-
         <div class="list-item hover-trigger">
-            <div>
-                <span class="list-title">Unacademy</span>
-                <span class="list-role">Software Developer Intern</span>
-            </div>
+            <div><span class="list-title">Unacademy</span><span class="list-role">Software Developer Intern</span></div>
             <span class="list-meta">Internship</span>
         </div>
     </section>
@@ -426,37 +403,31 @@
     <section id="projects" class="section-dark">
         <div class="section-title">Projects</div>
         <div class="chat-container">
-            
             <div class="chat-bubble chat-left hover-trigger">
                 <h3 class="project-title">The Day Grid</h3>
                 <p class="project-desc">Time is finite. Your wallpaper was wasting it.</p>
                 <a href="https://github.com/the-rebooted-coder/The-Day-Grid" target="_blank" class="project-link">View Repo</a>
             </div>
-
             <div class="chat-bubble chat-right hover-trigger">
                 <h3 class="project-title">Legacy to Modern Rebase</h3>
                 <p class="project-desc">Because code from 2003 deserves a second chance.</p>
                 <span class="project-link" style="opacity:0.5; cursor: not-allowed;">IBM Confidential</span>
             </div>
-
             <div class="chat-bubble chat-left hover-trigger">
                 <h3 class="project-title">Safe Charge</h3>
                 <p class="project-desc">Your charger can’t be trusted. This app can.</p>
                 <a href="https://play.google.com/store/apps/details?id=com.onesilicondiode.batterywise&pcampaignid=web_share" target="_blank" class="project-link">Play Store</a>
             </div>
-
              <div class="chat-bubble chat-right hover-trigger">
                 <h3 class="project-title">Mail Canon</h3>
                 <p class="project-desc">Upload a CSV. We do the spamming. Legally.</p>
                 <a href="https://github.com/the-rebooted-coder/Mail-Canon" target="_blank" class="project-link">View Repo</a>
             </div>
-
             <div class="chat-bubble chat-left hover-trigger">
                 <h3 class="project-title">Forecasted</h3>
                 <p class="project-desc">AI-powered stock predictions. Confidence sold separately.</p>
                 <a href="https://github.com/the-rebooted-coder/Forecasted" target="_blank" class="project-link">View Repo</a>
             </div>
-
             <div style="text-align: center; margin-top: 2rem;">
                 <a href="https://github.com/the-rebooted-coder" target="_blank" class="project-link hover-trigger">More on GitHub</a>
             </div>
@@ -496,23 +467,22 @@
     </section>
 
     <script>
-        // --- CONFIGURATION ---
-        const imageSources = [
-            "https://i.ibb.co/1Vmw65c/poster-1-spandan.png", 
-            "https://i.ibb.co/7xxg2HwS/poster-2-spandan.png",
-            "https://i.ibb.co/NgrK3wx9/poster-3-spandan.png",
-            "https://i.ibb.co/1fKX3zQD/poster-4-spandan.png",
-            "https://i.ibb.co/yc96f8P3/poster-5-spandan.png",
-	    "https://i.ibb.co/qFW4Wjnw/poster-6-spandan.png",
-            "https://i.ibb.co/DP7VG34R/poster-7-spandan.png",
-            "https://i.ibb.co/XfDCNP7q/poster-8-spandan.png",
-            "https://i.ibb.co/nMMXgkjp/poster-9-spandan.png",
-            "https://i.ibb.co/hFxCyx4W/poster-10-spandan.png",
-            "https://i.ibb.co/MkGRvdJw/poster-11-spandan.png"
+        // --- DATA CONFIGURATION ---
+             const projectData = [
+            { src: "https://i.ibb.co/1Vmw65c/poster-1-spandan.png", link: "https://github.com/the-rebooted-coder/The-Day-Grid" },
+            { src: "https://i.ibb.co/7xxg2HwS/poster-2-spandan.png", link: "https://github.com/the-rebooted-coder/BatteryWise" },
+            { src: "https://i.ibb.co/NgrK3wx9/poster-3-spandan.png", link: "https://github.com/the-rebooted-coder/Mail-Canon" },
+            { src: "https://i.ibb.co/1fKX3zQD/poster-4-spandan.png", link: "#" },
+            { src: "https://i.ibb.co/yc96f8P3/poster-5-spandan.png", link: "https://github.com/the-rebooted-coder/Forecasted" },
+            { src: "https://i.ibb.co/qFW4Wjnw/poster-6-spandan.png", link: "https://github.com/the-rebooted-coder/What-s-In" },
+            { src: "https://i.ibb.co/DP7VG34R/poster-7-spandan.png", link: "https://github.com/the-rebooted-coder/knack" },
+            { src: "https://i.ibb.co/XfDCNP7q/poster-8-spandan.png", link: "https://github.com/the-rebooted-coder/Hanuman-Chalisa-Lyrical" },
+            { src: "https://i.ibb.co/nMMXgkjp/poster-9-spandan.png", link: "https://github.com/the-rebooted-coder/Digital-Desk" },
+            { src: "https://i.ibb.co/hFxCyx4W/poster-10-spandan.png", link: "https://github.com/the-rebooted-coder/Kaagaz-Dynamic-Desktop" },
+            { src: "https://i.ibb.co/MkGRvdJw/poster-11-spandan.png", link: "#" }
         ];
 
         // --- CUSTOM CURSOR ---
-        // Only active if mouse is detected (Desktop)
         const cursorDot = document.querySelector('[data-cursor-dot]');
         const cursorOutline = document.querySelector('[data-cursor-outline]');
         const hoverTriggers = document.querySelectorAll('.hover-trigger');
@@ -528,45 +498,100 @@
             }, { duration: 500, fill: "forwards" });
         });
 
-        hoverTriggers.forEach(trigger => {
-            trigger.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
-            trigger.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
-        });
+        // Helper to update hover listeners for dynamic elements
+        function addHoverListeners(element) {
+            element.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+            element.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+        }
 
-        // --- IMAGE TRAIL EFFECT (HERO ONLY) ---
-        // Disabled on mobile via CSS for performance
+        hoverTriggers.forEach(addHoverListeners);
+
+        // --- TRAIL & FREEZE LOGIC ---
         const heroSection = document.getElementById('hero');
         let lastX = 0;
         let lastY = 0;
         let imageIndex = 0;
+        let interactionTimeout;
+        let currentPersistentCard = null;
 
         heroSection.addEventListener('mousemove', (e) => {
-            // Check if screen is wide enough (skip on mobile)
-            if (window.innerWidth < 768) return;
+            if (window.innerWidth < 768) return; // Skip on mobile
 
-            if (Math.abs(e.clientX - lastX) < 100 && Math.abs(e.clientY - lastY) < 100) return;
+            // 1. If we start moving, clear any existing persistent card
+            if (currentPersistentCard) {
+                currentPersistentCard.style.opacity = '0';
+                currentPersistentCard.style.transform = 'translate(-50%, -50%) scale(0.8)';
+                setTimeout(() => currentPersistentCard?.remove(), 300);
+                currentPersistentCard = null;
+            }
 
-            lastX = e.clientX;
-            lastY = e.clientY;
+            // 2. Clear the "stop" timer
+            clearTimeout(interactionTimeout);
 
-            const img = document.createElement('img');
-            img.src = imageSources[imageIndex % imageSources.length];
-            img.className = 'trail-image';
-            
-            const randomRot = Math.random() * 20 - 10; 
-            img.style.setProperty('--rot', `${randomRot}deg`);
-            
-            img.style.left = `${e.clientX}px`;
-            img.style.top = `${e.clientY}px`;
+            // 3. Distance check for spawning trail images (prevent clustering)
+            if (Math.abs(e.clientX - lastX) > 60 || Math.abs(e.clientY - lastY) > 60) {
+                lastX = e.clientX;
+                lastY = e.clientY;
 
-            heroSection.appendChild(img);
+                // Spawn Trail Image (Decorative, fades out)
+                const img = document.createElement('img');
+                img.src = projectData[imageIndex % projectData.length].src;
+                img.className = 'trail-image';
+                
+                const randomRot = Math.random() * 20 - 10; 
+                img.style.setProperty('--rot', `${randomRot}deg`);
+                img.style.left = `${e.clientX}px`;
+                img.style.top = `${e.clientY}px`;
 
-            setTimeout(() => {
-                img.remove();
-            }, 1000);
+                heroSection.appendChild(img);
 
-            imageIndex++;
+                // Cleanup trail image
+                setTimeout(() => img.remove(), 1000);
+                
+                imageIndex++;
+            }
+
+            // 4. Set timer: If mouse stops for 200ms, spawn persistent card
+            interactionTimeout = setTimeout(() => {
+                spawnPersistentCard(e.clientX, e.clientY);
+            }, 200);
         });
+
+        function spawnPersistentCard(x, y) {
+            // Use the next image in sequence
+            const data = projectData[imageIndex % projectData.length];
+            
+            // Create Link Wrapper
+            const card = document.createElement('a');
+            card.href = data.link;
+            card.target = "_blank"; // Open in new tab
+            card.className = 'persistent-card hover-trigger';
+            
+            // Create Image
+            const img = document.createElement('img');
+            img.src = data.src;
+            card.appendChild(img);
+            
+            // Position & Style
+            card.style.left = `${x}px`;
+            card.style.top = `${y}px`;
+            
+            const randomRot = Math.random() * 10 - 5; // Subtle rotation
+            card.style.setProperty('--rot', `${randomRot}deg`);
+
+            // Append & Animate
+            heroSection.appendChild(card);
+            
+            // Trigger CSS transition
+            requestAnimationFrame(() => {
+                card.classList.add('active');
+            });
+
+            currentPersistentCard = card;
+            
+            // Make sure custom cursor reacts to this new element
+            addHoverListeners(card);
+        }
 
         // --- PARALLAX & SCROLL ---
         document.addEventListener('scroll', () => {
