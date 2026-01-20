@@ -99,7 +99,9 @@
             height: 40px;
             border: 1px solid white;
             background-color: transparent;
-            transition: width 0.2s, height 0.2s, background-color 0.2s, border-color 0.2s, border-radius 0.2s;
+            transition: width 0.2s, height 0.2s, background-color 0.2s, border-color 0.2s, border-radius 0.2s, background-image 0.2s;
+            background-size: cover;
+            background-position: center;
         }
 
         /* 1. LINK HOVER (Big Circle) */
@@ -133,6 +135,19 @@
             border-radius: 50%; 
         }
         body.highlighting .cursor-dot { opacity: 0; }
+
+        /* 4. IMAGE PREVIEW MODE (For Recognition Hover) */
+        body.img-preview-mode .cursor-outline {
+            width: 200px;
+            height: 140px;
+            border-radius: 8px;
+            border: 2px solid white;
+            background-color: #1a1a1a; /* Fallback */
+            mix-blend-mode: normal; /* Disable difference mode so image colors show */
+            opacity: 1;
+        }
+        body.img-preview-mode .cursor-dot { opacity: 0; }
+
 
         /* --- NAVIGATION --- */
         nav {
@@ -368,10 +383,28 @@
             opacity: 0;
             transform: translateY(30px);
             transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            /* Prepare for background animation */
+            background-image: radial-gradient(#e5e5e5 1.5px, transparent 1.5px);
+            background-size: 15px 15px;
+            background-position: 0 0;
+            /* Initially transparent dots to allow solid white */
+            background-color: #ffffff;
+        }
+
+        /* Moving Dots Animation Definition */
+        @keyframes movingDots {
+            0% { background-position: 0 0; }
+            100% { background-position: 15px 15px; }
+        }
+
+        .chat-bubble:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 12px 12px 0px #000000;
+            animation: movingDots 1s linear infinite;
         }
 
         .section-dark .chat-bubble, .section-light .chat-bubble {
-            background: #ffffff;
+            background-color: #ffffff;
             color: #000000;
         }
 
@@ -421,7 +454,6 @@
         }
 
         .chat-bubble.visible { opacity: 1; transform: translateY(0); }
-        .chat-bubble:hover { transform: translateY(-5px); box-shadow: 12px 12px 0px #000000; }
 
         .project-title { font-size: 2rem; margin-bottom: 0.5rem; font-weight: 700; font-family: 'Playfair Display', serif; }
         .project-desc { font-size: 1.1rem; margin-bottom: 1.5rem; font-weight: 400; font-family: 'Outfit', sans-serif; }
@@ -431,6 +463,7 @@
             border: 2px solid black; padding: 10px 24px; border-radius: 50px;
             transition: all 0.3s; display: inline-block; background-color: white; color: black;
             box-shadow: 2px 2px 0px #000;
+            position: relative; z-index: 2; /* Ensure clicks work over dots */
         }
         .project-link:hover { 
             background-color: black; color: white; box-shadow: 4px 4px 0px rgba(255,255,255,0.5);
@@ -576,15 +609,18 @@
 
     <section id="recognition" class="section-light">
         <div class="section-title">Recognition</div>
-        <div class="list-item hover-trigger">
+        
+        <div class="list-item recognition-trigger" data-img="https://i.ibb.co/1Vmw65c/poster-1-spandan.png">
             <div><span class="list-title">Converge Runnerup</span><span class="list-role">IBM</span></div>
             <span class="list-meta">2025</span>
         </div>
-        <div class="list-item hover-trigger">
+        
+        <div class="list-item recognition-trigger" data-img="https://i.ibb.co/7xxg2HwS/poster-2-spandan.png">
             <div><span class="list-title">GEMs of Development</span><span class="list-role">IBM India</span></div>
             <span class="list-meta">2025</span>
         </div>
-        <div class="list-item hover-trigger">
+        
+        <div class="list-item recognition-trigger" data-img="https://i.ibb.co/NgrK3wx9/poster-3-spandan.png">
             <div><span class="list-title">Top Performer Gratitude</span><span class="list-role">IBM</span></div>
             <span class="list-meta">2026</span>
         </div>
@@ -627,6 +663,7 @@
         const cursorOutline = document.querySelector('[data-cursor-outline]');
         const hoverTriggers = document.querySelectorAll('.hover-trigger');
         const bubbleTriggers = document.querySelectorAll('.hover-bubble');
+        const recognitionTriggers = document.querySelectorAll('.recognition-trigger');
 
         window.addEventListener('mousemove', function (e) {
             const posX = e.clientX;
@@ -649,22 +686,33 @@
             element.addEventListener('mouseleave', () => document.body.classList.remove('highlighting'));
         }
 
+        // --- NEW: RECOGNITION CURSOR IMAGE LOGIC ---
+        function addRecognitionListeners(element) {
+            element.addEventListener('mouseenter', () => {
+                const imgUrl = element.getAttribute('data-img');
+                if(imgUrl) {
+                    cursorOutline.style.backgroundImage = `url('${imgUrl}')`;
+                    document.body.classList.add('img-preview-mode');
+                }
+            });
+            element.addEventListener('mouseleave', () => {
+                cursorOutline.style.backgroundImage = 'none';
+                document.body.classList.remove('img-preview-mode');
+            });
+        }
+
         hoverTriggers.forEach(addHoverListeners);
         bubbleTriggers.forEach(addHighlighterListeners);
+        recognitionTriggers.forEach(addRecognitionListeners);
 
         // --- SMART TEXT CURSOR LOGIC ---
-        // Zap effect for text elements, ignoring special zones
         const textElements = document.querySelectorAll("p, h1, h2, h3, h4, span, li");
         
         textElements.forEach(el => {
-            // Apply zap ONLY if:
-            // 1. Not in a bubble (Highlighter zone)
-            // 2. Not a link (Click zone)
-            // 3. Not a generic hover trigger
-            // 4. Not in Hero section (Poster aesthetic zone)
             if (!el.closest('.chat-bubble') && 
                 !el.closest('a') && 
                 !el.closest('.hover-trigger') && 
+                !el.closest('.recognition-trigger') &&
                 !el.closest('#hero')) { 
                 
                 el.addEventListener('mouseenter', () => document.body.classList.add('text-mode'));
@@ -837,7 +885,6 @@
         document.querySelectorAll('.chat-bubble').forEach(bubble => observer.observe(bubble));
 
         // --- TAB MOCKERY LOGIC ---
-        // 1. Logic Variables
         let isRedirecting = false;
         const originalTitle = document.title;
         
@@ -859,33 +906,27 @@
             "See you soon!"
         ];
 
-        // 2. Track all link clicks
         document.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
-                // If it's an external link or opens in new tab
                 if (link.target === "_blank" || link.href.startsWith('http')) {
                     isRedirecting = true;
-                    // Reset safety valve
                     setTimeout(() => isRedirecting = false, 2000);
                 }
             });
         });
 
-        // 3. Tab Visibility Handler
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
                 if (isRedirecting) {
-                    // User clicked a link to leave -> Supportive
                     const randomSupport = supportiveTitles[Math.floor(Math.random() * supportiveTitles.length)];
                     document.title = randomSupport;
                 } else {
-                    // User just switched tabs -> Mocking
                     const randomFunny = funnyTitles[Math.floor(Math.random() * funnyTitles.length)];
                     document.title = randomFunny;
                 }
             } else {
                 document.title = originalTitle;
-                isRedirecting = false; // Reset flag when they come back
+                isRedirecting = false;
             }
         });
     </script>
