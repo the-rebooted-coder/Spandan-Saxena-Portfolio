@@ -138,12 +138,12 @@
 
         /* 4. IMAGE PREVIEW MODE (For Recognition Hover) */
         body.img-preview-mode .cursor-outline {
-            width: 200px;
-            height: 140px;
-            border-radius: 8px;
-            border: 2px solid white;
-            background-color: #1a1a1a; /* Fallback */
-            mix-blend-mode: normal; /* Disable difference mode so image colors show */
+            width: 150px; /* Square width */
+            height: 150px; /* Square height */
+            border-radius: 12px;
+            border: none;
+            background-color: transparent; /* Transparent background for PNGs */
+            mix-blend-mode: normal; 
             opacity: 1;
         }
         body.img-preview-mode .cursor-dot { opacity: 0; }
@@ -610,17 +610,17 @@
     <section id="recognition" class="section-light">
         <div class="section-title">Recognition</div>
         
-        <div class="list-item recognition-trigger" data-img="https://i.ibb.co/1Vmw65c/poster-1-spandan.png">
+        <div class="list-item recognition-trigger" data-img="https://i.ibb.co/3yzjFkBy/converge-cursor.png">
             <div><span class="list-title">Converge Runnerup</span><span class="list-role">IBM</span></div>
             <span class="list-meta">2025</span>
         </div>
         
-        <div class="list-item recognition-trigger" data-img="https://i.ibb.co/7xxg2HwS/poster-2-spandan.png">
+        <div class="list-item recognition-trigger" data-img="https://i.ibb.co/KjWN4c6Y/gem-cursor.png">
             <div><span class="list-title">GEMs of Development</span><span class="list-role">IBM India</span></div>
             <span class="list-meta">2025</span>
         </div>
         
-        <div class="list-item recognition-trigger" data-img="https://i.ibb.co/NgrK3wx9/poster-3-spandan.png">
+        <div class="list-item recognition-trigger" data-img="https://i.ibb.co/35v1R5Nk/gratitude-cursor.png">
             <div><span class="list-title">Top Performer Gratitude</span><span class="list-role">IBM</span></div>
             <span class="list-meta">2026</span>
         </div>
@@ -770,8 +770,8 @@
         const heroSectionObserver = new IntersectionObserver((entries) => {
              entries.forEach(entry => {
                 if(entry.isIntersecting) {
-                     navItems.forEach(item => item.classList.remove('active'));
-                     navItems[0].classList.add('active'); 
+                      navItems.forEach(item => item.classList.remove('active'));
+                      navItems[0].classList.add('active'); 
                 }
              });
         }, {threshold: 0.5});
