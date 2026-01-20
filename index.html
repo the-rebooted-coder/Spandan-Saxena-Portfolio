@@ -140,8 +140,8 @@
         body.img-preview-mode .cursor-outline {
             width: 150px; /* Square width */
             height: 150px; /* Square height */
-            border-radius: 12px;
-            border: none;
+            border-radius: 12px; /* Slightly rounded corners */
+            border: none; /* No border for images */
             background-color: transparent; /* Transparent background for PNGs */
             mix-blend-mode: normal; 
             opacity: 1;
@@ -929,6 +929,28 @@
                 isRedirecting = false;
             }
         });
+
+            function preloadImages() {
+            if (window.innerWidth < 768) return; // Optional: Skip on mobile to save bandwidth
+
+            // 1. Preload Recognition Cursor Images
+            recognitionTriggers.forEach(trigger => {
+                const imgUrl = trigger.getAttribute('data-img');
+                if (imgUrl) {
+                    const img = new Image();
+                    img.src = imgUrl;
+                }
+            });
+
+            // 2. Preload Hero Trail Images
+            projectData.forEach(data => {
+                const img = new Image();
+                img.src = data.src;
+            });
+        }
+
+        window.addEventListener('load', preloadImages);
+
     </script>
 </body>
 </html>
