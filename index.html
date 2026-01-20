@@ -485,6 +485,34 @@
         .social-link { font-size: 1.2rem; border-bottom: 1px solid transparent; padding-bottom: 5px; }
         .social-link:hover { border-bottom: 1px solid currentColor; }
 
+        /* --- MOBILE VISUALS HUD --- */
+        .mobile-visuals {
+            display: none;
+            position: fixed;
+            bottom: 110px; /* Sits above the mobile nav */
+            right: 20px;
+            width: 140px;
+            height: 140px;
+            pointer-events: none;
+            z-index: 50;
+        }
+        .mobile-visuals img {
+            width: 100%; 
+            height: 100%;
+            object-fit: contain;
+            /* No border/background so it looks like floating graphics */
+            opacity: 0;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            position: absolute; 
+            top:0; 
+            left:0;
+            transform: scale(0.8) translateY(10px);
+        }
+        .mobile-visuals img.active { 
+            opacity: 1; 
+            transform: scale(1) translateY(0); 
+        }
+
         /* --- RESPONSIVE --- */
         @media (max-width: 768px) {
             body { padding-bottom: 80px; }
@@ -498,8 +526,12 @@
             .list-item { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
             .list-meta { text-align: left; margin-left: 0; font-size: 0.85rem; opacity: 0.5; }
             .list-item:hover { padding: 2.5rem 0; }
-            .trail-image, .persistent-card { display: none !important; } 
+            
+            /* --- ENABLE MOBILE EFFECTS --- */
+            .trail-image { display: block !important; } /* Force show trails */
+            .persistent-card { display: none !important; } /* Hide cards on mobile (too big) */
             .cursor-dot, .cursor-outline { display: none; }
+            .mobile-visuals { display: block; } /* Show HUD */
             * { cursor: auto; }
         }
     </style>
@@ -510,6 +542,9 @@
 
     <div class="cursor-dot" data-cursor-dot></div>
     <div class="cursor-outline" data-cursor-outline></div>
+
+    <div class="mobile-visuals" id="mobilePreview">
+        </div>
 
     <nav>
         <div class="logo hover-trigger">SPANDAN.</div>
@@ -788,6 +823,23 @@
         let currentPersistentCard = null;
         let toastTimeout;
 
+        // --- TRAIL GENERATION LOGIC (Refactored for both Mouse & Touch) ---
+        function spawnTrail(x, y) {
+             const img = document.createElement('img');
+            img.src = projectData[imageIndex % projectData.length].src;
+            img.className = 'trail-image';
+            
+            const randomRot = Math.random() * 20 - 10; 
+            img.style.setProperty('--rot', `${randomRot}deg`);
+            img.style.left = `${x}px`;
+            img.style.top = `${y}px`;
+
+            // Adjust size/opacity for mobile if needed in CSS, but base logic remains
+            heroSection.appendChild(img);
+            setTimeout(() => img.remove(), 1000); // Fades out in 1s via CSS animation
+            imageIndex++;
+        }
+
         heroSection.addEventListener('mousemove', (e) => {
             if (window.innerWidth < 768) return; 
 
@@ -805,25 +857,29 @@
             if (Math.abs(e.clientX - lastX) > 60 || Math.abs(e.clientY - lastY) > 60) {
                 lastX = e.clientX;
                 lastY = e.clientY;
-
-                const img = document.createElement('img');
-                img.src = projectData[imageIndex % projectData.length].src;
-                img.className = 'trail-image';
-                
-                const randomRot = Math.random() * 20 - 10; 
-                img.style.setProperty('--rot', `${randomRot}deg`);
-                img.style.left = `${e.clientX}px`;
-                img.style.top = `${e.clientY}px`;
-
-                heroSection.appendChild(img);
-                setTimeout(() => img.remove(), 1000);
-                imageIndex++;
+                spawnTrail(e.clientX, e.clientY);
             }
 
             interactionTimeout = setTimeout(() => {
                 spawnPersistentCard(e.clientX, e.clientY);
             }, 200);
         });
+
+        // --- MOBILE TOUCH TRAIL ---
+        heroSection.addEventListener('touchmove', (e) => {
+             // Only for small screens
+            if (window.innerWidth > 768) return;
+
+            const touch = e.touches[0];
+            
+            // Throttle: Only spawn if moved significant distance
+            if (Math.abs(touch.clientX - lastX) > 40 || Math.abs(touch.clientY - lastY) > 40) {
+                lastX = touch.clientX;
+                lastY = touch.clientY;
+                spawnTrail(touch.clientX, touch.clientY);
+            }
+        }, { passive: true });
+
 
         function spawnPersistentCard(x, y) {
             if (y < 100) return;
@@ -930,26 +986,56 @@
             }
         });
 
-            function preloadImages() {
-            if (window.innerWidth < 768) return; // Optional: Skip on mobile to save bandwidth
-
-            // 1. Preload Recognition Cursor Images
+        // --- IMAGE PRELOADING ---
+        function preloadImages() {
+            // Preload triggers
             recognitionTriggers.forEach(trigger => {
                 const imgUrl = trigger.getAttribute('data-img');
                 if (imgUrl) {
                     const img = new Image();
                     img.src = imgUrl;
+                    
+                    // Also create the DOM element for mobile HUD
+                    const hudImg = document.createElement('img');
+                    hudImg.src = imgUrl;
+                    hudImg.setAttribute('data-for', imgUrl);
+                    document.getElementById('mobilePreview').appendChild(hudImg);
                 }
             });
 
-            // 2. Preload Hero Trail Images
+            // Preload hero images
             projectData.forEach(data => {
                 const img = new Image();
                 img.src = data.src;
             });
         }
-
         window.addEventListener('load', preloadImages);
+
+
+        // --- MOBILE CENTER STAGE OBSERVER ---
+        // Observer to detect when recognition items are in the center of the viewport
+        const mobilePreviewContainer = document.getElementById('mobilePreview');
+        
+        if (window.innerWidth < 768) {
+            const centerStageObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const targetImg = entry.target.getAttribute('data-img');
+                        // Hide all current images
+                        const allHudImgs = mobilePreviewContainer.querySelectorAll('img');
+                        allHudImgs.forEach(img => img.classList.remove('active'));
+                        
+                        // Find the matching image and show it
+                        const activeImg = mobilePreviewContainer.querySelector(`img[data-for="${targetImg}"]`);
+                        if(activeImg) activeImg.classList.add('active');
+                    }
+                });
+            }, { 
+                rootMargin: "-45% 0px -45% 0px" // Triggers when element is in the vertical middle 10% of screen
+            });
+
+            recognitionTriggers.forEach(trigger => centerStageObserver.observe(trigger));
+        }
 
     </script>
 </body>
