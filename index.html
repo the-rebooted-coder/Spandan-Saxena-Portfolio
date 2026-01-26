@@ -42,10 +42,16 @@
         }
 
         html {
-            scroll-behavior: smooth;
+            /* scroll-behavior: smooth; <--- Removed to let Lenis handle it */
             overflow-x: hidden;
             width: 100%;
         }
+        
+        /* Lenis Recommended CSS */
+        html.lenis { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto; }
+        .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+        .lenis.lenis-stopped { overflow: hidden; }
 
         body {
             background-color: var(--bg-dark);
@@ -171,12 +177,12 @@
             position: relative; z-index: 2;
         }
 
-        /* --- NEW: Text Container Fix --- */
+        /* --- Text Container Fix --- */
         .list-info {
             display: flex;
             flex-direction: column;
             justify-content: center;
-            gap: 5px; /* Ensures clean vertical spacing */
+            gap: 5px; 
         }
 
         .list-title { font-size: clamp(1.2rem, 4vw, 1.8rem); font-family: 'Playfair Display', serif; font-weight: 600; line-height: 1.2; }
@@ -572,9 +578,10 @@
         <p style="font-size: 1.2rem; opacity: 0.8; max-width: 600px; margin-bottom: 2rem;">
             I build software that actually works, scale systems that don’t fall apart, and ship ideas instead of talking about them.
         </p>
-        <a href="mailto:connectwithspandan@gmail.com" class="project-link hover-trigger" style="font-size: 1.2rem; padding: 1rem 3rem; border-radius: 50px;">
+        <div class="project-link hover-trigger" onclick="copyEmail()" style="font-size: 1.2rem; padding: 1rem 3rem; border-radius: 50px; cursor: pointer;">
             connectwithspandan@gmail.com
-        </a>
+            <span style="font-size: 0.8rem; opacity: 0.6; margin-left: 10px;">(Click to Copy)</span>
+        </div>
         <div class="social-grid">
             <a href="https://www.linkedin.com/in/spandn/" target="_blank" class="social-link hover-trigger">LinkedIn</a>
             <a href="https://github.com/the-rebooted-coder" target="_blank" class="social-link hover-trigger">GitHub</a>
@@ -583,8 +590,69 @@
         <div class="footer-brand">An S² Labs Product 🥼</div>
     </section>
 
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+
     <script>
         document.body.classList.add('custom-cursor-active');
+
+        // --- NEW: LENIS SMOOTH SCROLL ---
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            direction: 'vertical',
+            gestureDirection: 'vertical',
+            smooth: true,
+            mouseMultiplier: 1,
+            smoothTouch: false,
+            touchMultiplier: 2,
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        // Bind internal links to Lenis scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                lenis.scrollTo(this.getAttribute('href'));
+            });
+        });
+
+        // --- NEW: COPY EMAIL LOGIC ---
+        function copyEmail() {
+            const email = "connectwithspandan@gmail.com";
+            navigator.clipboard.writeText(email).then(() => {
+                const toast = document.getElementById('mockToast');
+                // Save original text
+                const originalText = toast.innerText;
+                
+                // Show success
+                toast.innerText = "Email copied to clipboard! 📋"; 
+                toast.classList.add('show');
+                
+                // Hide after 3 seconds
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    // Reset text for the confidential toast logic
+                    setTimeout(() => {
+                        toast.innerText = "Nice try. It's confidential. Unless you have clearance, keep scrolling."; 
+                    }, 500);
+                }, 3000);
+            });
+        }
+
+        // --- NEW: EASTER EGG ---
+        console.log(
+            "%c It's going to be... %c wait for it... %c LEGENDARY! ",
+            "color: white; background: black; font-size: 1.2rem; padding: 5px;",
+            "color: black; background: #E5E5E5; font-size: 1.2rem; padding: 5px;",
+            "color: white; background: #FF9900; font-weight: bold; font-size: 1.2rem; padding: 5px;"
+        );
+        console.log("Welcome to the console. If you're looking for bugs, I hope you brought a suit. 👔");
+
 
         // --- SKILLS TICKER LOGIC (VELOCITY BASED) ---
         const skillsContainer = document.getElementById('skillsContainer');
