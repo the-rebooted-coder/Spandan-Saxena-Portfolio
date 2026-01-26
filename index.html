@@ -3,8 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
     <title>Spandan Saxena | Software Developer</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <meta name="description" content="Portfolio of Spandan Saxena, a Software Developer at IBM. Specializing in Android, Web, and 'Neobrutalist' design.">
+    
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://your-portfolio-url.com/">
+    <meta property="og:title" content="Spandan Saxena | Software Developer">
+    <meta property="og:description" content="From Logic to Launch. Explore my interactive portfolio.">
+    <meta property="og:image" content="https://your-portfolio-url.com/og-image.jpg"> <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://your-portfolio-url.com/">
+    <meta property="twitter:title" content="Spandan Saxena | Software Developer">
+    <meta property="twitter:description" content="From Logic to Launch. Explore my interactive portfolio.">
+    <meta property="twitter:image" content="https://your-portfolio-url.com/og-image.jpg"> <link rel="icon" type="image/png" href="favicon.png"> <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     
@@ -22,7 +33,8 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            cursor: none;
+            /* POINT 6: We removed global cursor:none here. 
+               It is now applied via the .custom-cursor-active class on <body> */
             -webkit-tap-highlight-color: transparent;
         }
 
@@ -41,6 +53,12 @@
             line-height: 1.6;
             position: relative;
             padding-bottom: 0;
+        }
+
+        /* POINT 6: Cursor Safe-Guard 
+           The cursor is only hidden if JS successfully adds this class. */
+        body.custom-cursor-active * {
+            cursor: none !important;
         }
 
         h1, h2, h3, h4 {
@@ -87,7 +105,14 @@
             pointer-events: none;
             mix-blend-mode: difference;
             background-color: white; 
+            display: none; /* Hidden by default until JS enables them */
         }
+        
+        body.custom-cursor-active .cursor-dot,
+        body.custom-cursor-active .cursor-outline {
+            display: block;
+        }
+
         .cursor-dot { 
             width: 8px; 
             height: 8px; 
@@ -387,7 +412,6 @@
             background-image: radial-gradient(#e5e5e5 1.5px, transparent 1.5px);
             background-size: 15px 15px;
             background-position: 0 0;
-            /* Initially transparent dots to allow solid white */
             background-color: #ffffff;
         }
 
@@ -479,6 +503,41 @@
         .list-meta { font-size: 0.9rem; opacity: 0.6; text-align: right; white-space: nowrap; margin-left: 1rem; }
         .list-role { display: block; font-size: 0.9rem; font-family: 'Outfit', sans-serif; margin-top: 5px; opacity: 0.8; }
 
+        /* --- SKILLS TICKER (POINT 2) --- */
+        .ticker-wrap {
+            width: 100%;
+            overflow: hidden;
+            background-color: #000; /* Contrast background */
+            padding: 2rem 0;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+        }
+        .ticker {
+            display: flex;
+            width: fit-content;
+            animation: ticker 20s linear infinite;
+        }
+        .ticker-item {
+            font-family: 'Outfit', monospace; /* Tech feel */
+            font-size: 3rem;
+            white-space: nowrap;
+            color: rgba(255, 255, 255, 0.3);
+            margin-right: 4rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .ticker-item.highlight {
+            color: #fff;
+            -webkit-text-stroke: 1px white;
+        }
+
+        @keyframes ticker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); } /* Move half since we double the items */
+        }
+
+
         /* --- FOOTER --- */
         .footer-brand { margin-top: 5rem; font-size: 0.9rem; opacity: 0.5; font-family: monospace; letter-spacing: 2px; }
         .social-grid { display: flex; gap: 2rem; margin-top: 3rem; justify-content: center; flex-wrap: wrap; }
@@ -500,7 +559,6 @@
             width: 100%; 
             height: 100%;
             object-fit: contain;
-            /* No border/background so it looks like floating graphics */
             opacity: 0;
             transition: opacity 0.5s ease, transform 0.5s ease;
             position: absolute; 
@@ -530,9 +588,9 @@
             /* --- ENABLE MOBILE EFFECTS --- */
             .trail-image { display: block !important; } /* Force show trails */
             .persistent-card { display: none !important; } /* Hide cards on mobile (too big) */
-            .cursor-dot, .cursor-outline { display: none; }
+            .cursor-dot, .cursor-outline { display: none !important; } /* Hard hide custom cursor on mobile */
             .mobile-visuals { display: block; } /* Show HUD */
-            * { cursor: auto; }
+            * { cursor: auto !important; } /* Reset cursor for mobile */
         }
     </style>
 </head>
@@ -543,8 +601,7 @@
     <div class="cursor-dot" data-cursor-dot></div>
     <div class="cursor-outline" data-cursor-outline></div>
 
-    <div class="mobile-visuals" id="mobilePreview">
-        </div>
+    <div class="mobile-visuals" id="mobilePreview"></div>
 
     <nav>
         <div class="logo hover-trigger">SPANDAN.</div>
@@ -597,6 +654,27 @@
             <span class="list-meta">Internship</span>
         </div>
     </section>
+
+    <div class="ticker-wrap section-light">
+        <div class="ticker">
+            <div class="ticker-item">Android</div>
+            <div class="ticker-item highlight">Kotlin</div>
+            <div class="ticker-item">Java</div>
+            <div class="ticker-item highlight">React JS</div>
+            <div class="ticker-item">Node.js</div>
+            <div class="ticker-item highlight">AWS</div>
+            <div class="ticker-item">Git</div>
+            <div class="ticker-item highlight">UI/UX</div>
+            <div class="ticker-item">Android</div>
+            <div class="ticker-item highlight">Kotlin</div>
+            <div class="ticker-item">Java</div>
+            <div class="ticker-item highlight">React JS</div>
+            <div class="ticker-item">Node.js</div>
+            <div class="ticker-item highlight">AWS</div>
+            <div class="ticker-item">Git</div>
+            <div class="ticker-item highlight">UI/UX</div>
+        </div>
+    </div>
 
     <section id="projects" class="section-dark">
         <div class="section-title">Projects</div>
@@ -678,20 +756,25 @@
     </section>
 
     <script>
+        // --- POINT 6: CURSOR SAFETY CHECK ---
+        // We only hide the default cursor if JavaScript is running and we can render custom cursors.
+        document.body.classList.add('custom-cursor-active');
+
+        // --- POINT 5: ACCESSIBILITY (Alt Text Added) ---
         const projectData = [
-            { src: "https://i.ibb.co/1Vmw65c/poster-1-spandan.png", link: "https://the-day-grid.vercel.app" },
-            { src: "https://i.ibb.co/7xxg2HwS/poster-2-spandan.png", link: "https://github.com/the-rebooted-coder/BatteryWise" },
-            { src: "https://i.ibb.co/NgrK3wx9/poster-3-spandan.png", link: "https://github.com/the-rebooted-coder/Mail-Canon" },
-            { src: "https://i.ibb.co/1fKX3zQD/poster-4-spandan.png", link: "#", isConfidential: true },
-            { src: "https://i.ibb.co/yc96f8P3/poster-5-spandan.png", link: "https://github.com/the-rebooted-coder/Forecasted" },
-            { src: "https://i.ibb.co/qFW4Wjnw/poster-6-spandan.png", link: "https://github.com/the-rebooted-coder/What-s-In" },
-            { src: "https://i.ibb.co/DP7VG34R/poster-7-spandan.png", link: "https://github.com/the-rebooted-coder/knack" },
-            { src: "https://i.ibb.co/XfDCNP7q/poster-8-spandan.png", link: "https://github.com/the-rebooted-coder/Hanuman-Chalisa-Lyrical" },
-            { src: "https://i.ibb.co/nMMXgkjp/poster-9-spandan.png", link: "https://github.com/the-rebooted-coder/Digital-Desk" },
-            { src: "https://i.ibb.co/hFxCyx4W/poster-10-spandan.png", link: "https://github.com/the-rebooted-coder/Kaagaz-Dynamic-Desktop" },
-            { src: "https://i.ibb.co/MkGRvdJw/poster-11-spandan.png", link: "mailto:connectwithspandan@gmail.com?subject=I%20clicked%20the%20secret%2011th%20card%20and%20all%20I%20got%20was%20this%20email%20draft" },
-            { src: "https://i.ibb.co/NgN1cFTF/poster-12-spandan.png", link: "https://www.snapchat.com/unlock/?type=SNAPCODE&uuid=58a604a1379140089d56a02ec0917f05&metadata=01" },
-            { src: "https://i.ibb.co/tTyP4pWM/poster-13-spandan.png", link: "https://www.snapchat.com/unlock/?type=SNAPCODE&uuid=ee8c25b7cf994a6d918a156b1bdd9a08&metadata=01" }
+            { src: "https://i.ibb.co/1Vmw65c/poster-1-spandan.png", link: "https://the-day-grid.vercel.app", alt: "The Day Grid App Screenshot" },
+            { src: "https://i.ibb.co/7xxg2HwS/poster-2-spandan.png", link: "https://github.com/the-rebooted-coder/BatteryWise", alt: "Battery Wise App Screenshot" },
+            { src: "https://i.ibb.co/NgrK3wx9/poster-3-spandan.png", link: "https://github.com/the-rebooted-coder/Mail-Canon", alt: "Mail Canon App Screenshot" },
+            { src: "https://i.ibb.co/1fKX3zQD/poster-4-spandan.png", link: "#", isConfidential: true, alt: "Confidential Project Preview" },
+            { src: "https://i.ibb.co/yc96f8P3/poster-5-spandan.png", link: "https://github.com/the-rebooted-coder/Forecasted", alt: "Forecasted App Screenshot" },
+            { src: "https://i.ibb.co/qFW4Wjnw/poster-6-spandan.png", link: "https://github.com/the-rebooted-coder/What-s-In", alt: "What's In App Screenshot" },
+            { src: "https://i.ibb.co/DP7VG34R/poster-7-spandan.png", link: "https://github.com/the-rebooted-coder/knack", alt: "Knack App Screenshot" },
+            { src: "https://i.ibb.co/XfDCNP7q/poster-8-spandan.png", link: "https://github.com/the-rebooted-coder/Hanuman-Chalisa-Lyrical", alt: "Lyrical App Screenshot" },
+            { src: "https://i.ibb.co/nMMXgkjp/poster-9-spandan.png", link: "https://github.com/the-rebooted-coder/Digital-Desk", alt: "Digital Desk App Screenshot" },
+            { src: "https://i.ibb.co/hFxCyx4W/poster-10-spandan.png", link: "https://github.com/the-rebooted-coder/Kaagaz-Dynamic-Desktop", alt: "Kaagaz App Screenshot" },
+            { src: "https://i.ibb.co/MkGRvdJw/poster-11-spandan.png", link: "mailto:connectwithspandan@gmail.com?subject=I%20clicked%20the%20secret%2011th%20card", alt: "Secret Project" },
+            { src: "https://i.ibb.co/NgN1cFTF/poster-12-spandan.png", link: "https://www.snapchat.com/unlock/?type=SNAPCODE&uuid=58a604a1379140089d56a02ec0917f05&metadata=01", alt: "Snapchat Lens Preview" },
+            { src: "https://i.ibb.co/tTyP4pWM/poster-13-spandan.png", link: "https://www.snapchat.com/unlock/?type=SNAPCODE&uuid=ee8c25b7cf994a6d918a156b1bdd9a08&metadata=01", alt: "Snapchat Lens Preview" }
         ];
 
         const cursorDot = document.querySelector('[data-cursor-dot]');
@@ -721,7 +804,7 @@
             element.addEventListener('mouseleave', () => document.body.classList.remove('highlighting'));
         }
 
-        // --- NEW: RECOGNITION CURSOR IMAGE LOGIC ---
+        // --- RECOGNITION CURSOR IMAGE LOGIC ---
         function addRecognitionListeners(element) {
             element.addEventListener('mouseenter', () => {
                 const imgUrl = element.getAttribute('data-img');
@@ -823,10 +906,12 @@
         let currentPersistentCard = null;
         let toastTimeout;
 
-        // --- TRAIL GENERATION LOGIC (Refactored for both Mouse & Touch) ---
+        // --- TRAIL GENERATION LOGIC ---
         function spawnTrail(x, y) {
-             const img = document.createElement('img');
-            img.src = projectData[imageIndex % projectData.length].src;
+            const data = projectData[imageIndex % projectData.length];
+            const img = document.createElement('img');
+            img.src = data.src;
+            img.alt = data.alt || "Project Preview"; // POINT 5: Alt Text
             img.className = 'trail-image';
             
             const randomRot = Math.random() * 20 - 10; 
@@ -834,9 +919,8 @@
             img.style.left = `${x}px`;
             img.style.top = `${y}px`;
 
-            // Adjust size/opacity for mobile if needed in CSS, but base logic remains
             heroSection.appendChild(img);
-            setTimeout(() => img.remove(), 1000); // Fades out in 1s via CSS animation
+            setTimeout(() => img.remove(), 1000); 
             imageIndex++;
         }
 
@@ -867,12 +951,10 @@
 
         // --- MOBILE TOUCH TRAIL ---
         heroSection.addEventListener('touchmove', (e) => {
-             // Only for small screens
             if (window.innerWidth > 768) return;
 
             const touch = e.touches[0];
             
-            // Throttle: Only spawn if moved significant distance
             if (Math.abs(touch.clientX - lastX) > 40 || Math.abs(touch.clientY - lastY) > 40) {
                 lastX = touch.clientX;
                 lastY = touch.clientY;
@@ -899,6 +981,7 @@
             
             const img = document.createElement('img');
             img.src = data.src;
+            img.alt = data.alt || "Project Card"; // POINT 5: Alt Text
             card.appendChild(img);
             
             card.style.left = `${x}px`;
