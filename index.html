@@ -792,7 +792,7 @@
         );
         console.log("Welcome to the console. If you're looking for bugs, I hope you brought a suit. 👔");
 
-        // --- SKILLS TICKER LOGIC (REPLACED WITH DRAG SUPPORT) ---
+        // --- SKILLS TICKER LOGIC (FIXED: SMOOTH DRAG & INERTIA) ---
         const skillsContainer = document.getElementById('skillsContainer');
         const skillsTrack = document.getElementById('skillsTrack');
         
@@ -800,44 +800,63 @@
         let defaultSpeed = 1.5; // Auto scroll speed
         let isDragging = false;
         let startX = 0;
+        let currentX = 0;
         let previousTranslate = 0;
         let animationId;
+        let velocity = 0; // For inertia
 
-        // Auto Scroll Function
         function animateTicker() {
-            const trackWidth = skillsTrack.scrollWidth / 3; // Assuming 3 sets of items based on HTML structure
+            const trackWidth = skillsTrack.scrollWidth / 3; 
 
-            if (!isDragging) {
-                scrollPos -= defaultSpeed;
+            if (isDragging) {
+                // While dragging, just track position, no auto-move
+            } else {
+                // Apply inertia or default speed
+                if (Math.abs(velocity) > 0.1) {
+                    scrollPos += velocity;
+                    velocity *= 0.95; // Friction
+                } else {
+                    scrollPos -= defaultSpeed; // Default left movement
+                }
             }
 
-            // Infinite Scroll Reset Logic
+            // Infinite Loop Reset
+            // We use a larger buffer to prevent snapping
             if (scrollPos <= -trackWidth) {
-                scrollPos = 0;
+                scrollPos += trackWidth;
+                previousTranslate += trackWidth; // Adjust prev to prevent jump on drag resume
             } else if (scrollPos > 0) {
-                scrollPos = -trackWidth;
+                scrollPos -= trackWidth;
+                previousTranslate -= trackWidth;
             }
 
             skillsTrack.style.transform = `translateX(${scrollPos}px)`;
             animationId = requestAnimationFrame(animateTicker);
         }
 
-        // Start
         animateTicker();
 
-        // --- DRAG EVENTS (Mouse & Touch) ---
+        // --- DRAG EVENTS ---
         function startDrag(e) {
             isDragging = true;
             startX = getPositionX(e);
+            currentX = startX;
             previousTranslate = scrollPos;
+            velocity = 0; // Stop inertia
             skillsContainer.style.cursor = 'grabbing';
         }
 
         function moveDrag(e) {
             if (!isDragging) return;
-            const currentX = getPositionX(e);
-            const diff = currentX - startX;
-            scrollPos = previousTranslate + diff;
+            const x = getPositionX(e);
+            const delta = x - currentX;
+            currentX = x;
+            
+            // Move immediate
+            scrollPos += delta;
+            
+            // Track velocity for release
+            velocity = delta; 
         }
 
         function endDrag() {
@@ -849,7 +868,6 @@
             return e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
         }
 
-        // Listeners
         skillsContainer.addEventListener('mousedown', startDrag);
         skillsContainer.addEventListener('touchstart', startDrag);
 
