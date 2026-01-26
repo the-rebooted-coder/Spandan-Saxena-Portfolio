@@ -42,7 +42,7 @@
         }
 
         html {
-            /* scroll-behavior: smooth; <--- Removed to let Lenis handle it */
+            /* Lenis handles scrolling */
             overflow-x: hidden;
             width: 100%;
         }
@@ -580,7 +580,6 @@
         </p>
         <div class="project-link hover-trigger" onclick="copyEmail()" style="font-size: 1.2rem; padding: 1rem 3rem; border-radius: 50px; cursor: pointer;">
             connectwithspandan@gmail.com
-            <span style="font-size: 0.8rem; opacity: 0.6; margin-left: 10px;">(Click to Copy)</span>
         </div>
         <div class="social-grid">
             <a href="https://www.linkedin.com/in/spandn/" target="_blank" class="social-link hover-trigger">LinkedIn</a>
@@ -595,7 +594,7 @@
     <script>
         document.body.classList.add('custom-cursor-active');
 
-        // --- NEW: LENIS SMOOTH SCROLL ---
+        // --- LENIS SMOOTH SCROLL ---
         const lenis = new Lenis({
             duration: 1.2,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -613,7 +612,6 @@
         }
         requestAnimationFrame(raf);
 
-        // Bind internal links to Lenis scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -621,7 +619,7 @@
             });
         });
 
-        // --- NEW: COPY EMAIL LOGIC ---
+        // --- COPY EMAIL LOGIC ---
         function copyEmail() {
             const email = "connectwithspandan@gmail.com";
             navigator.clipboard.writeText(email).then(() => {
@@ -636,7 +634,7 @@
                 // Hide after 3 seconds
                 setTimeout(() => {
                     toast.classList.remove('show');
-                    // Reset text for the confidential toast logic
+                    // Reset text
                     setTimeout(() => {
                         toast.innerText = "Nice try. It's confidential. Unless you have clearance, keep scrolling."; 
                     }, 500);
@@ -644,7 +642,7 @@
             });
         }
 
-        // --- NEW: EASTER EGG ---
+        // --- EASTER EGG ---
         console.log(
             "%c It's going to be... %c wait for it... %c LEGENDARY! ",
             "color: white; background: black; font-size: 1.2rem; padding: 5px;",
@@ -654,7 +652,7 @@
         console.log("Welcome to the console. If you're looking for bugs, I hope you brought a suit. 👔");
 
 
-        // --- SKILLS TICKER LOGIC (VELOCITY BASED) ---
+        // --- SKILLS TICKER LOGIC ---
         const skillsContainer = document.getElementById('skillsContainer');
         const skillsTrack = document.getElementById('skillsTrack');
         
@@ -662,35 +660,26 @@
         let speed = 1.5; // Default drift speed
         let targetSpeed = 1.5;
 
-        // Mouse Velocity Logic
         skillsContainer.addEventListener('mousemove', (e) => {
             const containerWidth = window.innerWidth;
             const mouseX = e.clientX;
-            
-            // Calculate position from center (-1 to 1)
             const normalizedPos = (mouseX / containerWidth) * 2 - 1;
-            
-            // Map to speed: Left = fast negative, Right = fast positive
             targetSpeed = normalizedPos * 15; 
         });
 
         skillsContainer.addEventListener('mouseleave', () => {
-            targetSpeed = 1.5; // Reset to default drift on exit
+            targetSpeed = 1.5; // Reset to default
         });
 
         function animateTicker() {
-            // Smoothly interpolate current speed to target speed (Easing)
             speed += (targetSpeed - speed) * 0.1;
             scrollPos -= speed;
-            
-            // Infinite wrapping logic
             const trackWidth = skillsTrack.scrollWidth / 3; 
             if (scrollPos <= -trackWidth) {
                 scrollPos = 0;
             } else if (scrollPos > 0) {
                 scrollPos = -trackWidth;
             }
-
             skillsTrack.style.transform = `translateX(${scrollPos}px)`;
             requestAnimationFrame(animateTicker);
         }
