@@ -151,7 +151,7 @@
             max-width: 600px; border-left: 2px solid currentColor; padding-left: 20px;
         }
 
-        /* --- BOXY CARDS (Used for Experience & Recognition) --- */
+        /* --- BOXY CARDS (Experience & Recognition) --- */
         .list-item {
             display: flex; flex-direction: column; 
             padding: 2rem; 
@@ -171,8 +171,17 @@
             position: relative; z-index: 2;
         }
 
-        .list-title { font-size: clamp(1.2rem, 4vw, 1.8rem); font-family: 'Playfair Display', serif; font-weight: 600; }
-        .list-role { font-size: 0.9rem; font-family: 'Outfit', sans-serif; opacity: 0.7; margin-top: 5px; }
+        /* --- NEW: Text Container Fix --- */
+        .list-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px; /* Ensures clean vertical spacing */
+        }
+
+        .list-title { font-size: clamp(1.2rem, 4vw, 1.8rem); font-family: 'Playfair Display', serif; font-weight: 600; line-height: 1.2; }
+        .list-role { display: block; font-size: 0.9rem; font-family: 'Outfit', sans-serif; opacity: 0.7; }
+        
         .list-meta { 
             font-size: 0.9rem; 
             font-weight: 600; 
@@ -180,6 +189,7 @@
             padding: 5px 12px; 
             border-radius: 50px; 
             transition: all 0.3s;
+            white-space: nowrap;
         }
 
         .list-details {
@@ -218,7 +228,7 @@
             display: flex;
             width: fit-content;
             gap: 4rem;
-            will-change: transform; /* Performance optimization */
+            will-change: transform;
         }
 
         .skill-item {
@@ -227,14 +237,14 @@
             font-weight: 800;
             text-transform: uppercase;
             white-space: nowrap;
-            color: transparent; /* See-through text */
-            -webkit-text-stroke: 1px rgba(255,255,255,0.4); /* Thin outline */
+            color: transparent; 
+            -webkit-text-stroke: 1px rgba(255,255,255,0.4);
             transition: all 0.3s ease-out;
             cursor: default;
         }
 
         .skill-item:hover {
-            color: #fff; /* Fill solid */
+            color: #fff;
             -webkit-text-stroke: 0px;
             text-shadow: 0 0 20px rgba(255,255,255,0.5);
             transform: scale(1.05);
@@ -351,9 +361,13 @@
             nav { padding: 1.5rem 5%; }
             .nav-links { display: none; }
             .bottom-nav { display: flex; }
-            .list-item { gap: 0.5rem; }
-            .list-meta { text-align: left; margin-left: 0; font-size: 0.85rem; opacity: 0.5; }
-            .list-item:hover { padding: 1.5rem; } 
+            
+            .list-item { padding: 1.5rem; } /* Compact mobile card */
+            .list-info { gap: 2px; } /* Tighter spacing on mobile */
+            .list-meta { text-align: left; margin-left: 0; font-size: 0.85rem; opacity: 0.5; margin-top: 5px; border: none; padding: 0; }
+            
+            /* On Mobile, header should wrap nicely */
+            .list-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
             
             .trail-image { display: block !important; }
             .persistent-card { display: none !important; }
@@ -412,9 +426,9 @@
         
         <div class="list-item hover-trigger">
             <div class="list-header">
-                <div>
+                <div class="list-info">
                     <span class="list-title">IBM</span>
-                    <div class="list-role">Application Developer</div>
+                    <span class="list-role">Application Developer</span>
                 </div>
                 <span class="list-meta">2023 - Current</span>
             </div>
@@ -425,9 +439,9 @@
 
         <div class="list-item hover-trigger">
             <div class="list-header">
-                <div>
+                <div class="list-info">
                     <span class="list-title">NIT Jaipur</span>
-                    <div class="list-role">Research Intern</div>
+                    <span class="list-role">Research Intern</span>
                 </div>
                 <span class="list-meta">2022 - 2023</span>
             </div>
@@ -438,9 +452,9 @@
 
         <div class="list-item hover-trigger">
             <div class="list-header">
-                <div>
+                <div class="list-info">
                     <span class="list-title">Unacademy</span>
-                    <div class="list-role">Software Developer Intern</div>
+                    <span class="list-role">Software Developer Intern</span>
                 </div>
                 <span class="list-meta">Internship</span>
             </div>
@@ -515,7 +529,10 @@
         
         <div class="list-item recognition-trigger" data-img="https://i.ibb.co/3yzjFkBy/converge-cursor.png">
             <div class="list-header">
-                <div><span class="list-title">Converge Runnerup</span><span class="list-role">IBM</span></div>
+                <div class="list-info">
+                    <span class="list-title">Converge Runnerup</span>
+                    <span class="list-role">IBM</span>
+                </div>
                 <span class="list-meta">2025</span>
             </div>
             <div class="list-details">
@@ -525,7 +542,10 @@
         
         <div class="list-item recognition-trigger" data-img="https://i.ibb.co/KjWN4c6Y/gem-cursor.png">
              <div class="list-header">
-                <div><span class="list-title">GEMs of Development</span><span class="list-role">IBM India</span></div>
+                <div class="list-info">
+                    <span class="list-title">GEMs of Development</span>
+                    <span class="list-role">IBM India</span>
+                </div>
                 <span class="list-meta">2025</span>
             </div>
             <div class="list-details">
@@ -535,7 +555,10 @@
         
         <div class="list-item recognition-trigger" data-img="https://i.ibb.co/35v1R5Nk/gratitude-cursor.png">
              <div class="list-header">
-                <div><span class="list-title">Top Performer Gratitude</span><span class="list-role">IBM</span></div>
+                <div class="list-info">
+                    <span class="list-title">Top Performer Gratitude</span>
+                    <span class="list-role">IBM</span>
+                </div>
                 <span class="list-meta">2026</span>
             </div>
             <div class="list-details">
