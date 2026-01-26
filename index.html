@@ -73,7 +73,7 @@
         .cursor-dot, .cursor-outline {
             position: fixed; top: 0; left: 0;
             transform: translate(-50%, -50%);
-            border-radius: 50%; z-index: 9999;
+            border-radius: 50%; z-index: 99999; /* Increased Z-index to be above context menu */
             pointer-events: none; mix-blend-mode: difference;
             background-color: white; display: none;
         }
@@ -100,6 +100,67 @@
             background-color: transparent; mix-blend-mode: normal; opacity: 1;
         }
         body.img-preview-mode .cursor-dot { opacity: 0; }
+
+        /* --- CUSTOM CONTEXT MENU --- */
+        #custom-context-menu {
+            position: fixed;
+            z-index: 99990; /* Just below cursor */
+            width: 220px;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 8px;
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            transform-origin: top left;
+            animation: menuPop 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes menuPop {
+            0% { opacity: 0; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .ctx-item {
+            padding: 10px 16px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .ctx-item:hover {
+            background-color: #fff;
+            color: #000;
+            transform: translateX(4px);
+        }
+        
+        .ctx-item span { pointer-events: none; }
+        .ctx-shortcut { font-size: 0.7rem; opacity: 0.5; font-family: monospace; pointer-events: none;}
+        
+        .ctx-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 4px 8px;
+        }
+
+        .ctx-header {
+            padding: 8px 16px 4px 16px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255,255,255,0.3);
+            font-weight: 700;
+            pointer-events: none;
+        }
 
         /* --- NAVIGATION --- */
         nav {
@@ -315,7 +376,7 @@
             background: #ffffff; color: #000000; padding: 12px 28px; border-radius: 50px;
             font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 0.95rem; opacity: 0;
             pointer-events: none; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 10000; box-shadow: 0 10px 40px rgba(255,255,255,0.1); text-align: center; white-space: nowrap;
+            z-index: 100000; box-shadow: 0 10px 40px rgba(255,255,255,0.1); text-align: center; white-space: nowrap;
         }
         .toast-message.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
@@ -548,6 +609,32 @@
 <body>
 
     <div id="mockToast" class="toast-message">Nice try. It's confidential. Unless you have clearance, keep scrolling.</div>
+
+    <div id="custom-context-menu">
+        <div class="ctx-header">Navigation</div>
+        <a href="#work" class="ctx-item hover-trigger" onclick="closeContextMenu()">
+            <span>Experience</span>
+            <span class="ctx-shortcut">01</span>
+        </a>
+        <a href="#projects" class="ctx-item hover-trigger" onclick="closeContextMenu()">
+            <span>Projects</span>
+            <span class="ctx-shortcut">02</span>
+        </a>
+        <a href="#contact" class="ctx-item hover-trigger" onclick="closeContextMenu()">
+            <span>Contact</span>
+            <span class="ctx-shortcut">03</span>
+        </a>
+        <div class="ctx-divider"></div>
+        <div class="ctx-header">System</div>
+        <div class="ctx-item hover-trigger" onclick="triggerConsoleLog(); closeContextMenu()">
+            <span>System Logs</span>
+            <span class="ctx-shortcut">CMD+I</span>
+        </div>
+        <div class="ctx-item hover-trigger" onclick="location.reload(); closeContextMenu()">
+            <span>Reboot</span>
+            <span class="ctx-shortcut">R</span>
+        </div>
+    </div>
 
     <div id="game-overlay">
         <div class="crt-overlay"></div> <div class="close-game" onclick="closeGame()">ESC</div>
@@ -810,10 +897,63 @@
 
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
+                // Ignore context menu links to prevent double fire
+                if(this.classList.contains('ctx-item')) return;
+                
                 e.preventDefault();
                 lenis.scrollTo(this.getAttribute('href'));
             });
         });
+
+        // --- CUSTOM CONTEXT MENU LOGIC ---
+        const contextMenu = document.getElementById('custom-context-menu');
+        
+        // Disable default right click
+        document.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            
+            // Calculate Position to avoid overflow
+            let x = e.clientX;
+            let y = e.clientY;
+            
+            const menuWidth = contextMenu.offsetWidth || 220;
+            const menuHeight = contextMenu.offsetHeight || 200;
+            
+            if (x + menuWidth > window.innerWidth) {
+                x = x - menuWidth;
+            }
+            if (y + menuHeight > window.innerHeight) {
+                y = y - menuHeight;
+            }
+            
+            contextMenu.style.left = `${x}px`;
+            contextMenu.style.top = `${y}px`;
+            contextMenu.style.display = 'flex';
+        });
+
+        // Close on Click anywhere
+        document.addEventListener('click', (e) => {
+            if (!contextMenu.contains(e.target)) {
+                closeContextMenu();
+            }
+        });
+        
+        // Close on scroll
+        window.addEventListener('scroll', closeContextMenu);
+
+        function closeContextMenu() {
+            contextMenu.style.display = 'none';
+        }
+        
+        function triggerConsoleLog() {
+            console.clear();
+            console.log(
+                "%c SYSTEM ACCESS GRANTED ",
+                "color: #000; background: #0f0; font-size: 1.5rem; padding: 10px; font-weight: bold;"
+            );
+            console.log("To view source, elements, and networking: Press F12 or CMD+OPT+I");
+            showToast("Log generated. Press F12 to view Console.");
+        }
 
         // --- COPY EMAIL & TOAST ---
         let toastTimeout;
@@ -983,7 +1123,10 @@
                 element.addEventListener('mouseleave', () => { cursorOutline.style.backgroundImage = 'none'; document.body.classList.remove('img-preview-mode'); });
             }
 
-            hoverTriggers.forEach(addHoverListeners);
+            // Need to re-select triggers as context menu is new
+            const allHoverTriggers = document.querySelectorAll('.hover-trigger');
+            allHoverTriggers.forEach(addHoverListeners);
+            
             bubbleTriggers.forEach(addHighlighterListeners);
             recognitionTriggers.forEach(addRecognitionListeners);
 
@@ -1074,9 +1217,9 @@
                     // Map ids to nav targets
                     const activeLink = document.querySelector(`.island-item[data-target="${id}"]`);
                     if (activeLink) {
-                         islandItems.forEach(i => i.classList.remove('active'));
-                         activeLink.classList.add('active');
-                         moveGlintTo(activeLink);
+                          islandItems.forEach(i => i.classList.remove('active'));
+                          activeLink.classList.add('active');
+                          moveGlintTo(activeLink);
                     }
                 }
             });
@@ -1155,7 +1298,7 @@
         }, { threshold: 0.1 });
         document.querySelectorAll('.chat-bubble').forEach(bubble => observer.observe(bubble));
 
-        // --- TAB MOCKERY ---
+        // --- TAB MOCKERY (UPDATED) ---
         let isRedirecting = false; const originalTitle = document.title;
         document.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
@@ -1163,7 +1306,7 @@
             });
         });
         document.addEventListener('visibilitychange', () => {
-            if (document.hidden) { document.title = isRedirecting ? "Go get 'em! 🚀" : "Come back, coward."; }
+            if (document.hidden) { document.title = isRedirecting ? "Go get 'em! 🚀" : "Hire Me? 👀"; }
             else { document.title = originalTitle; isRedirecting = false; }
         });
 
