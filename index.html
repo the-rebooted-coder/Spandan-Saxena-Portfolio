@@ -64,14 +64,11 @@
             line-height: 1.6;
             position: relative;
             padding-bottom: 0;
-            -webkit-font-smoothing: antialiased; /* OPTIMIZATION: Crisper text on mobile */
         }
 
         /* --- SMART CURSOR --- */
-        /* OPTIMIZATION: Only show custom cursor on devices with a mouse */
-        @media (pointer: fine) {
-            body.custom-cursor-active * { cursor: none !important; }
-            .cursor-dot, .cursor-outline { display: block; }
+        body.custom-cursor-active * {
+            cursor: none !important;
         }
 
         .cursor-dot, .cursor-outline {
@@ -81,6 +78,7 @@
             pointer-events: none; mix-blend-mode: difference;
             background-color: white; display: none;
         }
+        body.custom-cursor-active .cursor-dot, body.custom-cursor-active .cursor-outline { display: block; }
         
         .cursor-dot { width: 8px; height: 8px; transition: opacity 0.2s; }
         .cursor-outline {
@@ -104,7 +102,7 @@
         }
         body.img-preview-mode .cursor-dot { opacity: 0; }
 
-        /* --- NAVIGATION (DESKTOP) --- */
+        /* --- NAVIGATION --- */
         nav {
             position: fixed; top: 0; width: 100%; padding: 2rem 5%;
             display: flex; justify-content: space-between; align-items: center;
@@ -144,7 +142,7 @@
 
         /* --- HERO --- */
         #hero { height: 100vh; align-items: flex-start; justify-content: center; position: relative; overflow: hidden; }
-        .hero-text { z-index: 10; position: relative; pointer-events: none; width: 100%; will-change: transform; }
+        .hero-text { z-index: 10; position: relative; pointer-events: none; width: 100%; }
         .hero-text h1, .hero-text p { pointer-events: auto; }
         .hero-text h1 { font-size: clamp(3.5rem, 8vw, 6.5rem); line-height: 1.1; margin-bottom: 1.5rem; word-wrap: break-word; }
         .hero-text p {
@@ -173,15 +171,23 @@
         }
 
         .list-info {
-            display: flex; flex-direction: column; justify-content: center; gap: 5px; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px; 
         }
 
         .list-title { font-size: clamp(1.2rem, 4vw, 1.8rem); font-family: 'Playfair Display', serif; font-weight: 600; line-height: 1.2; }
         .list-role { display: block; font-size: 0.9rem; font-family: 'Outfit', sans-serif; opacity: 0.7; }
         
         .list-meta { 
-            font-size: 0.9rem; font-weight: 600; border: 1px solid currentColor; 
-            padding: 5px 12px; border-radius: 50px; transition: all 0.3s; white-space: nowrap;
+            font-size: 0.9rem; 
+            font-weight: 600; 
+            border: 1px solid currentColor; 
+            padding: 5px 12px; 
+            border-radius: 50px; 
+            transition: all 0.3s;
+            white-space: nowrap;
         }
 
         .list-details {
@@ -193,8 +199,10 @@
 
         /* Hover States for Boxy Cards */
         .list-item:hover {
-            background-color: #000; color: #fff; transform: scale(1.02);
-            box-shadow: 10px 10px 0px rgba(0,0,0,0.2); border-color: #000;
+            background-color: #000; color: #fff;
+            transform: scale(1.02);
+            box-shadow: 10px 10px 0px rgba(0,0,0,0.2);
+            border-color: #000;
         }
         .list-item:hover .list-details {
             max-height: 200px; opacity: 1; margin-top: 1.5rem;
@@ -204,27 +212,45 @@
 
         /* --- SKILLS TICKER (VELOCITY) --- */
         .skills-section {
-            width: 100%; overflow: hidden; background-color: #000;
-            padding: 5rem 0; border-top: 1px solid rgba(255,255,255,0.1);
-            border-bottom: 1px solid rgba(255,255,255,0.1); position: relative;
-            cursor: grab; /* Indicates drag */
+            width: 100%;
+            overflow: hidden;
+            background-color: #000;
+            padding: 5rem 0;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+            cursor: grab; /* Indicates drag capability */
         }
-        .skills-section:active { cursor: grabbing; }
+        
+        .skills-section:active {
+            cursor: grabbing;
+        }
 
         .skills-track {
-            display: flex; width: fit-content; gap: 4rem; will-change: transform;
+            display: flex;
+            width: fit-content;
+            gap: 4rem;
+            will-change: transform;
         }
 
         .skill-item {
-            font-family: 'Outfit', sans-serif; font-size: clamp(3rem, 6vw, 5rem);
-            font-weight: 800; text-transform: uppercase; white-space: nowrap;
-            color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,0.4);
-            transition: all 0.3s ease-out; cursor: default; user-select: none;
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 800;
+            text-transform: uppercase;
+            white-space: nowrap;
+            color: transparent; 
+            -webkit-text-stroke: 1px rgba(255,255,255,0.4);
+            transition: all 0.3s ease-out;
+            cursor: default;
+            user-select: none; /* Important for dragging */
         }
 
         .skill-item:hover {
-            color: #fff; -webkit-text-stroke: 0px;
-            text-shadow: 0 0 20px rgba(255,255,255,0.5); transform: scale(1.05);
+            color: #fff;
+            -webkit-text-stroke: 0px;
+            text-shadow: 0 0 20px rgba(255,255,255,0.5);
+            transform: scale(1.05);
         }
 
         /* --- PROJECTS --- */
@@ -265,8 +291,6 @@
             position: absolute; width: 200px; height: 120px; object-fit: cover; border-radius: 8px;
             pointer-events: none; transform: translate(-50%, -50%) scale(0.5); opacity: 0; z-index: 1;
             animation: popInFadeOut 1s forwards; filter: grayscale(100%); border: 1px solid rgba(255,255,255,0.2);
-            /* OPTIMIZATION */
-            will-change: transform, opacity; 
         }
         .persistent-card {
             position: absolute; width: 240px; height: 150px; border-radius: 10px;
@@ -295,9 +319,16 @@
 
         /* --- FOOTER --- */
         .footer-brand { 
-            margin-top: 5rem; font-size: 0.9rem; opacity: 0.5; font-family: monospace; 
-            letter-spacing: 2px; border-bottom: 1px dotted rgba(255, 255, 255, 0.5); 
-            display: inline-block; cursor: help; padding-bottom: 2px;
+            margin-top: 5rem; 
+            font-size: 0.9rem; 
+            opacity: 0.5; 
+            font-family: monospace; 
+            letter-spacing: 2px;
+            /* Added visual hint */
+            border-bottom: 1px dotted rgba(255, 255, 255, 0.5); 
+            display: inline-block;
+            cursor: help; 
+            padding-bottom: 2px;
         }
         .social-grid { display: flex; gap: 2rem; margin-top: 3rem; justify-content: center; flex-wrap: wrap; }
         .social-link { font-size: 1.2rem; border-bottom: 1px solid transparent; padding-bottom: 5px; }
@@ -305,7 +336,7 @@
 
         /* --- MOBILE VISUALS --- */
         .mobile-visuals {
-            display: none; position: fixed; bottom: 120px; right: 20px; width: 140px; height: 140px;
+            display: none; position: fixed; bottom: 110px; right: 20px; width: 140px; height: 140px;
             pointer-events: none; z-index: 50;
         }
         .mobile-visuals img {
@@ -315,62 +346,41 @@
         }
         .mobile-visuals img.active { opacity: 1; transform: scale(1) translateY(0); }
 
-        /* --- NEW ANIMATED MOBILE NAV ("The Jelly Dock") --- */
-        .mobile-nav-container {
-            display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            z-index: 1000; width: 90%; max-width: 400px;
+        /* --- BOTTOM NAV --- */
+        .bottom-nav {
+            display: none; position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: rgba(20, 20, 20, 0.9); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            z-index: 999; box-shadow: 0 10px 40px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.15);
+            width: 60px; height: 60px; border-radius: 30px; padding: 0; align-items: center; justify-content: center;
+            transition: width 0.5s cubic-bezier(0.25, 1, 0.5, 1), border-radius 0.5s ease; overflow: hidden;
         }
-        
-        .dock-glass {
-            background: rgba(20, 20, 20, 0.85);
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 10px 20px;
-            display: flex; justify-content: space-between; align-items: center;
-            position: relative;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        .bottom-nav.expanded { width: 90%; max-width: 400px; border-radius: 25px; padding: 0 25px; justify-content: space-between; }
+        .bottom-nav a {
+            display: none; flex-direction: column; align-items: center; font-size: 0.7rem; color: #aaa;
+            gap: 5px; transition: color 0.3s, opacity 0.3s; opacity: 0; min-width: 50px;
         }
+        .bottom-nav svg { width: 24px; height: 24px; fill: currentColor; }
+        .bottom-nav.expanded a { display: flex; opacity: 1; }
+        .bottom-nav:not(.expanded) a.active { display: flex; opacity: 1; color: white; }
+        .bottom-nav:not(.expanded) a.active span { display: none; }
+        .bottom-nav a.active, .bottom-nav a:hover { color: #fff; }
 
-        /* sliding active indicator */
-        .nav-indicator {
-            position: absolute;
-            top: 10px; left: 0;
-            width: 60px; height: 40px; /* Size approx matches icon hit area */
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 16px;
-            transform: translateX(var(--nav-x, 10px)); /* Controlled by JS */
-            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1.2); /* Bouncy spring */
-            pointer-events: none;
-        }
-
-        .nav-item {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            color: #888; text-decoration: none;
-            width: 60px; height: 40px;
-            position: relative; z-index: 2;
-            transition: color 0.3s, transform 0.2s;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .nav-item svg { width: 22px; height: 22px; fill: currentColor; transition: transform 0.3s; }
-        .nav-item span { font-size: 10px; margin-top: 3px; font-weight: 500; opacity: 0; transform: translateY(5px); transition: all 0.3s; }
-        
-        .nav-item.active { color: #fff; transform: scale(1.1); }
-        .nav-item.active svg { transform: translateY(-2px); }
-        .nav-item.active span { opacity: 1; transform: translateY(0); }
-
-        /* --- GAME CSS --- */
+        /* ========================================= */
+        /* THE DEBUGGER GAME CSS (IMPROVED)          */
+        /* ========================================= */
         #game-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #000000; z-index: 20000; display: none;
             flex-direction: column; align-items: center; justify-content: center;
-            cursor: none; font-family: 'Share Tech Mono', monospace; overflow: hidden;
+            cursor: none;
+            font-family: 'Share Tech Mono', monospace; /* Tech font */
+            overflow: hidden;
             /* CRITICAL FOR MOBILE: Prevents scrolling while playing */
             touch-action: none; 
         }
         #game-overlay.active { display: flex; }
         
+        /* CRT Scanline Overlay */
         .crt-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 20010;
@@ -380,7 +390,10 @@
         }
         @keyframes crt-flicker { 0% { opacity: 0.9; } 50% { opacity: 0.95; } 100% { opacity: 0.9; } }
 
-        #gameCanvas { background: #050505; width: 100%; height: 100%; display: block; }
+        #gameCanvas { 
+            background: #050505; 
+            width: 100%; height: 100%; display: block;
+        }
         
         .game-ui-layer {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -388,6 +401,7 @@
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
 
+        /* Improved HUD */
         .game-hud {
             position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
             display: flex; gap: 40px;
@@ -399,6 +413,7 @@
         }
         .hud-label { opacity: 0.7; font-size: 0.8rem; margin-right: 5px; }
 
+        /* Improved Screens */
         .game-start-screen, .game-over-screen {
             background: rgba(0, 10, 0, 0.9); padding: 3rem 4rem; 
             border: 2px solid var(--game-neon);
@@ -454,19 +469,18 @@
 
         /* --- RESPONSIVE --- */
         @media (max-width: 768px) {
-            body { padding-bottom: 100px; } /* Space for new dock */
+            body { padding-bottom: 80px; }
             section { padding: 80px 5%; }
             .section-title { top: 5%; right: 5%; font-size: 3.5rem; opacity: 0.08; }
             .chat-container { gap: 3rem; }
-            .chat-bubble { max-width: 95%; padding: 1.5rem; }
-            
+            .chat-bubble { max-width: 90%; padding: 2rem; }
             nav { padding: 1.5rem 5%; }
             .nav-links { display: none; }
-            .mobile-nav-container { display: block; } /* Show New Nav */
+            .bottom-nav { display: flex; }
             
             .list-item { padding: 1.5rem; }
             .list-info { gap: 2px; }
-            .list-meta { text-align: left; margin-left: 0; font-size: 0.85rem; opacity: 0.6; margin-top: 5px; border: none; padding: 0; }
+            .list-meta { text-align: left; margin-left: 0; font-size: 0.85rem; opacity: 0.5; margin-top: 5px; border: none; padding: 0; }
             
             .list-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
             
@@ -530,30 +544,19 @@
         </div>
     </nav>
 
-    <div class="mobile-nav-container">
-        <div class="dock-glass">
-            <div class="nav-indicator"></div>
-            
-            <a href="#hero" class="nav-item active" onclick="setActiveNav(this, 0)">
-                <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-                <span>Home</span>
-            </a>
-            
-            <a href="#work" class="nav-item" onclick="setActiveNav(this, 1)">
-                <svg viewBox="0 0 24 24"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/></svg>
-                <span>Exp</span>
-            </a>
-            
-            <a href="#projects" class="nav-item" onclick="setActiveNav(this, 2)">
-                <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg>
-                <span>Work</span>
-            </a>
-            
-            <a href="#contact" class="nav-item" onclick="setActiveNav(this, 3)">
-                <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-                <span>Mail</span>
-            </a>
-        </div>
+    <div id="mobileNav" class="bottom-nav">
+        <a href="#work" class="nav-item" data-target="work">
+            <svg viewBox="0 0 24 24"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/></svg><span>Exp</span>
+        </a>
+        <a href="#projects" class="nav-item" data-target="projects">
+            <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg><span>Projects</span>
+        </a>
+        <a href="#recognition" class="nav-item" data-target="recognition">
+            <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><span>Awards</span>
+        </a>
+        <a href="#contact" class="nav-item" data-target="contact">
+            <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg><span>Contact</span>
+        </a>
     </div>
 
     <section id="hero" class="section-dark">
@@ -730,48 +733,6 @@
     <script>
         document.body.classList.add('custom-cursor-active');
 
-        // --- MOBILE NAV LOGIC (FUN & BOUNCY) ---
-        function setActiveNav(element, index) {
-            // Haptic Feedback (Android)
-            if (navigator.vibrate) navigator.vibrate(10);
-            
-            // Update Active State
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            element.classList.add('active');
-            
-            // Move Indicator (Width of item approx 60px + margin calculations)
-            // We calculate approximate position based on index.
-            // 20px padding left + (index * width of item + gap)
-            // Just simplifying to % or fixed steps for this design.
-            const dock = document.querySelector('.dock-glass');
-            const itemWidth = element.offsetWidth;
-            const itemLeft = element.offsetLeft;
-            
-            const indicator = document.querySelector('.nav-indicator');
-            // 20px is dock padding
-            indicator.style.transform = `translateX(${itemLeft - 20}px)`;
-        }
-
-        // Initialize Nav on Scroll
-        const sections = document.querySelectorAll('section');
-        const navObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const id = entry.target.getAttribute('id');
-                    let index = 0;
-                    if(id === 'hero') index = 0;
-                    if(id === 'work') index = 1;
-                    if(id === 'projects') index = 2;
-                    if(id === 'contact') index = 3;
-                    
-                    const navItems = document.querySelectorAll('.nav-item');
-                    if(navItems[index]) setActiveNav(navItems[index], index);
-                }
-            });
-        }, { threshold: 0.3 });
-        sections.forEach(sec => navObserver.observe(sec));
-
-
         // --- LENIS SMOOTH SCROLL ---
         const lenis = new Lenis({
             duration: 1.2,
@@ -831,36 +792,39 @@
         );
         console.log("Welcome to the console. If you're looking for bugs, I hope you brought a suit. 👔");
 
-        // --- SKILLS TICKER (SMOOTH DRAG + INERTIA) ---
+        // --- SKILLS TICKER LOGIC (FIXED: SMOOTH DRAG & INERTIA) ---
         const skillsContainer = document.getElementById('skillsContainer');
         const skillsTrack = document.getElementById('skillsTrack');
         
         let scrollPos = 0;
-        let defaultSpeed = 1.5; 
+        let defaultSpeed = 1.5; // Auto scroll speed
         let isDragging = false;
         let startX = 0;
         let currentX = 0;
         let previousTranslate = 0;
         let animationId;
-        let velocity = 0; 
+        let velocity = 0; // For inertia
 
         function animateTicker() {
             const trackWidth = skillsTrack.scrollWidth / 3; 
 
             if (isDragging) {
-                // Dragging...
+                // While dragging, just track position, no auto-move
             } else {
+                // Apply inertia or default speed
                 if (Math.abs(velocity) > 0.1) {
                     scrollPos += velocity;
                     velocity *= 0.95; // Friction
                 } else {
-                    scrollPos -= defaultSpeed; 
+                    scrollPos -= defaultSpeed; // Default left movement
                 }
             }
 
+            // Infinite Loop Reset
+            // We use a larger buffer to prevent snapping
             if (scrollPos <= -trackWidth) {
                 scrollPos += trackWidth;
-                previousTranslate += trackWidth; 
+                previousTranslate += trackWidth; // Adjust prev to prevent jump on drag resume
             } else if (scrollPos > 0) {
                 scrollPos -= trackWidth;
                 previousTranslate -= trackWidth;
@@ -872,12 +836,13 @@
 
         animateTicker();
 
+        // --- DRAG EVENTS ---
         function startDrag(e) {
             isDragging = true;
             startX = getPositionX(e);
             currentX = startX;
             previousTranslate = scrollPos;
-            velocity = 0; 
+            velocity = 0; // Stop inertia
             skillsContainer.style.cursor = 'grabbing';
         }
 
@@ -886,7 +851,11 @@
             const x = getPositionX(e);
             const delta = x - currentX;
             currentX = x;
+            
+            // Move immediate
             scrollPos += delta;
+            
+            // Track velocity for release
             velocity = delta; 
         }
 
@@ -900,79 +869,15 @@
         }
 
         skillsContainer.addEventListener('mousedown', startDrag);
-        skillsContainer.addEventListener('touchstart', startDrag, {passive: true}); // Passive for better scroll
+        skillsContainer.addEventListener('touchstart', startDrag);
 
         skillsContainer.addEventListener('mousemove', moveDrag);
-        skillsContainer.addEventListener('touchmove', moveDrag, {passive: true});
+        skillsContainer.addEventListener('touchmove', moveDrag);
 
         skillsContainer.addEventListener('mouseup', endDrag);
         skillsContainer.addEventListener('mouseleave', endDrag);
         skillsContainer.addEventListener('touchend', endDrag);
 
-
-        // --- OPTIMIZED TRAIL (THROTTLED) ---
-        const heroSection = document.getElementById('hero');
-        let lastX = 0, lastY = 0, imageIndex = 0;
-        let interactionTimeout, currentPersistentCard = null;
-        let lastTrailTime = 0; // Throttling variable
-
-        function spawnTrail(x, y) {
-            const data = projectData[imageIndex % projectData.length];
-            const img = document.createElement('img'); img.src = data.src; img.className = 'trail-image';
-            
-            img.style.left = `${x}px`; img.style.top = `${y}px`;
-            const randomRot = Math.random() * 20 - 10; img.style.setProperty('--rot', `${randomRot}deg`);
-            
-            heroSection.appendChild(img); setTimeout(() => img.remove(), 1000); imageIndex++;
-        }
-
-        // Logic for both mouse and touch (Throttled)
-        function handleTrailMove(x, y) {
-            const now = Date.now();
-            // OPTIMIZATION: Only spawn every 50ms AND if distance > 60px
-            if (now - lastTrailTime < 50) return; 
-            
-            if (currentPersistentCard) {
-                currentPersistentCard.style.opacity = '0'; currentPersistentCard.style.transform = 'translate(-50%, -50%) scale(0.8)';
-                setTimeout(() => currentPersistentCard?.remove(), 300); currentPersistentCard = null;
-            }
-            clearTimeout(interactionTimeout);
-
-            if (y < 100) return;
-            if (Math.abs(x - lastX) > 60 || Math.abs(y - lastY) > 60) {
-                lastX = x; lastY = y; lastTrailTime = now;
-                spawnTrail(x, y);
-            }
-            interactionTimeout = setTimeout(() => { spawnPersistentCard(x, y); }, 200);
-        }
-
-        function spawnPersistentCard(x, y) {
-            if (y < 100) return;
-            const data = projectData[imageIndex % projectData.length];
-            const card = document.createElement('a'); card.href = data.link; card.className = 'persistent-card hover-trigger';
-            if (data.isConfidential) { card.addEventListener('click', (e) => { e.preventDefault(); showToast(); }); }
-            else { card.target = "_blank"; }
-            const img = document.createElement('img'); img.src = data.src; card.appendChild(img);
-            card.style.left = `${x}px`; card.style.top = `${y}px`;
-            const randomRot = Math.random() * 10 - 5; card.style.setProperty('--rot', `${randomRot}deg`);
-            heroSection.appendChild(card); requestAnimationFrame(() => { card.classList.add('active'); });
-            currentPersistentCard = card; 
-            // Manual hover listener since addHoverListeners assumes mouse
-            card.addEventListener('touchstart', () => document.body.classList.add('hovering'));
-            card.addEventListener('touchend', () => document.body.classList.remove('hovering'));
-        }
-
-        // Mouse (Desktop)
-        heroSection.addEventListener('mousemove', (e) => {
-            if (window.innerWidth < 768) return; 
-            handleTrailMove(e.clientX, e.clientY);
-        });
-        
-        // Touch (Mobile) - Optimized
-        heroSection.addEventListener('touchmove', (e) => {
-             const touch = e.touches[0];
-             handleTrailMove(touch.clientX, touch.clientY);
-        }, {passive: true}); // Passive true improves scroll performance
 
         // --- GENERIC ASSETS & CURSOR ---
         const projectData = [
@@ -1031,23 +936,134 @@
             }
         });
 
-        // --- PRELOAD & OPTIMIZATION ---
+        // --- MOBILE NAV ---
+        const mobileNav = document.getElementById('mobileNav');
+        const navItems = mobileNav.querySelectorAll('.nav-item');
+        mobileNav.addEventListener('click', () => { if (!mobileNav.classList.contains('expanded')) mobileNav.classList.add('expanded'); });
+        navItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (mobileNav.classList.contains('expanded')) { mobileNav.classList.remove('expanded'); }
+                else { mobileNav.classList.add('expanded'); e.preventDefault(); }
+            });
+        });
+        document.addEventListener('click', (e) => { if (!mobileNav.contains(e.target) && mobileNav.classList.contains('expanded')) mobileNav.classList.remove('expanded'); });
+
+        const sections = document.querySelectorAll('section');
+        const observerOptions = { threshold: 0.3 };
+        const navObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    navItems.forEach(item => item.classList.remove('active'));
+                    const id = entry.target.getAttribute('id');
+                    const activeLink = mobileNav.querySelector(`a[data-target="${id}"]`);
+                    if (activeLink) activeLink.classList.add('active');
+                }
+            });
+        }, observerOptions);
+        sections.forEach(section => navObserver.observe(section));
+        
+        const heroSectionObserver = new IntersectionObserver((entries) => {
+             entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                      navItems.forEach(item => item.classList.remove('active'));
+                      navItems[0].classList.add('active'); 
+                }
+             });
+        }, {threshold: 0.5});
+        
+        const hero = document.getElementById('hero');
+        if(hero) heroSectionObserver.observe(hero);
+
+        // --- HERO TRAIL (UPDATED FOR MOBILE) ---
+        const heroSection = document.getElementById('hero');
+        let lastX = 0, lastY = 0, imageIndex = 0;
+        let interactionTimeout, currentPersistentCard = null;
+
+        function spawnTrail(x, y) {
+            const data = projectData[imageIndex % projectData.length];
+            const img = document.createElement('img'); img.src = data.src; img.className = 'trail-image';
+            const randomRot = Math.random() * 20 - 10; img.style.setProperty('--rot', `${randomRot}deg`);
+            img.style.left = `${x}px`; img.style.top = `${y}px`;
+            heroSection.appendChild(img); setTimeout(() => img.remove(), 1000); imageIndex++;
+        }
+        
+        // Mouse Move Listener
+        heroSection.addEventListener('mousemove', (e) => {
+            if (window.innerWidth < 768) return; // Mouse logic still restricted on small screens if not touch
+            handleTrailMove(e.clientX, e.clientY);
+        });
+
+        // Touch Move Listener (NEW)
+        heroSection.addEventListener('touchmove', (e) => {
+             const touch = e.touches[0];
+             handleTrailMove(touch.clientX, touch.clientY);
+        });
+
+        function handleTrailMove(x, y) {
+            if (currentPersistentCard) {
+                currentPersistentCard.style.opacity = '0'; currentPersistentCard.style.transform = 'translate(-50%, -50%) scale(0.8)';
+                setTimeout(() => currentPersistentCard?.remove(), 300); currentPersistentCard = null;
+            }
+            clearTimeout(interactionTimeout);
+            if (y < 100) return;
+            if (Math.abs(x - lastX) > 60 || Math.abs(y - lastY) > 60) {
+                lastX = x; lastY = y; spawnTrail(x, y);
+            }
+            interactionTimeout = setTimeout(() => { spawnPersistentCard(x, y); }, 200);
+        }
+
+        function spawnPersistentCard(x, y) {
+            if (y < 100) return;
+            const data = projectData[imageIndex % projectData.length];
+            const card = document.createElement('a'); card.href = data.link; card.className = 'persistent-card hover-trigger';
+            if (data.isConfidential) { card.addEventListener('click', (e) => { e.preventDefault(); showToast(); }); }
+            else { card.target = "_blank"; }
+            const img = document.createElement('img'); img.src = data.src; card.appendChild(img);
+            card.style.left = `${x}px`; card.style.top = `${y}px`;
+            const randomRot = Math.random() * 10 - 5; card.style.setProperty('--rot', `${randomRot}deg`);
+            heroSection.appendChild(card); requestAnimationFrame(() => { card.classList.add('active'); });
+            currentPersistentCard = card; addHoverListeners(card);
+        }
+
+        document.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            const heroText = document.querySelector('.hero-text');
+            if(heroText) heroText.style.transform = `translateY(${scrollY * 0.2}px)`;
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.chat-bubble').forEach(bubble => observer.observe(bubble));
+
+        // --- TAB MOCKERY ---
+        let isRedirecting = false; const originalTitle = document.title;
+        document.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (link.target === "_blank" || link.href.startsWith('http')) { isRedirecting = true; setTimeout(() => isRedirecting = false, 2000); }
+            });
+        });
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) { document.title = isRedirecting ? "Go get 'em! 🚀" : "Come back, coward."; }
+            else { document.title = originalTitle; isRedirecting = false; }
+        });
+
+        // --- PRELOAD ---
         function preloadImages() {
             recognitionTriggers.forEach(trigger => {
                 const imgUrl = trigger.getAttribute('data-img');
                 if (imgUrl) {
                     const img = new Image(); img.src = imgUrl;
                     const hudImg = document.createElement('img'); hudImg.src = imgUrl; hudImg.setAttribute('data-for', imgUrl);
-                    // OPTIMIZATION: decoding async
-                    hudImg.decoding = "async";
                     document.getElementById('mobilePreview').appendChild(hudImg);
                 }
             });
-            projectData.forEach(data => { const img = new Image(); img.src = data.src; img.decoding = "async"; });
+            projectData.forEach(data => { const img = new Image(); img.src = data.src; });
         }
         window.addEventListener('load', preloadImages);
 
-        // --- MOBILE OBSERVER (Visuals) ---
+        // --- MOBILE OBSERVER ---
         const mobilePreviewContainer = document.getElementById('mobilePreview');
         if (window.innerWidth < 768) {
             const centerStageObserver = new IntersectionObserver((entries) => {
@@ -1071,7 +1087,14 @@
         
         secretTrigger.addEventListener('click', () => {
             secretClicks++;
-            const warnings = ["Hey! That tickles!", "Stop poking the footer.", "Seriously?", "I'm warning you...", "FINE. HAVE IT YOUR WAY."];
+            const warnings = [
+                "Hey! That tickles!", 
+                "Stop poking the footer.", 
+                "Seriously, do you not have work to do?", 
+                "I'm warning you...", 
+                "FINE. HAVE IT YOUR WAY."
+            ];
+            
             if(secretClicks <= 5) showToast(warnings[secretClicks - 1]);
             
             if (secretClicks === 5) {
@@ -1125,7 +1148,6 @@
             window.addEventListener('mousedown', shootBullet);
             
             // Touch Listeners (Mobile Support)
-            // Active listener for game (needs to prevent default)
             window.addEventListener('touchmove', handleTouchMove, { passive: false });
             window.addEventListener('touchstart', handleTouchStart, { passive: false });
         }
