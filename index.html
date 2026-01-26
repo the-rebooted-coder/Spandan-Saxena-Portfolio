@@ -349,7 +349,9 @@
         }
         .mobile-visuals img.active { opacity: 1; transform: scale(1) translateY(0); }
 
-        /* --- REPLACED: NEW FLOATING ISLAND NAV --- */
+        /* ========================================= */
+        /* JELLY ISLAND NAVIGATION (FIXED)          */
+        /* ========================================= */
         .bottom-nav-container {
             display: none; position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
             z-index: 9999;
@@ -357,34 +359,47 @@
         
         .island-nav {
             position: relative;
-            background: rgba(20, 20, 20, 0.85);
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(18, 18, 18, 0.9);
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 50px;
-            padding: 8px 15px;
-            display: flex; align-items: center; gap: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-            width: auto;
+            padding: 8px; /* Balanced Padding */
+            display: flex; align-items: center; justify-content: center;
+            gap: 12px; /* Consistent Gap */
+            box-shadow: 0 10px 40px rgba(0,0,0,0.7);
         }
 
+        /* The Jelly Glint */
         .nav-glint {
-            position: absolute; top: 5px; left: 5px; height: calc(100% - 10px); width: 40px;
-            background: rgba(255,255,255,0.15); border-radius: 50px;
-            transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.2), width 0.3s ease;
-            z-index: 0; pointer-events: none;
+            position: absolute;
+            top: 50%; left: 0;
+            height: 44px; width: 44px; /* Matches Icon Size */
+            background: rgba(255,255,255,0.15); 
+            border-radius: 50%;
+            z-index: 0; 
+            pointer-events: none;
+            /* Spring Physics for Jelly Feel */
+            transition: transform 0.5s cubic-bezier(0.5, 1.6, 0.4, 0.7), width 0.3s ease;
+            transform-origin: center center;
+            /* Alignment Fix: Center vertically */
+            transform: translateY(-50%) translateX(0);
         }
 
         .island-item {
             position: relative; z-index: 1;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            width: 40px; height: 40px; border-radius: 50%;
-            color: rgba(255,255,255,0.5); transition: color 0.3s ease;
-            cursor: pointer; -webkit-tap-highlight-color: transparent;
+            width: 44px; height: 44px; border-radius: 50%;
+            color: rgba(255,255,255,0.5); 
+            cursor: pointer; 
+            -webkit-tap-highlight-color: transparent;
+            /* Pop Animation */
+            transition: color 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         
-        .island-item svg { width: 24px; height: 24px; fill: currentColor; transition: transform 0.3s ease; }
-        .island-item.active { color: #fff; }
-        .island-item.active svg { transform: scale(1.1); }
+        .island-item svg { width: 22px; height: 22px; fill: currentColor; }
+        
+        /* Active State */
+        .island-item.active { color: #fff; transform: scale(1.1); }
 
         /* ========================================= */
         /* THE DEBUGGER GAME CSS (IMPROVED)          */
@@ -975,15 +990,17 @@
             });
         }
 
-        // --- NEW ISLAND NAV (Logic) ---
+        // --- FIXED: JELLY NAV LOGIC ---
         const islandItems = document.querySelectorAll('.island-item');
         const navGlint = document.getElementById('navGlint');
 
         function moveGlintTo(element) {
             if (!element) return;
+            // Calculations for perfect centering
             const left = element.offsetLeft;
             const width = element.offsetWidth;
-            navGlint.style.transform = `translateX(${left}px)`;
+            
+            navGlint.style.transform = `translateY(-50%) translateX(${left}px)`;
             navGlint.style.width = `${width}px`;
         }
         
