@@ -219,6 +219,11 @@
             border-top: 1px solid rgba(255,255,255,0.1);
             border-bottom: 1px solid rgba(255,255,255,0.1);
             position: relative;
+            cursor: grab; /* Indicates drag capability */
+        }
+        
+        .skills-section:active {
+            cursor: grabbing;
         }
 
         .skills-track {
@@ -238,6 +243,7 @@
             -webkit-text-stroke: 1px rgba(255,255,255,0.4);
             transition: all 0.3s ease-out;
             cursor: default;
+            user-select: none; /* Important for dragging */
         }
 
         .skill-item:hover {
@@ -786,36 +792,74 @@
         );
         console.log("Welcome to the console. If you're looking for bugs, I hope you brought a suit. 👔");
 
-        // --- SKILLS TICKER LOGIC ---
+        // --- SKILLS TICKER LOGIC (REPLACED WITH DRAG SUPPORT) ---
         const skillsContainer = document.getElementById('skillsContainer');
         const skillsTrack = document.getElementById('skillsTrack');
         
         let scrollPos = 0;
-        let speed = 1.5; 
-        let targetSpeed = 1.5;
+        let defaultSpeed = 1.5; // Auto scroll speed
+        let isDragging = false;
+        let startX = 0;
+        let previousTranslate = 0;
+        let animationId;
 
-        skillsContainer.addEventListener('mousemove', (e) => {
-            const containerWidth = window.innerWidth;
-            const mouseX = e.clientX;
-            const normalizedPos = (mouseX / containerWidth) * 2 - 1;
-            targetSpeed = normalizedPos * 15; 
-        });
-
-        skillsContainer.addEventListener('mouseleave', () => { targetSpeed = 1.5; });
-
+        // Auto Scroll Function
         function animateTicker() {
-            speed += (targetSpeed - speed) * 0.1;
-            scrollPos -= speed;
-            const trackWidth = skillsTrack.scrollWidth / 3; 
+            const trackWidth = skillsTrack.scrollWidth / 3; // Assuming 3 sets of items based on HTML structure
+
+            if (!isDragging) {
+                scrollPos -= defaultSpeed;
+            }
+
+            // Infinite Scroll Reset Logic
             if (scrollPos <= -trackWidth) {
                 scrollPos = 0;
             } else if (scrollPos > 0) {
                 scrollPos = -trackWidth;
             }
+
             skillsTrack.style.transform = `translateX(${scrollPos}px)`;
-            requestAnimationFrame(animateTicker);
+            animationId = requestAnimationFrame(animateTicker);
         }
+
+        // Start
         animateTicker();
+
+        // --- DRAG EVENTS (Mouse & Touch) ---
+        function startDrag(e) {
+            isDragging = true;
+            startX = getPositionX(e);
+            previousTranslate = scrollPos;
+            skillsContainer.style.cursor = 'grabbing';
+        }
+
+        function moveDrag(e) {
+            if (!isDragging) return;
+            const currentX = getPositionX(e);
+            const diff = currentX - startX;
+            scrollPos = previousTranslate + diff;
+        }
+
+        function endDrag() {
+            isDragging = false;
+            skillsContainer.style.cursor = 'grab';
+        }
+
+        function getPositionX(e) {
+            return e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+        }
+
+        // Listeners
+        skillsContainer.addEventListener('mousedown', startDrag);
+        skillsContainer.addEventListener('touchstart', startDrag);
+
+        skillsContainer.addEventListener('mousemove', moveDrag);
+        skillsContainer.addEventListener('touchmove', moveDrag);
+
+        skillsContainer.addEventListener('mouseup', endDrag);
+        skillsContainer.addEventListener('mouseleave', endDrag);
+        skillsContainer.addEventListener('touchend', endDrag);
+
 
         // --- GENERIC ASSETS & CURSOR ---
         const projectData = [
