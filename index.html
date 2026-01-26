@@ -151,7 +151,7 @@
             max-width: 600px; border-left: 2px solid currentColor; padding-left: 20px;
         }
 
-        /* --- EXPERIENCE CARDS (BOXY LOOK RESTORED) --- */
+        /* --- BOXY CARDS (Used for Experience & Recognition) --- */
         .list-item {
             display: flex; flex-direction: column; 
             padding: 2rem; 
@@ -189,7 +189,7 @@
             position: relative; z-index: 2;
         }
 
-        /* Hover States for Boxy Experience Cards */
+        /* Hover States for Boxy Cards */
         .list-item:hover {
             background-color: #000; color: #fff;
             transform: scale(1.02);
@@ -273,14 +273,6 @@
         }
         .project-link:hover { background-color: black; color: white; box-shadow: 4px 4px 0px rgba(255,255,255,0.5); }
 
-        /* --- RECOGNITION (FIXED: Uses list style, NOT card style) --- */
-        .recognition-list-item {
-             display: flex; justify-content: space-between; align-items: center; padding: 2.5rem 0;
-             border-bottom: 1px solid rgba(125, 125, 125, 0.2); transition: padding 0.3s ease; width: 100%;
-        }
-        .recognition-list-item:hover { padding: 2.5rem 1rem; background-color: rgba(125, 125, 125, 0.05); }
-
-
         /* --- TRAIL & CARD & TOAST & MOBILE --- */
         .trail-image {
             position: absolute; width: 200px; height: 120px; object-fit: cover; border-radius: 8px;
@@ -361,7 +353,7 @@
             .bottom-nav { display: flex; }
             .list-item { gap: 0.5rem; }
             .list-meta { text-align: left; margin-left: 0; font-size: 0.85rem; opacity: 0.5; }
-            .list-item:hover { padding: 1.5rem; } /* Less aggressive padding on mobile */
+            .list-item:hover { padding: 1.5rem; } 
             
             .trail-image { display: block !important; }
             .persistent-card { display: none !important; }
@@ -520,17 +512,35 @@
 
     <section id="recognition" class="section-light">
         <div class="section-title">Recognition</div>
-        <div class="recognition-list-item recognition-trigger" data-img="https://i.ibb.co/3yzjFkBy/converge-cursor.png">
-            <div><span class="list-title">Converge Runnerup</span><span class="list-role">IBM</span></div>
-            <span class="list-meta">2025</span>
+        
+        <div class="list-item recognition-trigger" data-img="https://i.ibb.co/3yzjFkBy/converge-cursor.png">
+            <div class="list-header">
+                <div><span class="list-title">Converge Runnerup</span><span class="list-role">IBM</span></div>
+                <span class="list-meta">2025</span>
+            </div>
+            <div class="list-details">
+                Won 2nd place globally among 600 participants for "Beyond the Algorithm" whitepaper.
+            </div>
         </div>
-        <div class="recognition-list-item recognition-trigger" data-img="https://i.ibb.co/KjWN4c6Y/gem-cursor.png">
-             <div><span class="list-title">GEMs of Development</span><span class="list-role">IBM India</span></div>
-             <span class="list-meta">2025</span>
+        
+        <div class="list-item recognition-trigger" data-img="https://i.ibb.co/KjWN4c6Y/gem-cursor.png">
+             <div class="list-header">
+                <div><span class="list-title">GEMs of Development</span><span class="list-role">IBM India</span></div>
+                <span class="list-meta">2025</span>
+            </div>
+            <div class="list-details">
+                Recognized for technical excellence and impact within the IBM India Development Lab.
+            </div>
         </div>
-        <div class="recognition-list-item recognition-trigger" data-img="https://i.ibb.co/35v1R5Nk/gratitude-cursor.png">
-             <div><span class="list-title">Top Performer Gratitude</span><span class="list-role">IBM</span></div>
-             <span class="list-meta">2026</span>
+        
+        <div class="list-item recognition-trigger" data-img="https://i.ibb.co/35v1R5Nk/gratitude-cursor.png">
+             <div class="list-header">
+                <div><span class="list-title">Top Performer Gratitude</span><span class="list-role">IBM</span></div>
+                <span class="list-meta">2026</span>
+            </div>
+            <div class="list-details">
+                Awarded for consistent high performance and delivery of critical project milestones.
+            </div>
         </div>
     </section>
 
