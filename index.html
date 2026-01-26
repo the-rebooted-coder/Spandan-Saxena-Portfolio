@@ -11,13 +11,19 @@
     <meta property="og:url" content="https://your-portfolio-url.com/">
     <meta property="og:title" content="Spandan Saxena | Software Developer">
     <meta property="og:description" content="From Logic to Launch. Explore my interactive portfolio.">
-    <meta property="og:image" content="https://your-portfolio-url.com/og-image.jpg"> <meta property="twitter:card" content="summary_large_image">
+    <meta property="og:image" content="https://your-portfolio-url.com/og-image.jpg"> 
+
+    <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://your-portfolio-url.com/">
     <meta property="twitter:title" content="Spandan Saxena | Software Developer">
     <meta property="twitter:description" content="From Logic to Launch. Explore my interactive portfolio.">
-    <meta property="twitter:image" content="https://your-portfolio-url.com/og-image.jpg"> <link rel="icon" type="image/png" href="favicon.png"> <link rel="preconnect" href="https://fonts.googleapis.com">
+    <meta property="twitter:image" content="https://your-portfolio-url.com/og-image.jpg">
+
+    <link rel="icon" type="image/png" href="favicon.png"> 
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;800&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     
     <style>
         /* --- RESET & VARIABLES --- */
@@ -26,15 +32,12 @@
             --text-dark: #ffffff;
             --bg-light: #ffffff;
             --text-light: #050505;
-            --cursor-size: 20px;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            /* POINT 6: We removed global cursor:none here. 
-               It is now applied via the .custom-cursor-active class on <body> */
             -webkit-tap-highlight-color: transparent;
         }
 
@@ -55,8 +58,6 @@
             padding-bottom: 0;
         }
 
-        /* POINT 6: Cursor Safe-Guard 
-           The cursor is only hidden if JS successfully adds this class. */
         body.custom-cursor-active * {
             cursor: none !important;
         }
@@ -71,472 +72,245 @@
             color: inherit;
         }
 
-        /* --- CUSTOM TEXT SELECTION (SMART INVERT) --- */
-        ::selection {
-            background-color: #ffffff;
-            color: #000000;
-            text-shadow: none;
-        }
-        ::-moz-selection {
-            background: #ffffff;
-            color: #000000;
-        }
-
-        .section-light ::selection,
-        .chat-bubble ::selection {
-            background-color: #000000;
-            color: #ffffff;
-        }
-        .section-light ::-moz-selection,
-        .chat-bubble ::-moz-selection {
-            background: #000000;
-            color: #ffffff;
-        }
+        /* --- SELECTION --- */
+        ::selection { background-color: #ffffff; color: #000000; text-shadow: none; }
+        ::-moz-selection { background: #ffffff; color: #000000; }
+        .section-light ::selection, .chat-bubble ::selection { background-color: #000000; color: #ffffff; }
 
         /* --- SMART CURSOR --- */
-        .cursor-dot,
-        .cursor-outline {
-            position: fixed;
-            top: 0;
-            left: 0;
+        .cursor-dot, .cursor-outline {
+            position: fixed; top: 0; left: 0;
             transform: translate(-50%, -50%);
-            border-radius: 50%;
-            z-index: 9999;
-            pointer-events: none;
-            mix-blend-mode: difference;
-            background-color: white; 
-            display: none; /* Hidden by default until JS enables them */
+            border-radius: 50%; z-index: 9999;
+            pointer-events: none; mix-blend-mode: difference;
+            background-color: white; display: none;
         }
+        body.custom-cursor-active .cursor-dot, body.custom-cursor-active .cursor-outline { display: block; }
         
-        body.custom-cursor-active .cursor-dot,
-        body.custom-cursor-active .cursor-outline {
-            display: block;
-        }
-
-        .cursor-dot { 
-            width: 8px; 
-            height: 8px; 
-            transition: opacity 0.2s;
-        }
-        
+        .cursor-dot { width: 8px; height: 8px; transition: opacity 0.2s; }
         .cursor-outline {
-            width: 40px;
-            height: 40px;
-            border: 1px solid white;
-            background-color: transparent;
-            transition: width 0.2s, height 0.2s, background-color 0.2s, border-color 0.2s, border-radius 0.2s, background-image 0.2s;
-            background-size: cover;
-            background-position: center;
+            width: 40px; height: 40px; border: 1px solid white; background-color: transparent;
+            transition: all 0.2s; background-size: cover; background-position: center;
         }
 
-        /* 1. LINK HOVER (Big Circle) */
-        body.hovering .cursor-outline {
-            width: 70px;
-            height: 70px;
-            background-color: white;
-            opacity: 1;
-        }
+        /* Cursor States */
+        body.hovering .cursor-outline { width: 70px; height: 70px; background-color: white; opacity: 1; }
         body.hovering .cursor-dot { opacity: 0; }
-
-        /* 2. TEXT HOVER (The "Zap" I-Beam Effect) */
-        body.text-mode .cursor-outline {
-            width: 4px;       /* Thin */
-            height: 30px;     /* Tall */
-            border-radius: 2px; /* Pill shape */
-            background-color: white; /* Solid fill */
-            border-color: transparent;
-        }
-        body.text-mode .cursor-dot {
-            opacity: 0; /* Hide the dot */
-        }
-
-        /* 3. HIGHLIGHT MODE (Yellow Effect on Bubbles) */
-        body.highlighting .cursor-outline {
-            width: 80px;
-            height: 80px;
-            background-color: #0000FF; 
-            border-color: transparent;
-            opacity: 1;
-            border-radius: 50%; 
-        }
+        
+        body.text-mode .cursor-outline { width: 4px; height: 30px; border-radius: 2px; background-color: white; border-color: transparent; }
+        body.text-mode .cursor-dot { opacity: 0; }
+        
+        body.highlighting .cursor-outline { width: 80px; height: 80px; background-color: #0000FF; border-color: transparent; opacity: 1; border-radius: 50%; }
         body.highlighting .cursor-dot { opacity: 0; }
-
-        /* 4. IMAGE PREVIEW MODE (For Recognition Hover) */
+        
         body.img-preview-mode .cursor-outline {
-            width: 150px; /* Square width */
-            height: 150px; /* Square height */
-            border-radius: 12px; /* Slightly rounded corners */
-            border: none; /* No border for images */
-            background-color: transparent; /* Transparent background for PNGs */
-            mix-blend-mode: normal; 
-            opacity: 1;
+            width: 150px; height: 150px; border-radius: 12px; border: none;
+            background-color: transparent; mix-blend-mode: normal; opacity: 1;
         }
         body.img-preview-mode .cursor-dot { opacity: 0; }
 
-
         /* --- NAVIGATION --- */
         nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            padding: 2rem 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 100;
-            mix-blend-mode: difference;
-            color: white; 
+            position: fixed; top: 0; width: 100%; padding: 2rem 5%;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 100; mix-blend-mode: difference; color: white;
         }
         .logo { font-size: 1.5rem; font-weight: 700; letter-spacing: -1px; }
         .nav-links { display: flex; gap: 2rem; }
         .nav-links a {
-            position: relative;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 500;
+            position: relative; font-size: 0.9rem; text-transform: uppercase;
+            letter-spacing: 1px; font-weight: 500;
         }
         .nav-links a::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 1px;
-            bottom: -5px;
-            left: 0;
-            background-color: white;
-            transition: width 0.3s ease;
+            content: ''; position: absolute; width: 0; height: 1px; bottom: -5px; left: 0;
+            background-color: white; transition: width 0.3s ease;
         }
         .nav-links a:hover::after { width: 100%; }
 
-        /* --- BOTTOM NAV (MOBILE) --- */
-        .bottom-nav {
-            display: none;
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(20, 20, 20, 0.9);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            z-index: 999;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-            border: 1px solid rgba(255,255,255,0.15);
-            width: 60px;
-            height: 60px;
-            border-radius: 30px;
-            padding: 0;
-            align-items: center;
-            justify-content: center;
-            transition: width 0.5s cubic-bezier(0.25, 1, 0.5, 1), border-radius 0.5s ease;
-            overflow: hidden;
-        }
-
-        .bottom-nav.expanded {
-            width: 90%;
-            max-width: 400px;
-            border-radius: 25px;
-            padding: 0 25px;
-            justify-content: space-between;
-        }
-
-        .bottom-nav a {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            font-size: 0.7rem;
-            color: #aaa;
-            gap: 5px;
-            transition: color 0.3s, opacity 0.3s;
-            opacity: 0;
-            min-width: 50px;
-        }
-        .bottom-nav svg { width: 24px; height: 24px; fill: currentColor; }
-
-        .bottom-nav.expanded a { display: flex; opacity: 1; }
-        .bottom-nav:not(.expanded) a.active { display: flex; opacity: 1; color: white; }
-        .bottom-nav:not(.expanded) a.active span { display: none; }
-        .bottom-nav a.active, .bottom-nav a:hover { color: #fff; }
-
         /* --- SECTIONS --- */
         section {
-            min-height: 100vh;
-            padding: 100px 10%;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            transition: background-color 0.5s ease, color 0.5s ease;
-            width: 100%;
-            overflow: hidden;
+            min-height: 100vh; padding: 100px 10%; position: relative; display: flex;
+            flex-direction: column; justify-content: center; transition: background-color 0.5s ease;
+            width: 100%; overflow: hidden;
         }
         .section-dark { background-color: var(--bg-dark); color: var(--text-dark); }
         .section-light { background-color: var(--bg-light); color: var(--text-light); }
         .section-title {
-            font-size: clamp(3rem, 10vw, 8rem); 
-            margin-bottom: 4rem;
-            opacity: 0.05;
-            position: absolute;
-            top: 10%;
-            right: 5%;
-            z-index: 0;
-            pointer-events: none;
-            text-transform: uppercase;
-            white-space: nowrap;
+            font-size: clamp(3rem, 10vw, 8rem); margin-bottom: 4rem; opacity: 0.05;
+            position: absolute; top: 10%; right: 5%; z-index: 0; pointer-events: none;
+            text-transform: uppercase; white-space: nowrap;
         }
 
         /* --- HERO --- */
-        #hero {
-            height: 100vh;
-            align-items: flex-start;
-            justify-content: center;
-            position: relative;
-            overflow: hidden; 
+        #hero { height: 100vh; align-items: flex-start; justify-content: center; position: relative; overflow: hidden; }
+        .hero-text { z-index: 10; position: relative; pointer-events: none; width: 100%; }
+        .hero-text h1, .hero-text p { pointer-events: auto; }
+        .hero-text h1 { font-size: clamp(3.5rem, 8vw, 6.5rem); line-height: 1.1; margin-bottom: 1.5rem; word-wrap: break-word; }
+        .hero-text p {
+            font-size: clamp(1rem, 2vw, 1.5rem); font-weight: 300; opacity: 0.8;
+            max-width: 600px; border-left: 2px solid currentColor; padding-left: 20px;
         }
-        .hero-text {
-            z-index: 10; 
-            position: relative;
-            pointer-events: none;
+
+        /* --- EXPERIENCE CARDS (BOXY LOOK RESTORED) --- */
+        .list-item {
+            display: flex; flex-direction: column; 
+            padding: 2rem; 
+            margin-bottom: 1rem;
+            border: 1px solid rgba(125, 125, 125, 0.2); 
+            border-radius: 12px;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            position: relative; 
+            overflow: hidden; 
+            background: transparent; 
+            cursor: pointer;
             width: 100%;
         }
         
-        .hero-text h1, .hero-text p {
-            pointer-events: auto; /* Allow text selection */
+        .list-header {
+            display: flex; justify-content: space-between; align-items: center; width: 100%;
+            position: relative; z-index: 2;
         }
 
-        .hero-text h1 {
-            font-size: clamp(3.5rem, 8vw, 6.5rem); 
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
-            word-wrap: break-word;
-        }
-        .hero-text p {
-            font-size: clamp(1rem, 2vw, 1.5rem);
-            font-weight: 300;
-            opacity: 0.8;
-            max-width: 600px;
-            border-left: 2px solid currentColor;
-            padding-left: 20px;
+        .list-title { font-size: clamp(1.2rem, 4vw, 1.8rem); font-family: 'Playfair Display', serif; font-weight: 600; }
+        .list-role { font-size: 0.9rem; font-family: 'Outfit', sans-serif; opacity: 0.7; margin-top: 5px; }
+        .list-meta { 
+            font-size: 0.9rem; 
+            font-weight: 600; 
+            border: 1px solid currentColor; 
+            padding: 5px 12px; 
+            border-radius: 50px; 
+            transition: all 0.3s;
         }
 
-        /* --- TRAIL & CARD --- */
+        .list-details {
+            max-height: 0; overflow: hidden; opacity: 0;
+            transition: all 0.4s ease; margin-top: 0;
+            font-size: 1rem; line-height: 1.5; font-weight: 300;
+            position: relative; z-index: 2;
+        }
+
+        /* Hover States for Boxy Experience Cards */
+        .list-item:hover {
+            background-color: #000; color: #fff;
+            transform: scale(1.02);
+            box-shadow: 10px 10px 0px rgba(0,0,0,0.2);
+            border-color: #000;
+        }
+        .list-item:hover .list-details {
+            max-height: 200px; opacity: 1; margin-top: 1.5rem;
+            padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.2);
+        }
+        .list-item:hover .list-meta { border-color: #fff; background: #fff; color: #000; }
+
+
+        /* --- SKILLS TICKER (VELOCITY) --- */
+        .skills-section {
+            width: 100%;
+            overflow: hidden;
+            background-color: #000;
+            padding: 5rem 0;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+        }
+
+        .skills-track {
+            display: flex;
+            width: fit-content;
+            gap: 4rem;
+            will-change: transform; /* Performance optimization */
+        }
+
+        .skill-item {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 800;
+            text-transform: uppercase;
+            white-space: nowrap;
+            color: transparent; /* See-through text */
+            -webkit-text-stroke: 1px rgba(255,255,255,0.4); /* Thin outline */
+            transition: all 0.3s ease-out;
+            cursor: default;
+        }
+
+        .skill-item:hover {
+            color: #fff; /* Fill solid */
+            -webkit-text-stroke: 0px;
+            text-shadow: 0 0 20px rgba(255,255,255,0.5);
+            transform: scale(1.05);
+        }
+
+        /* --- PROJECTS --- */
+        .chat-container {
+            display: flex; flex-direction: column; gap: 4rem; width: 100%; max-width: 800px;
+            margin: 0 auto; position: relative; z-index: 2;
+        }
+        .chat-bubble {
+            position: relative; max-width: 70%; padding: 2.5rem; background: #ffffff; color: #000000;
+            border: 3px solid #000000; border-radius: 20px; box-shadow: 8px 8px 0px #000000;
+            opacity: 0; transform: translateY(30px); transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            background-image: radial-gradient(#e5e5e5 1.5px, transparent 1.5px);
+            background-size: 15px 15px; background-position: 0 0; background-color: #ffffff;
+        }
+        @keyframes movingDots { 0% { background-position: 0 0; } 100% { background-position: 15px 15px; } }
+        .chat-bubble:hover { transform: translateY(-5px); box-shadow: 12px 12px 0px #000000; animation: movingDots 1s linear infinite; }
+        .section-dark .chat-bubble, .section-light .chat-bubble { background-color: #ffffff; color: #000000; }
+        .chat-bubble:nth-child(odd) { align-self: flex-start; margin-right: auto; border-bottom-left-radius: 0; }
+        .chat-bubble:nth-child(even) { align-self: flex-end; margin-left: auto; text-align: right; border-bottom-right-radius: 0; }
+        .chat-bubble::after, .chat-bubble::before { content: ''; position: absolute; width: 0; height: 0; border-style: solid; }
+        .chat-bubble:nth-child(odd)::before { bottom: -23px; left: -3px; border-width: 20px 20px 0 0; border-color: #000000 transparent transparent transparent; }
+        .chat-bubble:nth-child(odd)::after { bottom: -17px; left: 0px; border-width: 17px 17px 0 0; border-color: #ffffff transparent transparent transparent; }
+        .chat-bubble:nth-child(even)::before { bottom: -23px; right: -3px; border-width: 20px 0 0 20px; border-color: #000000 transparent transparent transparent; }
+        .chat-bubble:nth-child(even)::after { bottom: -17px; right: 0px; border-width: 17px 0 0 17px; border-color: #ffffff transparent transparent transparent; }
+        .chat-bubble.visible { opacity: 1; transform: translateY(0); }
+        .project-title { font-size: 2rem; margin-bottom: 0.5rem; font-weight: 700; font-family: 'Playfair Display', serif; }
+        .project-desc { font-size: 1.1rem; margin-bottom: 1.5rem; font-weight: 400; font-family: 'Outfit', sans-serif; }
+        .project-link {
+            font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+            border: 2px solid black; padding: 10px 24px; border-radius: 50px;
+            transition: all 0.3s; display: inline-block; background-color: white; color: black;
+            box-shadow: 2px 2px 0px #000; position: relative; z-index: 2;
+        }
+        .project-link:hover { background-color: black; color: white; box-shadow: 4px 4px 0px rgba(255,255,255,0.5); }
+
+        /* --- RECOGNITION (FIXED: Uses list style, NOT card style) --- */
+        .recognition-list-item {
+             display: flex; justify-content: space-between; align-items: center; padding: 2.5rem 0;
+             border-bottom: 1px solid rgba(125, 125, 125, 0.2); transition: padding 0.3s ease; width: 100%;
+        }
+        .recognition-list-item:hover { padding: 2.5rem 1rem; background-color: rgba(125, 125, 125, 0.05); }
+
+
+        /* --- TRAIL & CARD & TOAST & MOBILE --- */
         .trail-image {
-            position: absolute;
-            width: 200px;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 8px;
-            pointer-events: none;
-            transform: translate(-50%, -50%) scale(0.5);
-            opacity: 0;
-            z-index: 1; 
-            animation: popInFadeOut 1s forwards;
-            filter: grayscale(100%);
-            border: 1px solid rgba(255,255,255,0.2);
+            position: absolute; width: 200px; height: 120px; object-fit: cover; border-radius: 8px;
+            pointer-events: none; transform: translate(-50%, -50%) scale(0.5); opacity: 0; z-index: 1;
+            animation: popInFadeOut 1s forwards; filter: grayscale(100%); border: 1px solid rgba(255,255,255,0.2);
         }
         .persistent-card {
-            position: absolute;
-            width: 240px;
-            height: 150px;
-            border-radius: 10px;
-            transform: translate(-50%, -50%) scale(0.5) rotate(var(--rot));
-            opacity: 0;
-            z-index: 5;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            cursor: pointer;
-            pointer-events: auto; 
-            border: 2px solid rgba(255,255,255,0.8);
-            overflow: hidden;
-            display: block; 
+            position: absolute; width: 240px; height: 150px; border-radius: 10px;
+            transform: translate(-50%, -50%) scale(0.5) rotate(var(--rot)); opacity: 0; z-index: 5;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; pointer-events: auto;
+            border: 2px solid rgba(255,255,255,0.8); overflow: hidden; display: block;
         }
         .persistent-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
         .persistent-card.active { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(var(--rot)); }
-        .persistent-card:hover {
-            z-index: 20;
-            border-color: #fff;
-            transform: translate(-50%, -50%) scale(1.1) rotate(0deg) !important;
-        }
+        .persistent-card:hover { z-index: 20; border-color: #fff; transform: translate(-50%, -50%) scale(1.1) rotate(0deg) !important; }
+        
         @keyframes popInFadeOut {
             0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8) rotate(var(--rot)); }
             20% { opacity: 0.8; transform: translate(-50%, -50%) scale(1) rotate(var(--rot)); }
             100% { opacity: 0; transform: translate(-50%, -50%) scale(1) rotate(var(--rot)); }
         }
 
-        /* --- TOAST --- */
         .toast-message {
-            position: fixed;
-            bottom: 100px; 
-            left: 50%;
-            transform: translateX(-50%) translateY(20px);
-            background: #ffffff;
-            color: #000000;
-            padding: 12px 28px;
-            border-radius: 50px;
-            font-family: 'Outfit', sans-serif;
-            font-weight: 600;
-            font-size: 0.95rem;
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 10000;
-            box-shadow: 0 10px 40px rgba(255,255,255,0.1);
-            text-align: center;
-            white-space: nowrap;
+            position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px);
+            background: #ffffff; color: #000000; padding: 12px 28px; border-radius: 50px;
+            font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 0.95rem; opacity: 0;
+            pointer-events: none; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 10000; box-shadow: 0 10px 40px rgba(255,255,255,0.1); text-align: center; white-space: nowrap;
         }
         .toast-message.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-        /* --- COMIC STYLE BUBBLES --- */
-        .chat-container {
-            display: flex;
-            flex-direction: column;
-            gap: 4rem; 
-            width: 100%;
-            max-width: 800px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 2;
-        }
-
-        .chat-bubble {
-            position: relative;
-            max-width: 70%;
-            padding: 2.5rem;
-            background: #ffffff;
-            color: #000000;
-            border: 3px solid #000000;
-            border-radius: 20px;
-            box-shadow: 8px 8px 0px #000000;
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-            /* Prepare for background animation */
-            background-image: radial-gradient(#e5e5e5 1.5px, transparent 1.5px);
-            background-size: 15px 15px;
-            background-position: 0 0;
-            background-color: #ffffff;
-        }
-
-        /* Moving Dots Animation Definition */
-        @keyframes movingDots {
-            0% { background-position: 0 0; }
-            100% { background-position: 15px 15px; }
-        }
-
-        .chat-bubble:hover { 
-            transform: translateY(-5px); 
-            box-shadow: 12px 12px 0px #000000;
-            animation: movingDots 1s linear infinite;
-        }
-
-        .section-dark .chat-bubble, .section-light .chat-bubble {
-            background-color: #ffffff;
-            color: #000000;
-        }
-
-        /* Alternating */
-        .chat-bubble:nth-child(odd) {
-            align-self: flex-start;
-            margin-right: auto;
-            border-bottom-left-radius: 0;
-        }
-        .chat-bubble:nth-child(even) {
-            align-self: flex-end;
-            margin-left: auto;
-            text-align: right;
-            border-bottom-right-radius: 0;
-        }
-
-        /* Tails */
-        .chat-bubble::after, .chat-bubble::before {
-            content: '';
-            position: absolute;
-            width: 0; height: 0;
-            border-style: solid;
-        }
-
-        /* Left Tail */
-        .chat-bubble:nth-child(odd)::before {
-            bottom: -23px; left: -3px;
-            border-width: 20px 20px 0 0;
-            border-color: #000000 transparent transparent transparent;
-        }
-        .chat-bubble:nth-child(odd)::after {
-            bottom: -17px; left: 0px;
-            border-width: 17px 17px 0 0;
-            border-color: #ffffff transparent transparent transparent;
-        }
-
-        /* Right Tail */
-        .chat-bubble:nth-child(even)::before {
-            bottom: -23px; right: -3px;
-            border-width: 20px 0 0 20px;
-            border-color: #000000 transparent transparent transparent;
-        }
-        .chat-bubble:nth-child(even)::after {
-            bottom: -17px; right: 0px;
-            border-width: 17px 0 0 17px;
-            border-color: #ffffff transparent transparent transparent;
-        }
-
-        .chat-bubble.visible { opacity: 1; transform: translateY(0); }
-
-        .project-title { font-size: 2rem; margin-bottom: 0.5rem; font-weight: 700; font-family: 'Playfair Display', serif; }
-        .project-desc { font-size: 1.1rem; margin-bottom: 1.5rem; font-weight: 400; font-family: 'Outfit', sans-serif; }
-        
-        .project-link {
-            font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
-            border: 2px solid black; padding: 10px 24px; border-radius: 50px;
-            transition: all 0.3s; display: inline-block; background-color: white; color: black;
-            box-shadow: 2px 2px 0px #000;
-            position: relative; z-index: 2; /* Ensure clicks work over dots */
-        }
-        .project-link:hover { 
-            background-color: black; color: white; box-shadow: 4px 4px 0px rgba(255,255,255,0.5);
-        }
-
-        /* --- LISTS --- */
-        .list-item {
-            display: flex; justify-content: space-between; align-items: center; padding: 2.5rem 0;
-            border-bottom: 1px solid rgba(125, 125, 125, 0.2); transition: padding 0.3s ease; width: 100%;
-        }
-        .list-item:hover { padding: 2.5rem 1rem; background-color: rgba(125, 125, 125, 0.05); }
-        .list-title { font-size: clamp(1.2rem, 4vw, 1.8rem); font-family: 'Playfair Display', serif; }
-        .list-meta { font-size: 0.9rem; opacity: 0.6; text-align: right; white-space: nowrap; margin-left: 1rem; }
-        .list-role { display: block; font-size: 0.9rem; font-family: 'Outfit', sans-serif; margin-top: 5px; opacity: 0.8; }
-
-        /* --- SKILLS TICKER (POINT 2) --- */
-        .ticker-wrap {
-            width: 100%;
-            overflow: hidden;
-            background-color: #000; /* Contrast background */
-            padding: 2rem 0;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            position: relative;
-        }
-        .ticker {
-            display: flex;
-            width: fit-content;
-            animation: ticker 20s linear infinite;
-        }
-        .ticker-item {
-            font-family: 'Outfit', monospace; /* Tech feel */
-            font-size: 3rem;
-            white-space: nowrap;
-            color: rgba(255, 255, 255, 0.3);
-            margin-right: 4rem;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-        .ticker-item.highlight {
-            color: #fff;
-            -webkit-text-stroke: 1px white;
-        }
-
-        @keyframes ticker {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); } /* Move half since we double the items */
-        }
-
 
         /* --- FOOTER --- */
         .footer-brand { margin-top: 5rem; font-size: 0.9rem; opacity: 0.5; font-family: monospace; letter-spacing: 2px; }
@@ -544,32 +318,36 @@
         .social-link { font-size: 1.2rem; border-bottom: 1px solid transparent; padding-bottom: 5px; }
         .social-link:hover { border-bottom: 1px solid currentColor; }
 
-        /* --- MOBILE VISUALS HUD --- */
+        /* --- MOBILE VISUALS --- */
         .mobile-visuals {
-            display: none;
-            position: fixed;
-            bottom: 110px; /* Sits above the mobile nav */
-            right: 20px;
-            width: 140px;
-            height: 140px;
-            pointer-events: none;
-            z-index: 50;
+            display: none; position: fixed; bottom: 110px; right: 20px; width: 140px; height: 140px;
+            pointer-events: none; z-index: 50;
         }
         .mobile-visuals img {
-            width: 100%; 
-            height: 100%;
-            object-fit: contain;
-            opacity: 0;
-            transition: opacity 0.5s ease, transform 0.5s ease;
-            position: absolute; 
-            top:0; 
-            left:0;
+            width: 100%; height: 100%; object-fit: contain; opacity: 0;
+            transition: opacity 0.5s ease, transform 0.5s ease; position: absolute; top:0; left:0;
             transform: scale(0.8) translateY(10px);
         }
-        .mobile-visuals img.active { 
-            opacity: 1; 
-            transform: scale(1) translateY(0); 
+        .mobile-visuals img.active { opacity: 1; transform: scale(1) translateY(0); }
+
+        /* --- BOTTOM NAV --- */
+        .bottom-nav {
+            display: none; position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: rgba(20, 20, 20, 0.9); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            z-index: 999; box-shadow: 0 10px 40px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.15);
+            width: 60px; height: 60px; border-radius: 30px; padding: 0; align-items: center; justify-content: center;
+            transition: width 0.5s cubic-bezier(0.25, 1, 0.5, 1), border-radius 0.5s ease; overflow: hidden;
         }
+        .bottom-nav.expanded { width: 90%; max-width: 400px; border-radius: 25px; padding: 0 25px; justify-content: space-between; }
+        .bottom-nav a {
+            display: none; flex-direction: column; align-items: center; font-size: 0.7rem; color: #aaa;
+            gap: 5px; transition: color 0.3s, opacity 0.3s; opacity: 0; min-width: 50px;
+        }
+        .bottom-nav svg { width: 24px; height: 24px; fill: currentColor; }
+        .bottom-nav.expanded a { display: flex; opacity: 1; }
+        .bottom-nav:not(.expanded) a.active { display: flex; opacity: 1; color: white; }
+        .bottom-nav:not(.expanded) a.active span { display: none; }
+        .bottom-nav a.active, .bottom-nav a:hover { color: #fff; }
 
         /* --- RESPONSIVE --- */
         @media (max-width: 768px) {
@@ -581,16 +359,18 @@
             nav { padding: 1.5rem 5%; }
             .nav-links { display: none; }
             .bottom-nav { display: flex; }
-            .list-item { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+            .list-item { gap: 0.5rem; }
             .list-meta { text-align: left; margin-left: 0; font-size: 0.85rem; opacity: 0.5; }
-            .list-item:hover { padding: 2.5rem 0; }
+            .list-item:hover { padding: 1.5rem; } /* Less aggressive padding on mobile */
             
-            /* --- ENABLE MOBILE EFFECTS --- */
-            .trail-image { display: block !important; } /* Force show trails */
-            .persistent-card { display: none !important; } /* Hide cards on mobile (too big) */
-            .cursor-dot, .cursor-outline { display: none !important; } /* Hard hide custom cursor on mobile */
-            .mobile-visuals { display: block; } /* Show HUD */
-            * { cursor: auto !important; } /* Reset cursor for mobile */
+            .trail-image { display: block !important; }
+            .persistent-card { display: none !important; }
+            .cursor-dot, .cursor-outline { display: none !important; }
+            .mobile-visuals { display: block; }
+            * { cursor: auto !important; }
+            
+            .skill-item { font-size: 3rem; -webkit-text-stroke: 1px rgba(255,255,255,0.6); }
+            .skill-item:hover { transform: scale(1.05); }
         }
     </style>
 </head>
@@ -615,20 +395,16 @@
 
     <div id="mobileNav" class="bottom-nav">
         <a href="#work" class="nav-item" data-target="work">
-            <svg viewBox="0 0 24 24"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/></svg>
-            <span>Exp</span>
+            <svg viewBox="0 0 24 24"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/></svg><span>Exp</span>
         </a>
         <a href="#projects" class="nav-item" data-target="projects">
-            <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg>
-            <span>Projects</span>
+            <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg><span>Projects</span>
         </a>
         <a href="#recognition" class="nav-item" data-target="recognition">
-            <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-            <span>Awards</span>
+            <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><span>Awards</span>
         </a>
         <a href="#contact" class="nav-item" data-target="contact">
-            <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-            <span>Contact</span>
+            <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg><span>Contact</span>
         </a>
     </div>
 
@@ -641,38 +417,60 @@
 
     <section id="work" class="section-light">
         <div class="section-title">Experience</div>
+        
         <div class="list-item hover-trigger">
-            <div><span class="list-title">IBM</span><span class="list-role">Application Developer</span></div>
-            <span class="list-meta">2023 - Current</span>
+            <div class="list-header">
+                <div>
+                    <span class="list-title">IBM</span>
+                    <div class="list-role">Application Developer</div>
+                </div>
+                <span class="list-meta">2023 - Current</span>
+            </div>
+            <div class="list-details">
+                Leading development on enterprise-scale software solutions. Focused on optimizing legacy codebases and integrating empathetic AI architectures.
+            </div>
         </div>
+
         <div class="list-item hover-trigger">
-            <div><span class="list-title">NIT Jaipur</span><span class="list-role">Research Intern</span></div>
-            <span class="list-meta">2022 - 2023</span>
+            <div class="list-header">
+                <div>
+                    <span class="list-title">NIT Jaipur</span>
+                    <div class="list-role">Research Intern</div>
+                </div>
+                <span class="list-meta">2022 - 2023</span>
+            </div>
+            <div class="list-details">
+                Conducted experimental research on Citrus Fruit Disease Identification using Computer Vision and Machine Learning models.
+            </div>
         </div>
+
         <div class="list-item hover-trigger">
-            <div><span class="list-title">Unacademy</span><span class="list-role">Software Developer Intern</span></div>
-            <span class="list-meta">Internship</span>
+            <div class="list-header">
+                <div>
+                    <span class="list-title">Unacademy</span>
+                    <div class="list-role">Software Developer Intern</div>
+                </div>
+                <span class="list-meta">Internship</span>
+            </div>
+            <div class="list-details">
+                Contributed to the core learning mobile application. Implemented new UI libraries and improved app performance metrics by 15%.
+            </div>
         </div>
     </section>
 
-    <div class="ticker-wrap section-light">
-        <div class="ticker">
-            <div class="ticker-item">Android</div>
-            <div class="ticker-item highlight">Kotlin</div>
-            <div class="ticker-item">Java</div>
-            <div class="ticker-item highlight">React JS</div>
-            <div class="ticker-item">Node.js</div>
-            <div class="ticker-item highlight">AWS</div>
-            <div class="ticker-item">Git</div>
-            <div class="ticker-item highlight">UI/UX</div>
-            <div class="ticker-item">Android</div>
-            <div class="ticker-item highlight">Kotlin</div>
-            <div class="ticker-item">Java</div>
-            <div class="ticker-item highlight">React JS</div>
-            <div class="ticker-item">Node.js</div>
-            <div class="ticker-item highlight">AWS</div>
-            <div class="ticker-item">Git</div>
-            <div class="ticker-item highlight">UI/UX</div>
+    <div class="skills-section section-light hover-trigger" id="skillsContainer">
+        <div class="skills-track" id="skillsTrack">
+            <div class="skill-item">Android</div><div class="skill-item">Kotlin</div><div class="skill-item">Java</div>
+            <div class="skill-item">React</div><div class="skill-item">Node.js</div><div class="skill-item">AWS</div>
+            <div class="skill-item">Git</div><div class="skill-item">Neobrutalism</div><div class="skill-item">UI/UX</div>
+            
+            <div class="skill-item">Android</div><div class="skill-item">Kotlin</div><div class="skill-item">Java</div>
+            <div class="skill-item">React</div><div class="skill-item">Node.js</div><div class="skill-item">AWS</div>
+            <div class="skill-item">Git</div><div class="skill-item">Neobrutalism</div><div class="skill-item">UI/UX</div>
+
+            <div class="skill-item">Android</div><div class="skill-item">Kotlin</div><div class="skill-item">Java</div>
+            <div class="skill-item">React</div><div class="skill-item">Node.js</div><div class="skill-item">AWS</div>
+            <div class="skill-item">Git</div><div class="skill-item">Neobrutalism</div><div class="skill-item">UI/UX</div>
         </div>
     </div>
 
@@ -722,20 +520,17 @@
 
     <section id="recognition" class="section-light">
         <div class="section-title">Recognition</div>
-        
-        <div class="list-item recognition-trigger" data-img="https://i.ibb.co/3yzjFkBy/converge-cursor.png">
+        <div class="recognition-list-item recognition-trigger" data-img="https://i.ibb.co/3yzjFkBy/converge-cursor.png">
             <div><span class="list-title">Converge Runnerup</span><span class="list-role">IBM</span></div>
             <span class="list-meta">2025</span>
         </div>
-        
-        <div class="list-item recognition-trigger" data-img="https://i.ibb.co/KjWN4c6Y/gem-cursor.png">
-            <div><span class="list-title">GEMs of Development</span><span class="list-role">IBM India</span></div>
-            <span class="list-meta">2025</span>
+        <div class="recognition-list-item recognition-trigger" data-img="https://i.ibb.co/KjWN4c6Y/gem-cursor.png">
+             <div><span class="list-title">GEMs of Development</span><span class="list-role">IBM India</span></div>
+             <span class="list-meta">2025</span>
         </div>
-        
-        <div class="list-item recognition-trigger" data-img="https://i.ibb.co/35v1R5Nk/gratitude-cursor.png">
-            <div><span class="list-title">Top Performer Gratitude</span><span class="list-role">IBM</span></div>
-            <span class="list-meta">2026</span>
+        <div class="recognition-list-item recognition-trigger" data-img="https://i.ibb.co/35v1R5Nk/gratitude-cursor.png">
+             <div><span class="list-title">Top Performer Gratitude</span><span class="list-role">IBM</span></div>
+             <span class="list-meta">2026</span>
         </div>
     </section>
 
@@ -756,25 +551,66 @@
     </section>
 
     <script>
-        // --- POINT 6: CURSOR SAFETY CHECK ---
-        // We only hide the default cursor if JavaScript is running and we can render custom cursors.
         document.body.classList.add('custom-cursor-active');
 
-        // --- POINT 5: ACCESSIBILITY (Alt Text Added) ---
+        // --- SKILLS TICKER LOGIC (VELOCITY BASED) ---
+        const skillsContainer = document.getElementById('skillsContainer');
+        const skillsTrack = document.getElementById('skillsTrack');
+        
+        let scrollPos = 0;
+        let speed = 1.5; // Default drift speed
+        let targetSpeed = 1.5;
+
+        // Mouse Velocity Logic
+        skillsContainer.addEventListener('mousemove', (e) => {
+            const containerWidth = window.innerWidth;
+            const mouseX = e.clientX;
+            
+            // Calculate position from center (-1 to 1)
+            const normalizedPos = (mouseX / containerWidth) * 2 - 1;
+            
+            // Map to speed: Left = fast negative, Right = fast positive
+            targetSpeed = normalizedPos * 15; 
+        });
+
+        skillsContainer.addEventListener('mouseleave', () => {
+            targetSpeed = 1.5; // Reset to default drift on exit
+        });
+
+        function animateTicker() {
+            // Smoothly interpolate current speed to target speed (Easing)
+            speed += (targetSpeed - speed) * 0.1;
+            scrollPos -= speed;
+            
+            // Infinite wrapping logic
+            const trackWidth = skillsTrack.scrollWidth / 3; 
+            if (scrollPos <= -trackWidth) {
+                scrollPos = 0;
+            } else if (scrollPos > 0) {
+                scrollPos = -trackWidth;
+            }
+
+            skillsTrack.style.transform = `translateX(${scrollPos}px)`;
+            requestAnimationFrame(animateTicker);
+        }
+        animateTicker();
+
+
+        // --- GENERIC ASSETS & CURSOR ---
         const projectData = [
-            { src: "https://i.ibb.co/1Vmw65c/poster-1-spandan.png", link: "https://the-day-grid.vercel.app", alt: "The Day Grid App Screenshot" },
-            { src: "https://i.ibb.co/7xxg2HwS/poster-2-spandan.png", link: "https://github.com/the-rebooted-coder/BatteryWise", alt: "Battery Wise App Screenshot" },
-            { src: "https://i.ibb.co/NgrK3wx9/poster-3-spandan.png", link: "https://github.com/the-rebooted-coder/Mail-Canon", alt: "Mail Canon App Screenshot" },
-            { src: "https://i.ibb.co/1fKX3zQD/poster-4-spandan.png", link: "#", isConfidential: true, alt: "Confidential Project Preview" },
-            { src: "https://i.ibb.co/yc96f8P3/poster-5-spandan.png", link: "https://github.com/the-rebooted-coder/Forecasted", alt: "Forecasted App Screenshot" },
-            { src: "https://i.ibb.co/qFW4Wjnw/poster-6-spandan.png", link: "https://github.com/the-rebooted-coder/What-s-In", alt: "What's In App Screenshot" },
-            { src: "https://i.ibb.co/DP7VG34R/poster-7-spandan.png", link: "https://github.com/the-rebooted-coder/knack", alt: "Knack App Screenshot" },
-            { src: "https://i.ibb.co/XfDCNP7q/poster-8-spandan.png", link: "https://github.com/the-rebooted-coder/Hanuman-Chalisa-Lyrical", alt: "Lyrical App Screenshot" },
-            { src: "https://i.ibb.co/nMMXgkjp/poster-9-spandan.png", link: "https://github.com/the-rebooted-coder/Digital-Desk", alt: "Digital Desk App Screenshot" },
-            { src: "https://i.ibb.co/hFxCyx4W/poster-10-spandan.png", link: "https://github.com/the-rebooted-coder/Kaagaz-Dynamic-Desktop", alt: "Kaagaz App Screenshot" },
-            { src: "https://i.ibb.co/MkGRvdJw/poster-11-spandan.png", link: "mailto:connectwithspandan@gmail.com?subject=I%20clicked%20the%20secret%2011th%20card", alt: "Secret Project" },
-            { src: "https://i.ibb.co/NgN1cFTF/poster-12-spandan.png", link: "https://www.snapchat.com/unlock/?type=SNAPCODE&uuid=58a604a1379140089d56a02ec0917f05&metadata=01", alt: "Snapchat Lens Preview" },
-            { src: "https://i.ibb.co/tTyP4pWM/poster-13-spandan.png", link: "https://www.snapchat.com/unlock/?type=SNAPCODE&uuid=ee8c25b7cf994a6d918a156b1bdd9a08&metadata=01", alt: "Snapchat Lens Preview" }
+            { src: "https://i.ibb.co/1Vmw65c/poster-1-spandan.png", link: "https://the-day-grid.vercel.app", alt: "The Day Grid" },
+            { src: "https://i.ibb.co/7xxg2HwS/poster-2-spandan.png", link: "https://github.com/the-rebooted-coder/BatteryWise", alt: "Battery Wise" },
+            { src: "https://i.ibb.co/NgrK3wx9/poster-3-spandan.png", link: "https://github.com/the-rebooted-coder/Mail-Canon", alt: "Mail Canon" },
+            { src: "https://i.ibb.co/1fKX3zQD/poster-4-spandan.png", link: "#", isConfidential: true, alt: "Confidential" },
+            { src: "https://i.ibb.co/yc96f8P3/poster-5-spandan.png", link: "https://github.com/the-rebooted-coder/Forecasted", alt: "Forecasted" },
+            { src: "https://i.ibb.co/qFW4Wjnw/poster-6-spandan.png", link: "https://github.com/the-rebooted-coder/What-s-In", alt: "What's In" },
+            { src: "https://i.ibb.co/DP7VG34R/poster-7-spandan.png", link: "https://github.com/the-rebooted-coder/knack", alt: "Knack" },
+            { src: "https://i.ibb.co/XfDCNP7q/poster-8-spandan.png", link: "https://github.com/the-rebooted-coder/Hanuman-Chalisa-Lyrical", alt: "Lyrical" },
+            { src: "https://i.ibb.co/nMMXgkjp/poster-9-spandan.png", link: "https://github.com/the-rebooted-coder/Digital-Desk", alt: "Digital Desk" },
+            { src: "https://i.ibb.co/hFxCyx4W/poster-10-spandan.png", link: "https://github.com/the-rebooted-coder/Kaagaz-Dynamic-Desktop", alt: "Kaagaz" },
+            { src: "https://i.ibb.co/MkGRvdJw/poster-11-spandan.png", link: "mailto:connectwithspandan@gmail.com?subject=Secret", alt: "Secret" },
+            { src: "https://i.ibb.co/NgN1cFTF/poster-12-spandan.png", link: "#", alt: "Snap 1" },
+            { src: "https://i.ibb.co/tTyP4pWM/poster-13-spandan.png", link: "#", alt: "Snap 2" }
         ];
 
         const cursorDot = document.querySelector('[data-cursor-dot]');
@@ -783,106 +619,65 @@
         const bubbleTriggers = document.querySelectorAll('.hover-bubble');
         const recognitionTriggers = document.querySelectorAll('.recognition-trigger');
 
-        window.addEventListener('mousemove', function (e) {
-            const posX = e.clientX;
-            const posY = e.clientY;
-            cursorDot.style.left = `${posX}px`;
-            cursorDot.style.top = `${posY}px`;
-            cursorOutline.animate({
-                left: `${posX}px`,
-                top: `${posY}px`
-            }, { duration: 500, fill: "forwards" });
+        window.addEventListener('mousemove', (e) => {
+            const posX = e.clientX; const posY = e.clientY;
+            cursorDot.style.left = `${posX}px`; cursorDot.style.top = `${posY}px`;
+            cursorOutline.animate({ left: `${posX}px`, top: `${posY}px` }, { duration: 500, fill: "forwards" });
         });
 
         function addHoverListeners(element) {
             element.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
             element.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
         }
-        
         function addHighlighterListeners(element) {
             element.addEventListener('mouseenter', () => document.body.classList.add('highlighting'));
             element.addEventListener('mouseleave', () => document.body.classList.remove('highlighting'));
         }
-
-        // --- RECOGNITION CURSOR IMAGE LOGIC ---
         function addRecognitionListeners(element) {
             element.addEventListener('mouseenter', () => {
                 const imgUrl = element.getAttribute('data-img');
-                if(imgUrl) {
-                    cursorOutline.style.backgroundImage = `url('${imgUrl}')`;
-                    document.body.classList.add('img-preview-mode');
-                }
+                if(imgUrl) { cursorOutline.style.backgroundImage = `url('${imgUrl}')`; document.body.classList.add('img-preview-mode'); }
             });
-            element.addEventListener('mouseleave', () => {
-                cursorOutline.style.backgroundImage = 'none';
-                document.body.classList.remove('img-preview-mode');
-            });
+            element.addEventListener('mouseleave', () => { cursorOutline.style.backgroundImage = 'none'; document.body.classList.remove('img-preview-mode'); });
         }
 
         hoverTriggers.forEach(addHoverListeners);
         bubbleTriggers.forEach(addHighlighterListeners);
         recognitionTriggers.forEach(addRecognitionListeners);
 
-        // --- SMART TEXT CURSOR LOGIC ---
-        const textElements = document.querySelectorAll("p, h1, h2, h3, h4, span, li");
-        
+        const textElements = document.querySelectorAll("p, h1, h2, h3, h4, span, li, .skill-item");
         textElements.forEach(el => {
-            if (!el.closest('.chat-bubble') && 
-                !el.closest('a') && 
-                !el.closest('.hover-trigger') && 
-                !el.closest('.recognition-trigger') &&
-                !el.closest('#hero')) { 
-                
+            if (!el.closest('.chat-bubble') && !el.closest('a') && !el.closest('.hover-trigger') && !el.closest('.recognition-trigger') && !el.closest('#hero')) {
                 el.addEventListener('mouseenter', () => document.body.classList.add('text-mode'));
                 el.addEventListener('mouseleave', () => document.body.classList.remove('text-mode'));
             }
         });
 
+        // --- MOBILE NAV ---
         const mobileNav = document.getElementById('mobileNav');
         const navItems = mobileNav.querySelectorAll('.nav-item');
-
-        mobileNav.addEventListener('click', (e) => {
-            if (!mobileNav.classList.contains('expanded')) {
-                mobileNav.classList.add('expanded');
-            }
-        });
-
+        mobileNav.addEventListener('click', () => { if (!mobileNav.classList.contains('expanded')) mobileNav.classList.add('expanded'); });
         navItems.forEach(item => {
             item.addEventListener('click', (e) => {
                 e.stopPropagation();
-                if (mobileNav.classList.contains('expanded')) {
-                    mobileNav.classList.remove('expanded');
-                } else {
-                    mobileNav.classList.add('expanded');
-                    e.preventDefault();
-                }
+                if (mobileNav.classList.contains('expanded')) { mobileNav.classList.remove('expanded'); }
+                else { mobileNav.classList.add('expanded'); e.preventDefault(); }
             });
         });
-
-        document.addEventListener('click', (e) => {
-            if (!mobileNav.contains(e.target) && mobileNav.classList.contains('expanded')) {
-                mobileNav.classList.remove('expanded');
-            }
-        });
+        document.addEventListener('click', (e) => { if (!mobileNav.contains(e.target) && mobileNav.classList.contains('expanded')) mobileNav.classList.remove('expanded'); });
 
         const sections = document.querySelectorAll('section');
-        const observerOptions = {
-            threshold: 0.3 
-        };
-
+        const observerOptions = { threshold: 0.3 };
         const navObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     navItems.forEach(item => item.classList.remove('active'));
                     const id = entry.target.getAttribute('id');
                     const activeLink = mobileNav.querySelector(`a[data-target="${id}"]`);
-                    if (activeLink) {
-                        activeLink.classList.add('active');
-                    }
+                    if (activeLink) activeLink.classList.add('active');
                 }
             });
         }, observerOptions);
-
         sections.forEach(section => navObserver.observe(section));
         
         const heroSectionObserver = new IntersectionObserver((entries) => {
@@ -897,116 +692,48 @@
         const hero = document.getElementById('hero');
         if(hero) heroSectionObserver.observe(hero);
 
-
+        // --- HERO TRAIL ---
         const heroSection = document.getElementById('hero');
-        let lastX = 0;
-        let lastY = 0;
-        let imageIndex = 0;
-        let interactionTimeout;
-        let currentPersistentCard = null;
-        let toastTimeout;
+        let lastX = 0, lastY = 0, imageIndex = 0;
+        let interactionTimeout, currentPersistentCard = null, toastTimeout;
 
-        // --- TRAIL GENERATION LOGIC ---
         function spawnTrail(x, y) {
             const data = projectData[imageIndex % projectData.length];
-            const img = document.createElement('img');
-            img.src = data.src;
-            img.alt = data.alt || "Project Preview"; // POINT 5: Alt Text
-            img.className = 'trail-image';
-            
-            const randomRot = Math.random() * 20 - 10; 
-            img.style.setProperty('--rot', `${randomRot}deg`);
-            img.style.left = `${x}px`;
-            img.style.top = `${y}px`;
-
-            heroSection.appendChild(img);
-            setTimeout(() => img.remove(), 1000); 
-            imageIndex++;
+            const img = document.createElement('img'); img.src = data.src; img.className = 'trail-image';
+            const randomRot = Math.random() * 20 - 10; img.style.setProperty('--rot', `${randomRot}deg`);
+            img.style.left = `${x}px`; img.style.top = `${y}px`;
+            heroSection.appendChild(img); setTimeout(() => img.remove(), 1000); imageIndex++;
         }
-
         heroSection.addEventListener('mousemove', (e) => {
-            if (window.innerWidth < 768) return; 
-
+            if (window.innerWidth < 768) return;
             if (currentPersistentCard) {
-                currentPersistentCard.style.opacity = '0';
-                currentPersistentCard.style.transform = 'translate(-50%, -50%) scale(0.8)';
-                setTimeout(() => currentPersistentCard?.remove(), 300);
-                currentPersistentCard = null;
+                currentPersistentCard.style.opacity = '0'; currentPersistentCard.style.transform = 'translate(-50%, -50%) scale(0.8)';
+                setTimeout(() => currentPersistentCard?.remove(), 300); currentPersistentCard = null;
             }
-
             clearTimeout(interactionTimeout);
-
-            if (e.clientY < 100) return; 
-
+            if (e.clientY < 100) return;
             if (Math.abs(e.clientX - lastX) > 60 || Math.abs(e.clientY - lastY) > 60) {
-                lastX = e.clientX;
-                lastY = e.clientY;
-                spawnTrail(e.clientX, e.clientY);
+                lastX = e.clientX; lastY = e.clientY; spawnTrail(e.clientX, e.clientY);
             }
-
-            interactionTimeout = setTimeout(() => {
-                spawnPersistentCard(e.clientX, e.clientY);
-            }, 200);
+            interactionTimeout = setTimeout(() => { spawnPersistentCard(e.clientX, e.clientY); }, 200);
         });
-
-        // --- MOBILE TOUCH TRAIL ---
-        heroSection.addEventListener('touchmove', (e) => {
-            if (window.innerWidth > 768) return;
-
-            const touch = e.touches[0];
-            
-            if (Math.abs(touch.clientX - lastX) > 40 || Math.abs(touch.clientY - lastY) > 40) {
-                lastX = touch.clientX;
-                lastY = touch.clientY;
-                spawnTrail(touch.clientX, touch.clientY);
-            }
-        }, { passive: true });
-
 
         function spawnPersistentCard(x, y) {
             if (y < 100) return;
             const data = projectData[imageIndex % projectData.length];
-            const card = document.createElement('a');
-            card.href = data.link;
-            card.className = 'persistent-card hover-trigger';
-            
-            if (data.isConfidential) {
-                card.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    showToast();
-                });
-            } else {
-                card.target = "_blank"; 
-            }
-            
-            const img = document.createElement('img');
-            img.src = data.src;
-            img.alt = data.alt || "Project Card"; // POINT 5: Alt Text
-            card.appendChild(img);
-            
-            card.style.left = `${x}px`;
-            card.style.top = `${y}px`;
-            
-            const randomRot = Math.random() * 10 - 5;
-            card.style.setProperty('--rot', `${randomRot}deg`);
-
-            heroSection.appendChild(card);
-            
-            requestAnimationFrame(() => {
-                card.classList.add('active');
-            });
-
-            currentPersistentCard = card;
-            addHoverListeners(card);
+            const card = document.createElement('a'); card.href = data.link; card.className = 'persistent-card hover-trigger';
+            if (data.isConfidential) { card.addEventListener('click', (e) => { e.preventDefault(); showToast(); }); }
+            else { card.target = "_blank"; }
+            const img = document.createElement('img'); img.src = data.src; card.appendChild(img);
+            card.style.left = `${x}px`; card.style.top = `${y}px`;
+            const randomRot = Math.random() * 10 - 5; card.style.setProperty('--rot', `${randomRot}deg`);
+            heroSection.appendChild(card); requestAnimationFrame(() => { card.classList.add('active'); });
+            currentPersistentCard = card; addHoverListeners(card);
         }
 
         function showToast() {
-            const toast = document.getElementById('mockToast');
-            toast.classList.add('show');
-            clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => {
-                toast.classList.remove('show');
-            }, 4000);
+            const toast = document.getElementById('mockToast'); toast.classList.add('show');
+            clearTimeout(toastTimeout); toastTimeout = setTimeout(() => { toast.classList.remove('show'); }, 4000);
         }
 
         document.addEventListener('scroll', () => {
@@ -1016,110 +743,51 @@
         });
 
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) entry.target.classList.add('visible');
-            });
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
         }, { threshold: 0.1 });
-
         document.querySelectorAll('.chat-bubble').forEach(bubble => observer.observe(bubble));
 
-        // --- TAB MOCKERY LOGIC ---
-        let isRedirecting = false;
-        const originalTitle = document.title;
-        
-        const funnyTitles = [
-            "Come back, coward.",
-            "I saw that.",
-            "Cheating on me?",
-            "You're making a mistake.",
-            "Boring tab, isn't it?",
-            "Traitor.",
-            "I have cookies. (Lies)"
-        ];
-
-        const supportiveTitles = [
-            "Go get 'em! 🚀",
-            "Building the future...",
-            "Good luck!",
-            "You got this!",
-            "See you soon!"
-        ];
-
+        // --- TAB MOCKERY ---
+        let isRedirecting = false; const originalTitle = document.title;
         document.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
-                if (link.target === "_blank" || link.href.startsWith('http')) {
-                    isRedirecting = true;
-                    setTimeout(() => isRedirecting = false, 2000);
-                }
+                if (link.target === "_blank" || link.href.startsWith('http')) { isRedirecting = true; setTimeout(() => isRedirecting = false, 2000); }
             });
         });
-
         document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                if (isRedirecting) {
-                    const randomSupport = supportiveTitles[Math.floor(Math.random() * supportiveTitles.length)];
-                    document.title = randomSupport;
-                } else {
-                    const randomFunny = funnyTitles[Math.floor(Math.random() * funnyTitles.length)];
-                    document.title = randomFunny;
-                }
-            } else {
-                document.title = originalTitle;
-                isRedirecting = false;
-            }
+            if (document.hidden) { document.title = isRedirecting ? "Go get 'em! 🚀" : "Come back, coward."; }
+            else { document.title = originalTitle; isRedirecting = false; }
         });
 
-        // --- IMAGE PRELOADING ---
+        // --- PRELOAD ---
         function preloadImages() {
-            // Preload triggers
             recognitionTriggers.forEach(trigger => {
                 const imgUrl = trigger.getAttribute('data-img');
                 if (imgUrl) {
-                    const img = new Image();
-                    img.src = imgUrl;
-                    
-                    // Also create the DOM element for mobile HUD
-                    const hudImg = document.createElement('img');
-                    hudImg.src = imgUrl;
-                    hudImg.setAttribute('data-for', imgUrl);
+                    const img = new Image(); img.src = imgUrl;
+                    const hudImg = document.createElement('img'); hudImg.src = imgUrl; hudImg.setAttribute('data-for', imgUrl);
                     document.getElementById('mobilePreview').appendChild(hudImg);
                 }
             });
-
-            // Preload hero images
-            projectData.forEach(data => {
-                const img = new Image();
-                img.src = data.src;
-            });
+            projectData.forEach(data => { const img = new Image(); img.src = data.src; });
         }
         window.addEventListener('load', preloadImages);
 
-
-        // --- MOBILE CENTER STAGE OBSERVER ---
-        // Observer to detect when recognition items are in the center of the viewport
+        // --- MOBILE OBSERVER ---
         const mobilePreviewContainer = document.getElementById('mobilePreview');
-        
         if (window.innerWidth < 768) {
             const centerStageObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         const targetImg = entry.target.getAttribute('data-img');
-                        // Hide all current images
-                        const allHudImgs = mobilePreviewContainer.querySelectorAll('img');
-                        allHudImgs.forEach(img => img.classList.remove('active'));
-                        
-                        // Find the matching image and show it
+                        mobilePreviewContainer.querySelectorAll('img').forEach(img => img.classList.remove('active'));
                         const activeImg = mobilePreviewContainer.querySelector(`img[data-for="${targetImg}"]`);
                         if(activeImg) activeImg.classList.add('active');
                     }
                 });
-            }, { 
-                rootMargin: "-45% 0px -45% 0px" // Triggers when element is in the vertical middle 10% of screen
-            });
-
+            }, { rootMargin: "-45% 0px -45% 0px" });
             recognitionTriggers.forEach(trigger => centerStageObserver.observe(trigger));
         }
-
     </script>
 </body>
 </html>
