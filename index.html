@@ -23,7 +23,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;800&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;800&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     
     <style>
         /* --- RESET & VARIABLES --- */
@@ -32,6 +32,8 @@
             --text-dark: #ffffff;
             --bg-light: #ffffff;
             --text-light: #050505;
+            --game-neon: #0f0;
+            --game-danger: #ff0055;
         }
 
         * {
@@ -64,26 +66,11 @@
             padding-bottom: 0;
         }
 
+        /* --- SMART CURSOR --- */
         body.custom-cursor-active * {
             cursor: none !important;
         }
 
-        h1, h2, h3, h4 {
-            font-family: 'Playfair Display', serif;
-            font-weight: 600;
-        }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        /* --- SELECTION --- */
-        ::selection { background-color: #ffffff; color: #000000; text-shadow: none; }
-        ::-moz-selection { background: #ffffff; color: #000000; }
-        .section-light ::selection, .chat-bubble ::selection { background-color: #000000; color: #ffffff; }
-
-        /* --- SMART CURSOR --- */
         .cursor-dot, .cursor-outline {
             position: fixed; top: 0; left: 0;
             transform: translate(-50%, -50%);
@@ -147,6 +134,12 @@
             text-transform: uppercase; white-space: nowrap;
         }
 
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+        }
+        a { text-decoration: none; color: inherit; }
+
         /* --- HERO --- */
         #hero { height: 100vh; align-items: flex-start; justify-content: center; position: relative; overflow: hidden; }
         .hero-text { z-index: 10; position: relative; pointer-events: none; width: 100%; }
@@ -177,7 +170,6 @@
             position: relative; z-index: 2;
         }
 
-        /* --- Text Container Fix --- */
         .list-info {
             display: flex;
             flex-direction: column;
@@ -217,7 +209,6 @@
             padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.2);
         }
         .list-item:hover .list-meta { border-color: #fff; background: #fff; color: #000; }
-
 
         /* --- SKILLS TICKER (VELOCITY) --- */
         .skills-section {
@@ -357,6 +348,106 @@
         .bottom-nav:not(.expanded) a.active span { display: none; }
         .bottom-nav a.active, .bottom-nav a:hover { color: #fff; }
 
+        /* ========================================= */
+        /* THE DEBUGGER GAME CSS (IMPROVED)          */
+        /* ========================================= */
+        #game-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000000; z-index: 20000; display: none;
+            flex-direction: column; align-items: center; justify-content: center;
+            cursor: none;
+            font-family: 'Share Tech Mono', monospace; /* Tech font */
+            overflow: hidden;
+        }
+        #game-overlay.active { display: flex; }
+        
+        /* CRT Scanline Overlay */
+        .crt-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 20010;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+            animation: crt-flicker 0.15s infinite;
+        }
+        @keyframes crt-flicker { 0% { opacity: 0.9; } 50% { opacity: 0.95; } 100% { opacity: 0.9; } }
+
+        #gameCanvas { 
+            background: #050505; 
+            width: 100%; height: 100%; display: block;
+        }
+        
+        .game-ui-layer {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 20003;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+
+        /* Improved HUD */
+        .game-hud {
+            position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+            display: flex; gap: 40px;
+            color: var(--game-neon); font-size: 1.5rem; 
+            text-shadow: 0 0 10px var(--game-neon);
+            background: rgba(0,0,0,0.7); border: 1px solid var(--game-neon);
+            padding: 10px 30px; border-radius: 4px;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+        }
+        .hud-label { opacity: 0.7; font-size: 0.8rem; margin-right: 5px; }
+
+        /* Improved Screens */
+        .game-start-screen, .game-over-screen {
+            background: rgba(0, 10, 0, 0.9); padding: 3rem 4rem; 
+            border: 2px solid var(--game-neon);
+            text-align: center; pointer-events: auto; backdrop-filter: blur(10px);
+            display: none; flex-direction: column; gap: 1.5rem;
+            box-shadow: 0 0 50px rgba(0, 255, 0, 0.3), inset 0 0 20px rgba(0, 255, 0, 0.1);
+            position: relative; overflow: hidden;
+            animation: slideUpFade 0.5s ease-out;
+            max-width: 90%;
+        }
+        
+        .game-over-screen { border-color: var(--game-danger); box-shadow: 0 0 50px rgba(255, 0, 85, 0.3); }
+
+        @keyframes slideUpFade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .game-title { 
+            font-family: 'Share Tech Mono', monospace; font-size: 3.5rem; 
+            color: #fff; line-height: 1; margin: 0; text-transform: uppercase;
+            letter-spacing: 5px; text-shadow: 2px 2px 0px rgba(255,255,255,0.3);
+        }
+        .game-subtitle { 
+            font-family: 'Share Tech Mono', monospace; color: var(--game-neon); 
+            font-size: 1.1rem; letter-spacing: 2px;
+        }
+        
+        .game-btn {
+            background: transparent; color: var(--game-neon); 
+            border: 2px solid var(--game-neon); padding: 15px 40px;
+            font-family: 'Share Tech Mono', monospace; font-weight: 700; font-size: 1.5rem;
+            cursor: pointer; text-transform: uppercase; transition: all 0.2s;
+            position: relative; overflow: hidden;
+        }
+        .game-btn::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: var(--game-neon); transition: left 0.3s; z-index: -1;
+        }
+        .game-btn:hover { color: black; box-shadow: 0 0 30px var(--game-neon); }
+        .game-btn:hover::before { left: 0; }
+        .game-btn:active { transform: scale(0.95); }
+        
+        .game-btn.danger { color: var(--game-danger); border-color: var(--game-danger); }
+        .game-btn.danger::before { background: var(--game-danger); }
+        .game-btn.danger:hover { box-shadow: 0 0 30px var(--game-danger); }
+
+        .close-game { 
+            position: absolute; top: 30px; right: 30px; color: var(--text-dark); cursor: pointer; 
+            font-size: 1.2rem; pointer-events: auto; font-family: monospace; 
+            width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; 
+            border: 1px solid rgba(255,255,255,0.3); border-radius: 50%; z-index: 20020;
+            background: rgba(0,0,0,0.5); transition: all 0.3s;
+        }
+        .close-game:hover { border-color: var(--game-danger); color: var(--game-danger); transform: rotate(90deg); }
+
         /* --- RESPONSIVE --- */
         @media (max-width: 768px) {
             body { padding-bottom: 80px; }
@@ -368,11 +459,10 @@
             .nav-links { display: none; }
             .bottom-nav { display: flex; }
             
-            .list-item { padding: 1.5rem; } /* Compact mobile card */
-            .list-info { gap: 2px; } /* Tighter spacing on mobile */
+            .list-item { padding: 1.5rem; }
+            .list-info { gap: 2px; }
             .list-meta { text-align: left; margin-left: 0; font-size: 0.85rem; opacity: 0.5; margin-top: 5px; border: none; padding: 0; }
             
-            /* On Mobile, header should wrap nicely */
             .list-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
             
             .trail-image { display: block !important; }
@@ -383,12 +473,42 @@
             
             .skill-item { font-size: 3rem; -webkit-text-stroke: 1px rgba(255,255,255,0.6); }
             .skill-item:hover { transform: scale(1.05); }
+
+            /* Game Responsive */
+            #gameCanvas { width: 100%; height: 100%; border: none; }
+            .game-hud { top: 10px; padding: 5px 15px; font-size: 1rem; width: 90%; justify-content: space-around; }
+            .game-start-screen, .game-over-screen { padding: 2rem; width: 90%; }
+            .game-title { font-size: 2rem; }
         }
     </style>
 </head>
 <body>
 
     <div id="mockToast" class="toast-message">Nice try. It's confidential. Unless you have clearance, keep scrolling.</div>
+
+    <div id="game-overlay">
+        <div class="crt-overlay"></div> <div class="close-game" onclick="closeGame()">ESC</div>
+        <canvas id="gameCanvas"></canvas>
+        
+        <div class="game-ui-layer">
+            <div id="gameHud" class="game-hud" style="display:none;">
+                <div><span class="hud-label">SCORE</span><span id="scoreVal">0</span></div>
+                <div><span class="hud-label">BUGS</span><span id="bugVal">0</span></div>
+            </div>
+
+            <div id="startScreen" class="game-start-screen" style="display: flex;">
+                <h1 class="game-title">THE DEBUGGER</h1>
+                <p class="game-subtitle">// SYSTEM COMPROMISED //<br>INITIATE CLEANUP PROTOCOL</p>
+                <button class="game-btn" onclick="startGame()">INITIALIZE >></button>
+            </div>
+
+            <div id="gameOverScreen" class="game-over-screen">
+                <h1 class="game-title" style="color: var(--game-danger); text-shadow: 0 0 20px var(--game-danger);">RUNTIME ERROR</h1>
+                <p class="game-subtitle" id="finalScoreMsg" style="color: #fff;">SCORE: 0</p>
+                <button class="game-btn danger" onclick="startGame()">REBOOT SYSTEM</button>
+            </div>
+        </div>
+    </div>
 
     <div class="cursor-dot" data-cursor-dot></div>
     <div class="cursor-outline" data-cursor-outline></div>
@@ -586,7 +706,7 @@
             <a href="https://github.com/the-rebooted-coder" target="_blank" class="social-link hover-trigger">GitHub</a>
             <a href="https://www.instagram.com/simply.spandan/" target="_blank" class="social-link hover-trigger">Instagram</a>
         </div>
-        <div class="footer-brand">An S² Labs Product 🥼</div>
+        <div class="footer-brand hover-trigger" id="secretTrigger">An S² Labs Product 🥼</div>
     </section>
 
     <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
@@ -619,26 +739,28 @@
             });
         });
 
-        // --- COPY EMAIL LOGIC ---
+        // --- COPY EMAIL & TOAST ---
+        let toastTimeout;
+        function showToast(message) {
+            const toast = document.getElementById('mockToast');
+            const originalText = "Nice try. It's confidential. Unless you have clearance, keep scrolling.";
+            
+            toast.innerText = message || originalText;
+            toast.classList.add('show');
+            
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+                if(message) {
+                     setTimeout(() => { toast.innerText = originalText; }, 500);
+                }
+            }, 3000);
+        }
+
         function copyEmail() {
             const email = "connectwithspandan@gmail.com";
             navigator.clipboard.writeText(email).then(() => {
-                const toast = document.getElementById('mockToast');
-                // Save original text
-                const originalText = toast.innerText;
-                
-                // Show success
-                toast.innerText = "Email copied to clipboard! 📋"; 
-                toast.classList.add('show');
-                
-                // Hide after 3 seconds
-                setTimeout(() => {
-                    toast.classList.remove('show');
-                    // Reset text
-                    setTimeout(() => {
-                        toast.innerText = "Nice try. It's confidential. Unless you have clearance, keep scrolling."; 
-                    }, 500);
-                }, 3000);
+                showToast("Email copied to clipboard! 📋");
             });
         }
 
@@ -651,13 +773,12 @@
         );
         console.log("Welcome to the console. If you're looking for bugs, I hope you brought a suit. 👔");
 
-
         // --- SKILLS TICKER LOGIC ---
         const skillsContainer = document.getElementById('skillsContainer');
         const skillsTrack = document.getElementById('skillsTrack');
         
         let scrollPos = 0;
-        let speed = 1.5; // Default drift speed
+        let speed = 1.5; 
         let targetSpeed = 1.5;
 
         skillsContainer.addEventListener('mousemove', (e) => {
@@ -667,9 +788,7 @@
             targetSpeed = normalizedPos * 15; 
         });
 
-        skillsContainer.addEventListener('mouseleave', () => {
-            targetSpeed = 1.5; // Reset to default
-        });
+        skillsContainer.addEventListener('mouseleave', () => { targetSpeed = 1.5; });
 
         function animateTicker() {
             speed += (targetSpeed - speed) * 0.1;
@@ -684,7 +803,6 @@
             requestAnimationFrame(animateTicker);
         }
         animateTicker();
-
 
         // --- GENERIC ASSETS & CURSOR ---
         const projectData = [
@@ -785,7 +903,7 @@
         // --- HERO TRAIL ---
         const heroSection = document.getElementById('hero');
         let lastX = 0, lastY = 0, imageIndex = 0;
-        let interactionTimeout, currentPersistentCard = null, toastTimeout;
+        let interactionTimeout, currentPersistentCard = null;
 
         function spawnTrail(x, y) {
             const data = projectData[imageIndex % projectData.length];
@@ -819,11 +937,6 @@
             const randomRot = Math.random() * 10 - 5; card.style.setProperty('--rot', `${randomRot}deg`);
             heroSection.appendChild(card); requestAnimationFrame(() => { card.classList.add('active'); });
             currentPersistentCard = card; addHoverListeners(card);
-        }
-
-        function showToast() {
-            const toast = document.getElementById('mockToast'); toast.classList.add('show');
-            clearTimeout(toastTimeout); toastTimeout = setTimeout(() => { toast.classList.remove('show'); }, 4000);
         }
 
         document.addEventListener('scroll', () => {
@@ -877,6 +990,265 @@
                 });
             }, { rootMargin: "-45% 0px -45% 0px" });
             recognitionTriggers.forEach(trigger => centerStageObserver.observe(trigger));
+        }
+
+        // ==========================================
+        //         THE DEBUGGER GAME LOGIC
+        // ==========================================
+        let secretClicks = 0;
+        const secretTrigger = document.getElementById('secretTrigger');
+        
+        secretTrigger.addEventListener('click', () => {
+            secretClicks++;
+            const warnings = ["One.", "Two.", "Three.", "Don't do it.", "INITIALIZING..."];
+            if(secretClicks <= 5) showToast(warnings[secretClicks - 1]);
+            
+            if (secretClicks === 5) {
+                setTimeout(launchGameEngine, 1000);
+                secretClicks = 0;
+            }
+        });
+
+        const overlay = document.getElementById('game-overlay');
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // UI Elements
+        const startScreen = document.getElementById('startScreen');
+        const gameOverScreen = document.getElementById('gameOverScreen');
+        const hud = document.getElementById('gameHud');
+        const scoreVal = document.getElementById('scoreVal');
+        const bugVal = document.getElementById('bugVal');
+        const finalScoreMsg = document.getElementById('finalScoreMsg');
+
+        let gameLoopId;
+        let score = 0;
+        let gameActive = false;
+        let frame = 0;
+        let gridOffset = 0; // For background animation
+        
+        let player = { x: 0, y: 0, size: 20 };
+        let bullets = [];
+        let enemies = [];
+        let particles = [];
+        let mouseX = 0, mouseY = 0;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+
+        function launchGameEngine() {
+            resizeCanvas();
+            overlay.classList.add('active');
+            // Hide standard cursor logic, use game logic
+            document.body.classList.remove('custom-cursor-active'); 
+            // Reset UI
+            startScreen.style.display = 'flex';
+            gameOverScreen.style.display = 'none';
+            hud.style.display = 'none';
+            
+            // Track mouse inside canvas specifically
+            window.addEventListener('mousemove', updateGameMouse);
+            window.addEventListener('mousedown', shootBullet);
+        }
+
+        function closeGame() {
+            cancelAnimationFrame(gameLoopId);
+            gameActive = false;
+            overlay.classList.remove('active');
+            // Restore Portfolio Cursor
+            document.body.classList.add('custom-cursor-active');
+            
+            // Clean listeners
+            window.removeEventListener('mousemove', updateGameMouse);
+            window.removeEventListener('mousedown', shootBullet);
+        }
+
+        function updateGameMouse(e) {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            // Smooth player movement
+            player.x = mouseX;
+            player.y = mouseY;
+        }
+
+        function shootBullet() {
+            if(!gameActive) return;
+            bullets.push({
+                x: player.x,
+                y: player.y - 20,
+                w: 4, h: 20,
+                color: '#0f0',
+                speed: 20
+            });
+        }
+
+        function startGame() {
+            startScreen.style.display = 'none';
+            gameOverScreen.style.display = 'none';
+            hud.style.display = 'flex';
+            
+            score = 0;
+            bullets = [];
+            enemies = [];
+            particles = [];
+            gameActive = true;
+            frame = 0;
+            
+            loop();
+        }
+
+        function spawnEnemy() {
+            const size = Math.random() * 30 + 20;
+            enemies.push({
+                x: Math.random() * canvas.width,
+                y: -50,
+                w: size, h: size,
+                speed: 3 + (score * 0.1) + Math.random() * 2,
+                color: '#ff0055',
+                jitter: 0
+            });
+        }
+
+        function createExplosion(x, y, color) {
+            for(let i=0; i<15; i++) {
+                particles.push({
+                    x: x, y: y,
+                    vx: (Math.random() - 0.5) * 15,
+                    vy: (Math.random() - 0.5) * 15,
+                    life: 1.0,
+                    color: color,
+                    size: Math.random() * 5 + 2
+                });
+            }
+        }
+
+        function loop() {
+            if(!gameActive) return;
+            
+            // Clear
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // --- Animated Grid Background ---
+            gridOffset += 2 + (score * 0.05);
+            if(gridOffset > 50) gridOffset = 0;
+            
+            ctx.strokeStyle = 'rgba(0, 50, 0, 0.3)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            // Vertical lines (perspective illusion)
+            for(let i=0; i<canvas.width; i+=100) { 
+                ctx.moveTo(i,0); ctx.lineTo(i, canvas.height); 
+            }
+            // Horizontal moving lines
+            for(let i=gridOffset; i<canvas.height; i+=50) { 
+                ctx.moveTo(0,i); ctx.lineTo(canvas.width, i); 
+            }
+            ctx.stroke();
+
+            // --- Draw Player (Neon Triangle + Thruster) ---
+            // Thruster
+            ctx.fillStyle = `rgba(0, 255, 255, ${Math.random() * 0.5 + 0.2})`;
+            ctx.beginPath();
+            ctx.moveTo(player.x - 5, player.y + 15);
+            ctx.lineTo(player.x + 5, player.y + 15);
+            ctx.lineTo(player.x, player.y + 30 + Math.random()*10);
+            ctx.fill();
+
+            // Ship Body
+            ctx.shadowBlur = 15; ctx.shadowColor = '#0f0';
+            ctx.fillStyle = '#fff';
+            ctx.beginPath();
+            ctx.moveTo(player.x, player.y - 20);
+            ctx.lineTo(player.x - 15, player.y + 15);
+            ctx.lineTo(player.x + 15, player.y + 15);
+            ctx.closePath();
+            ctx.fill();
+            ctx.shadowBlur = 0;
+
+            // --- Bullets ---
+            ctx.fillStyle = '#0f0';
+            ctx.shadowBlur = 10; ctx.shadowColor = '#0f0';
+            for (let i = bullets.length - 1; i >= 0; i--) {
+                let b = bullets[i];
+                b.y -= b.speed;
+                ctx.fillRect(b.x - b.w/2, b.y, b.w, b.h);
+                if (b.y < 0) bullets.splice(i, 1);
+            }
+            ctx.shadowBlur = 0;
+
+            // --- Enemies ---
+            if (frame % (Math.max(20, 60 - score)) === 0) spawnEnemy(); 
+            
+            for (let i = enemies.length - 1; i >= 0; i--) {
+                let e = enemies[i];
+                e.y += e.speed;
+                
+                // Jitter effect for "Bug" look
+                let jitterX = (Math.random() - 0.5) * 5;
+                
+                ctx.fillStyle = e.color;
+                ctx.shadowBlur = 10; ctx.shadowColor = 'red';
+                ctx.fillRect(e.x + jitterX, e.y, e.w, e.h);
+                // Glitch line
+                if(Math.random() > 0.9) {
+                    ctx.fillStyle = 'white';
+                    ctx.fillRect(e.x - 5, e.y + Math.random()*e.h, e.w + 10, 2);
+                }
+                ctx.shadowBlur = 0;
+
+                // Collision Player
+                if (
+                    player.x > e.x && player.x < e.x + e.w &&
+                    player.y > e.y && player.y < e.y + e.h
+                ) {
+                    endGame();
+                }
+
+                // Collision Bullets
+                for (let j = bullets.length - 1; j >= 0; j--) {
+                    let b = bullets[j];
+                    if (
+                        b.x > e.x && b.x < e.x + e.w &&
+                        b.y < e.y + e.h && b.y > e.y
+                    ) {
+                        createExplosion(e.x + e.w/2, e.y + e.h/2, '#ff0055');
+                        enemies.splice(i, 1);
+                        bullets.splice(j, 1);
+                        score++;
+                        break; 
+                    }
+                }
+
+                if (e.y > canvas.height) enemies.splice(i, 1); 
+            }
+
+            // --- Particles ---
+            for(let i = particles.length - 1; i >= 0; i--) {
+                let p = particles[i];
+                p.x += p.vx; p.y += p.vy;
+                p.life -= 0.05;
+                ctx.fillStyle = p.color;
+                ctx.globalAlpha = p.life;
+                ctx.fillRect(p.x, p.y, p.size, p.size);
+                ctx.globalAlpha = 1.0;
+                if(p.life <= 0) particles.splice(i, 1);
+            }
+
+            // Update HUD
+            scoreVal.innerText = score;
+            bugVal.innerText = enemies.length;
+            frame++;
+            gameLoopId = requestAnimationFrame(loop);
+        }
+
+        function endGame() {
+            gameActive = false;
+            hud.style.display = 'none';
+            gameOverScreen.style.display = 'flex';
+            finalScoreMsg.innerText = `BUGS FIXED: ${score}`;
         }
     </script>
 </body>
