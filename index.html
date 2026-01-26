@@ -312,7 +312,18 @@
         .toast-message.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
         /* --- FOOTER --- */
-        .footer-brand { margin-top: 5rem; font-size: 0.9rem; opacity: 0.5; font-family: monospace; letter-spacing: 2px; }
+        .footer-brand { 
+            margin-top: 5rem; 
+            font-size: 0.9rem; 
+            opacity: 0.5; 
+            font-family: monospace; 
+            letter-spacing: 2px;
+            /* Added visual hint */
+            border-bottom: 1px dotted rgba(255, 255, 255, 0.5); 
+            display: inline-block;
+            cursor: help; 
+            padding-bottom: 2px;
+        }
         .social-grid { display: flex; gap: 2rem; margin-top: 3rem; justify-content: center; flex-wrap: wrap; }
         .social-link { font-size: 1.2rem; border-bottom: 1px solid transparent; padding-bottom: 5px; }
         .social-link:hover { border-bottom: 1px solid currentColor; }
@@ -358,6 +369,8 @@
             cursor: none;
             font-family: 'Share Tech Mono', monospace; /* Tech font */
             overflow: hidden;
+            /* CRITICAL FOR MOBILE: Prevents scrolling while playing */
+            touch-action: none; 
         }
         #game-overlay.active { display: flex; }
         
@@ -900,7 +913,7 @@
         const hero = document.getElementById('hero');
         if(hero) heroSectionObserver.observe(hero);
 
-        // --- HERO TRAIL ---
+        // --- HERO TRAIL (UPDATED FOR MOBILE) ---
         const heroSection = document.getElementById('hero');
         let lastX = 0, lastY = 0, imageIndex = 0;
         let interactionTimeout, currentPersistentCard = null;
@@ -912,19 +925,31 @@
             img.style.left = `${x}px`; img.style.top = `${y}px`;
             heroSection.appendChild(img); setTimeout(() => img.remove(), 1000); imageIndex++;
         }
+        
+        // Mouse Move Listener
         heroSection.addEventListener('mousemove', (e) => {
-            if (window.innerWidth < 768) return;
+            if (window.innerWidth < 768) return; // Mouse logic still restricted on small screens if not touch
+            handleTrailMove(e.clientX, e.clientY);
+        });
+
+        // Touch Move Listener (NEW)
+        heroSection.addEventListener('touchmove', (e) => {
+             const touch = e.touches[0];
+             handleTrailMove(touch.clientX, touch.clientY);
+        });
+
+        function handleTrailMove(x, y) {
             if (currentPersistentCard) {
                 currentPersistentCard.style.opacity = '0'; currentPersistentCard.style.transform = 'translate(-50%, -50%) scale(0.8)';
                 setTimeout(() => currentPersistentCard?.remove(), 300); currentPersistentCard = null;
             }
             clearTimeout(interactionTimeout);
-            if (e.clientY < 100) return;
-            if (Math.abs(e.clientX - lastX) > 60 || Math.abs(e.clientY - lastY) > 60) {
-                lastX = e.clientX; lastY = e.clientY; spawnTrail(e.clientX, e.clientY);
+            if (y < 100) return;
+            if (Math.abs(x - lastX) > 60 || Math.abs(y - lastY) > 60) {
+                lastX = x; lastY = y; spawnTrail(x, y);
             }
-            interactionTimeout = setTimeout(() => { spawnPersistentCard(e.clientX, e.clientY); }, 200);
-        });
+            interactionTimeout = setTimeout(() => { spawnPersistentCard(x, y); }, 200);
+        }
 
         function spawnPersistentCard(x, y) {
             if (y < 100) return;
@@ -1000,7 +1025,14 @@
         
         secretTrigger.addEventListener('click', () => {
             secretClicks++;
-            const warnings = ["One.", "Two.", "Three.", "Don't do it.", "INITIALIZING..."];
+            const warnings = [
+                "Hey! That tickles!", 
+                "Stop poking the footer.", 
+                "Seriously, do you not have work to do?", 
+                "I'm warning you...", 
+                "FINE. HAVE IT YOUR WAY."
+            ];
+            
             if(secretClicks <= 5) showToast(warnings[secretClicks - 1]);
             
             if (secretClicks === 5) {
@@ -1049,9 +1081,13 @@
             gameOverScreen.style.display = 'none';
             hud.style.display = 'none';
             
-            // Track mouse inside canvas specifically
+            // Mouse Listeners
             window.addEventListener('mousemove', updateGameMouse);
             window.addEventListener('mousedown', shootBullet);
+            
+            // Touch Listeners (Mobile Support)
+            window.addEventListener('touchmove', handleTouchMove, { passive: false });
+            window.addEventListener('touchstart', handleTouchStart, { passive: false });
         }
 
         function closeGame() {
@@ -1064,14 +1100,32 @@
             // Clean listeners
             window.removeEventListener('mousemove', updateGameMouse);
             window.removeEventListener('mousedown', shootBullet);
+            window.removeEventListener('touchmove', handleTouchMove);
+            window.removeEventListener('touchstart', handleTouchStart);
         }
 
         function updateGameMouse(e) {
             mouseX = e.clientX;
             mouseY = e.clientY;
-            // Smooth player movement
             player.x = mouseX;
             player.y = mouseY;
+        }
+
+        // --- NEW MOBILE HANDLERS ---
+        function handleTouchMove(e) {
+            e.preventDefault(); // Stop scrolling
+            const touch = e.touches[0];
+            player.x = touch.clientX;
+            player.y = touch.clientY;
+        }
+
+        function handleTouchStart(e) {
+             if(e.target.classList.contains('close-game') || e.target.classList.contains('game-btn')) return; 
+             e.preventDefault();
+             shootBullet();
+             const touch = e.touches[0];
+             player.x = touch.clientX;
+             player.y = touch.clientY;
         }
 
         function shootBullet() {
@@ -1138,7 +1192,7 @@
             ctx.strokeStyle = 'rgba(0, 50, 0, 0.3)';
             ctx.lineWidth = 1;
             ctx.beginPath();
-            // Vertical lines (perspective illusion)
+            // Vertical lines
             for(let i=0; i<canvas.width; i+=100) { 
                 ctx.moveTo(i,0); ctx.lineTo(i, canvas.height); 
             }
@@ -1148,7 +1202,7 @@
             }
             ctx.stroke();
 
-            // --- Draw Player (Neon Triangle + Thruster) ---
+            // --- Draw Player ---
             // Thruster
             ctx.fillStyle = `rgba(0, 255, 255, ${Math.random() * 0.5 + 0.2})`;
             ctx.beginPath();
@@ -1186,13 +1240,12 @@
                 let e = enemies[i];
                 e.y += e.speed;
                 
-                // Jitter effect for "Bug" look
                 let jitterX = (Math.random() - 0.5) * 5;
                 
                 ctx.fillStyle = e.color;
                 ctx.shadowBlur = 10; ctx.shadowColor = 'red';
                 ctx.fillRect(e.x + jitterX, e.y, e.w, e.h);
-                // Glitch line
+                
                 if(Math.random() > 0.9) {
                     ctx.fillStyle = 'white';
                     ctx.fillRect(e.x - 5, e.y + Math.random()*e.h, e.w + 10, 2);
