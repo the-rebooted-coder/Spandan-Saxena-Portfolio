@@ -4,36 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <title>Spandan Saxena | Software Developer</title>
-    <meta name="description" content="Portfolio of Spandan Saxena, a Software Developer at IBM. Specializing in Android, Web, and 'Neobrutalist' design.">
+    <title>Spandan Saxena | Spatial Architecture & Software Engineering</title>
+    <meta name="description" content="Interactive 3D Spatial Portfolio of Spandan Saxena — Software Development Engineer at IBM India Software Labs.">
     
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://the-rebooted-coder.github.io/Spandan-Saxena-Portfolio/og-image.jpg">
-    <meta property="og:title" content="Spandan Saxena | Software Developer">
-    <meta property="og:description" content="From Logic to Launch. Explore my interactive portfolio.">
-    <meta property="og:image" content="https://the-rebooted-coder.github.io/Spandan-Saxena-Portfolio/og-image.jpg"> 
-
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://your-portfolio-url.com/">
-    <meta property="twitter:title" content="Spandan Saxena | Software Developer">
-    <meta property="twitter:description" content="From Logic to Launch. Explore my interactive portfolio.">
-    <meta property="twitter:image" content="https://your-portfolio-url.com/og-image.jpg">
-
-    <link rel="icon" type="image/png" href="favicon.png"> 
+    <meta property="og:url" content="https://the-rebooted-coder.github.io/Spandan-Saxena-Portfolio/">
+    <meta property="og:title" content="Spandan Saxena | Spatial Portfolio">
+    <meta property="og:description" content="From Logic to Launch. Step through the portal into my interactive architecture.">
+    <meta property="og:image" content="https://the-rebooted-coder.github.io/Spandan-Saxena-Portfolio/og-image.jpg">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;800&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+
     <style>
-        /* --- RESET & VARIABLES --- */
         :root {
-            --bg-dark: #050505;
-            --text-dark: #ffffff;
-            --bg-light: #ffffff;
-            --text-light: #050505;
-            --game-neon: #0f0;
-            --game-danger: #ff0055;
+            --bg-void: #030306;
+            --bg-surface: rgba(12, 13, 20, 0.72);
+            --bg-glass: rgba(18, 20, 32, 0.55);
+            --text-primary: #f4f5f8;
+            --text-muted: #8a90a6;
+            --neon-cyan: #00f0ff;
+            --neon-lime: #bfff00;
+            --neon-amber: #ffaa00;
+            --neon-crimson: #ff0055;
+            --portal-white: #ffffff;
+            --border-subtle: rgba(255, 255, 255, 0.1);
+            --border-bright: rgba(0, 240, 255, 0.45);
+            --font-display: 'Syne', sans-serif;
+            --font-serif: 'Instrument Serif', serif;
+            --font-mono: 'JetBrains Mono', monospace;
         }
 
         * {
@@ -41,1333 +41,1897 @@
             padding: 0;
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
+            user-select: none;
         }
 
-        html {
-            overflow-x: hidden;
+        html, body {
             width: 100%;
+            height: 100%;
+            background-color: var(--bg-void);
+            color: var(--text-primary);
+            font-family: var(--font-display);
+            overflow-x: hidden;
         }
-        
-        /* Lenis Recommended CSS */
-        html.lenis { height: auto; }
-        .lenis.lenis-smooth { scroll-behavior: auto; }
-        .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
-        .lenis.lenis-stopped { overflow: hidden; }
 
+        /* Virtual scroll track drives the 3D Z-axis camera */
         body {
-            background-color: var(--bg-dark);
-            color: var(--text-dark);
-            font-family: 'Outfit', sans-serif;
-            overflow-x: hidden;
-            width: 100%;
-            line-height: 1.6;
-            position: relative;
-            padding-bottom: 0;
+            height: 750vh;
+            overflow-y: scroll;
+            scrollbar-width: none;
+        }
+        body::-webkit-scrollbar {
+            display: none;
         }
 
-        /* --- SMART CURSOR --- */
-        body.custom-cursor-active * {
-            cursor: none !important;
+        /* --- AMBIENT FILM GRAIN & VIGNETTE --- */
+        .ambient-vignette {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 90;
+            background: radial-gradient(circle at 50% 50%, transparent 55%, rgba(2, 2, 5, 0.88) 100%);
         }
 
-        .cursor-dot, .cursor-outline {
-            position: fixed; top: 0; left: 0;
+        .scanlines {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 91;
+            background: repeating-linear-gradient(
+                to bottom,
+                transparent 0px,
+                transparent 2px,
+                rgba(255, 255, 255, 0.012) 3px
+            );
+        }
+
+        /* --- PORTAL BLOOM FLASH --- */
+        #portal-flash {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at center, #ffffff 0%, #e0ffff 40%, transparent 100%);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 85;
+            mix-blend-mode: screen;
+            transition: opacity 0.12s ease-out;
+        }
+
+        /* --- BACKGROUND ARCHITECTURAL CANVAS --- */
+        #corridor-canvas {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* --- CUSTOM SMART RETICLE CURSOR --- */
+        .cursor-reticle {
+            position: fixed;
+            top: 0; left: 0;
+            width: 36px; height: 36px;
+            border: 1px solid rgba(0, 240, 255, 0.6);
+            border-radius: 50%;
             transform: translate(-50%, -50%);
-            border-radius: 50%; z-index: 99999; /* Increased Z-index to be above context menu */
-            pointer-events: none; mix-blend-mode: difference;
-            background-color: white; display: none;
+            pointer-events: none;
+            z-index: 99999;
+            transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                        height 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                        border-color 0.25s ease,
+                        background-color 0.25s ease,
+                        border-radius 0.25s ease;
+            display: none;
+            background-size: cover;
+            background-position: center;
         }
-        body.custom-cursor-active .cursor-dot, body.custom-cursor-active .cursor-outline { display: block; }
-        
-        .cursor-dot { width: 8px; height: 8px; transition: opacity 0.2s; }
-        .cursor-outline {
-            width: 40px; height: 40px; border: 1px solid white; background-color: transparent;
-            transition: all 0.2s; background-size: cover; background-position: center;
+        .cursor-core {
+            position: fixed;
+            top: 0; left: 0;
+            width: 6px; height: 6px;
+            background: var(--neon-cyan);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 99999;
+            box-shadow: 0 0 12px var(--neon-cyan);
+            display: none;
+        }
+        @media (pointer: fine) {
+            body.custom-cursor * { cursor: none !important; }
+            body.custom-cursor .cursor-reticle,
+            body.custom-cursor .cursor-core { display: block; }
+        }
+        body.cursor-hover .cursor-reticle {
+            width: 64px; height: 64px;
+            border-color: var(--neon-lime);
+            background-color: rgba(191, 255, 0, 0.08);
+        }
+        body.cursor-hover .cursor-core {
+            background: var(--neon-lime);
+            transform: translate(-50%, -50%) scale(1.6);
+        }
+        body.cursor-preview .cursor-reticle {
+            width: 210px; height: 135px;
+            border-radius: 12px;
+            border: 2px solid var(--portal-white);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.85), 0 0 25px rgba(0, 240, 255, 0.35);
+        }
+        body.cursor-preview .cursor-core {
+            opacity: 0;
         }
 
-        /* Cursor States */
-        body.hovering .cursor-outline { width: 70px; height: 70px; background-color: white; opacity: 1; }
-        body.hovering .cursor-dot { opacity: 0; }
-        
-        body.text-mode .cursor-outline { width: 4px; height: 30px; border-radius: 2px; background-color: white; border-color: transparent; }
-        body.text-mode .cursor-dot { opacity: 0; }
-        
-        body.highlighting .cursor-outline { width: 80px; height: 80px; background-color: #0000FF; border-color: transparent; opacity: 1; border-radius: 50%; }
-        body.highlighting .cursor-dot { opacity: 0; }
-        
-        body.img-preview-mode .cursor-outline {
-            width: 150px; height: 150px; border-radius: 12px; border: none;
-            background-color: transparent; mix-blend-mode: normal; opacity: 1;
+        /* --- TOP HUD & TELEMETRY --- */
+        .hud-top {
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            pointer-events: none;
         }
-        body.img-preview-mode .cursor-dot { opacity: 0; }
+        .hud-brand {
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+        .brand-cube {
+            width: 12px; height: 12px;
+            background: var(--neon-cyan);
+            box-shadow: 0 0 15px var(--neon-cyan);
+            animation: pulseCube 2.5s infinite ease-in-out;
+        }
+        @keyframes pulseCube {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(45deg) scale(1.25); background: var(--neon-lime); box-shadow: 0 0 18px var(--neon-lime); }
+        }
+        .brand-text {
+            font-weight: 800;
+            font-size: 1.15rem;
+            letter-spacing: 2px;
+        }
+        .brand-sub {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            padding: 2px 8px;
+            border: 1px solid var(--border-subtle);
+            border-radius: 4px;
+        }
 
-        /* --- CUSTOM CONTEXT MENU --- */
+        .hud-telemetry {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            background: rgba(8, 10, 16, 0.75);
+            backdrop-filter: blur(12px);
+            padding: 8px 18px;
+            border-radius: 100px;
+            border: 1px solid var(--border-subtle);
+            pointer-events: auto;
+        }
+        .telemetry-item span {
+            color: var(--neon-cyan);
+            font-weight: 700;
+        }
+
+        /* --- BOTTOM SPATIAL ROOM MATRIX DOCK --- */
+        .spatial-dock {
+            position: fixed;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px;
+            background: rgba(10, 12, 18, 0.82);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 100px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 240, 255, 0.08);
+        }
+        .dock-btn {
+            position: relative;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            padding: 10px 18px;
+            border-radius: 100px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+        .dock-btn .dock-idx {
+            opacity: 0.45;
+            font-size: 0.65rem;
+        }
+        .dock-btn.active {
+            color: var(--bg-void);
+            background: var(--portal-white);
+            font-weight: 700;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+        .dock-btn.active .dock-idx {
+            opacity: 0.8;
+            color: var(--bg-void);
+        }
+        .dock-btn:hover:not(.active) {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.07);
+        }
+
+        /* --- 3D SPATIAL VIEWPORT & WORLD --- */
+        #viewport {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            perspective: 1100px;
+            perspective-origin: 50% 50%;
+            overflow: hidden;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        #world {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+
+        .room {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 6rem 6vw 7rem;
+            transform-style: preserve-3d;
+            will-change: transform, opacity;
+            pointer-events: none;
+        }
+        .room.room-interactive {
+            pointer-events: auto;
+        }
+
+        /* Architectural Room Header Tag */
+        .room-marker {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--neon-cyan);
+            margin-bottom: 1rem;
+            padding: 6px 14px;
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            border-radius: 100px;
+            background: rgba(0, 240, 255, 0.05);
+        }
+        .room-marker::before {
+            content: '';
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--neon-cyan);
+            box-shadow: 0 0 8px var(--neon-cyan);
+        }
+
+        /* ===================================================
+           ROOM 00: THE THRESHOLD (VOLUMETRIC LIGHT DOORWAY)
+           =================================================== */
+        .threshold-layout {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        .portal-assembly {
+            position: relative;
+            width: 270px;
+            height: 410px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+            cursor: pointer;
+            transform-style: preserve-3d;
+        }
+
+        /* Volumetric floor reflection */
+        .portal-floor-glow {
+            position: absolute;
+            bottom: -95px;
+            left: 50%;
+            transform: translateX(-50%) rotateX(78deg);
+            width: 480px;
+            height: 260px;
+            background: radial-gradient(circle, rgba(255,255,255,0.75) 0%, rgba(0, 240, 255, 0.4) 35%, transparent 70%);
+            filter: blur(16px);
+            pointer-events: none;
+            transition: transform 0.5s ease, opacity 0.5s ease;
+        }
+
+        /* Outer Monolith Frame */
+        .portal-frame {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border: 2px solid #ffffff;
+            border-radius: 140px 140px 8px 8px;
+            overflow: hidden;
+            box-shadow:
+                0 0 35px rgba(255, 255, 255, 0.8),
+                0 0 90px rgba(0, 240, 255, 0.55),
+                inset 0 0 50px rgba(255, 255, 255, 0.9);
+            background: radial-gradient(circle at 50% 40%, #ffffff 0%, #d8faff 55%, #00f0ff 100%);
+        }
+
+        /* Inner pure light core */
+        .portal-core-light {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, #ffffff 0%, #f2ffff 65%, #b8f9ff 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #030306;
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            letter-spacing: 3px;
+            font-weight: 700;
+        }
+
+        /* Heavy Architectural Blast Doors that part on scroll */
+        .portal-door {
+            position: absolute;
+            top: 0;
+            width: 50.5%;
+            height: 100%;
+            background: linear-gradient(145deg, #0b0d14 0%, #05060a 100%);
+            z-index: 3;
+            transition: transform 0.1s linear;
+            display: flex;
+            align-items: center;
+        }
+        .portal-door-left {
+            left: 0;
+            border-right: 1.5px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 8px 0 25px rgba(255, 255, 255, 0.65);
+            justify-content: flex-end;
+            padding-right: 12px;
+        }
+        .portal-door-right {
+            right: 0;
+            border-left: 1.5px solid rgba(255, 255, 255, 0.9);
+            box-shadow: -8px 0 25px rgba(255, 255, 255, 0.65);
+            justify-content: flex-start;
+            padding-left: 12px;
+        }
+        .door-handle-line {
+            width: 2px;
+            height: 60px;
+            background: var(--neon-cyan);
+            box-shadow: 0 0 10px var(--neon-cyan);
+        }
+
+        .hero-headline {
+            position: relative;
+            z-index: 5;
+            pointer-events: none;
+        }
+        .hero-headline h1 {
+            font-size: clamp(2.8rem, 6.5vw, 6.2rem);
+            font-weight: 800;
+            line-height: 0.95;
+            letter-spacing: -2px;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            text-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
+        }
+        .hero-headline h1 i {
+            font-family: var(--font-serif);
+            font-weight: 400;
+            font-style: italic;
+            color: var(--neon-cyan);
+            letter-spacing: 0;
+            text-transform: none;
+            padding-right: 8px;
+        }
+        .hero-sub {
+            font-family: var(--font-mono);
+            font-size: clamp(0.85rem, 1.4vw, 1.05rem);
+            color: var(--text-muted);
+            max-width: 580px;
+            margin: 0 auto 1.75rem;
+        }
+        .enter-cta {
+            pointer-events: auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 28px;
+            border-radius: 100px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            color: var(--portal-white);
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        .enter-cta:hover {
+            background: var(--portal-white);
+            color: var(--bg-void);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.7);
+            transform: translateY(-2px);
+        }
+
+        /* ===================================================
+           ROOM 01: COMMAND CORE (EXPERIENCE & TECH TICKER)
+           =================================================== */
+        .chamber-container {
+            width: 100%;
+            max-width: 1240px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .chamber-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            width: 100%;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-subtle);
+            padding-bottom: 1rem;
+        }
+        .chamber-title {
+            font-size: clamp(2rem, 4.2vw, 3.8rem);
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: -1px;
+        }
+        .chamber-title span {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-weight: 400;
+            color: var(--neon-lime);
+        }
+        .chamber-subtitle {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .exp-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.25rem;
+            width: 100%;
+            margin-bottom: 2rem;
+        }
+
+        .exp-card {
+            background: var(--bg-surface);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 1.6rem 1.8rem;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .exp-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 4px; height: 100%;
+            background: var(--neon-cyan);
+            opacity: 0.4;
+            transition: opacity 0.3s, box-shadow 0.3s;
+        }
+        .exp-card:hover {
+            border-color: var(--neon-cyan);
+            transform: translateY(-4px) translateZ(15px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(0, 240, 255, 0.12);
+        }
+        .exp-card:hover::before {
+            opacity: 1;
+            box-shadow: 0 0 15px var(--neon-cyan);
+        }
+
+        .exp-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+        }
+        .exp-org {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--portal-white);
+        }
+        .exp-role {
+            font-family: var(--font-mono);
+            font-size: 0.82rem;
+            color: var(--neon-cyan);
+            margin-top: 2px;
+        }
+        .exp-date {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            padding: 4px 10px;
+            border-radius: 100px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            color: var(--text-primary);
+            white-space: nowrap;
+        }
+        .exp-desc {
+            font-size: 0.92rem;
+            line-height: 1.55;
+            color: var(--text-muted);
+        }
+
+        /* Interactive Kinetic Ticker inside Room 01 */
+        .ticker-shell {
+            width: 100%;
+            overflow: hidden;
+            background: rgba(5, 6, 10, 0.85);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 1rem 0;
+            cursor: grab;
+            position: relative;
+        }
+        .ticker-shell:active { cursor: grabbing; }
+        .ticker-track {
+            display: flex;
+            width: fit-content;
+            gap: 2.5rem;
+            will-change: transform;
+        }
+        .ticker-pill {
+            font-family: var(--font-mono);
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            white-space: nowrap;
+            transition: color 0.25s, text-shadow 0.25s;
+        }
+        .ticker-pill::before {
+            content: '//';
+            color: var(--neon-lime);
+            font-weight: 400;
+        }
+        .ticker-pill:hover {
+            color: var(--portal-white);
+            text-shadow: 0 0 12px var(--neon-cyan);
+        }
+
+        /* ===================================================
+           ROOM 02: THE VAULT (HOLOGRAPHIC PROJECT SHOWCASE)
+           =================================================== */
+        .vault-layout {
+            width: 100%;
+            max-width: 1280px;
+            display: grid;
+            grid-template-columns: 1.45fr 1fr;
+            gap: 2rem;
+            align-items: stretch;
+        }
+
+        .projects-matrix {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            max-height: 62vh;
+            overflow-y: auto;
+            padding-right: 8px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--neon-cyan) rgba(255,255,255,0.05);
+        }
+        .projects-matrix::-webkit-scrollbar { width: 5px; }
+        .projects-matrix::-webkit-scrollbar-thumb { background: var(--neon-cyan); border-radius: 10px; }
+
+        .proj-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px;
+            padding: 1.35rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 1rem;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .proj-card:hover, .proj-card.active-proj {
+            border-color: var(--neon-lime);
+            background: rgba(20, 24, 38, 0.9);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(191, 255, 0, 0.15);
+        }
+        .proj-tag {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--neon-lime);
+        }
+        .proj-name {
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin: 4px 0 6px;
+            color: var(--portal-white);
+        }
+        .proj-Copy {
+            font-size: 0.86rem;
+            color: var(--text-muted);
+            line-height: 1.45;
+        }
+        .proj-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding-top: 0.75rem;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--portal-white);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .proj-action span {
+            color: var(--neon-cyan);
+            transition: transform 0.25s ease;
+        }
+        .proj-card:hover .proj-action span {
+            transform: translateX(5px);
+        }
+
+        /* Holographic Inspection Stage on Right */
+        .holo-stage {
+            background: rgba(8, 10, 18, 0.85);
+            border: 1px solid var(--border-bright);
+            border-radius: 18px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.75), inset 0 0 40px rgba(0, 240, 255, 0.07);
+        }
+        .holo-visual-wrap {
+            position: relative;
+            width: 100%;
+            height: 270px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: #050608;
+        }
+        .holo-visual-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+        }
+        .holo-stage:hover .holo-visual-wrap img {
+            transform: scale(1.05);
+        }
+        .holo-overlay-badge {
+            position: absolute;
+            top: 12px; left: 12px;
+            background: rgba(3, 3, 6, 0.85);
+            backdrop-filter: blur(8px);
+            padding: 5px 12px;
+            border-radius: 100px;
+            border: 1px solid var(--neon-cyan);
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            color: var(--neon-cyan);
+        }
+        .holo-meta {
+            margin-top: 1.25rem;
+        }
+        .holo-meta h4 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 0.4rem;
+        }
+        .holo-meta p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 1.1rem;
+            line-height: 1.5;
+        }
+        .holo-btn-row {
+            display: flex;
+            gap: 12px;
+        }
+        .btn-neon {
+            flex: 1;
+            text-align: center;
+            padding: 11px 18px;
+            border-radius: 10px;
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            text-decoration: none;
+            background: var(--neon-cyan);
+            color: var(--bg-void);
+            transition: all 0.25s ease;
+            cursor: pointer;
+            border: none;
+        }
+        .btn-neon:hover {
+            background: var(--neon-lime);
+            box-shadow: 0 0 25px rgba(191, 255, 0, 0.5);
+        }
+        .btn-ghost {
+            padding: 11px 16px;
+            border-radius: 10px;
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            color: var(--text-primary);
+            border: 1px solid var(--border-subtle);
+            text-decoration: none;
+            transition: all 0.25s ease;
+        }
+        .btn-ghost:hover {
+            border-color: var(--portal-white);
+            background: rgba(255,255,255,0.08);
+        }
+
+        /* ===================================================
+           ROOM 03: HALL OF RECOGNITION (MONOLITH PILLARS)
+           =================================================== */
+        .trophy-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            width: 100%;
+        }
+        .trophy-pillar {
+            background: linear-gradient(180deg, rgba(20, 22, 34, 0.85) 0%, rgba(8, 9, 15, 0.9) 100%);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 340px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .trophy-pillar:hover {
+            border-color: var(--neon-amber);
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.75), 0 0 30px rgba(255, 170, 0, 0.18);
+        }
+        .trophy-year {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--neon-amber);
+            border: 1px solid rgba(255, 170, 0, 0.4);
+            padding: 4px 12px;
+            border-radius: 100px;
+            width: fit-content;
+            margin-bottom: 1.5rem;
+        }
+        .trophy-title {
+            font-size: 1.65rem;
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 0.5rem;
+        }
+        .trophy-issuer {
+            font-family: var(--font-mono);
+            font-size: 0.82rem;
+            color: var(--neon-cyan);
+            margin-bottom: 1rem;
+        }
+        .trophy-desc {
+            font-size: 0.92rem;
+            color: var(--text-muted);
+            line-height: 1.55;
+            margin-bottom: 1.5rem;
+        }
+        .trophy-badge-img {
+            width: 64px;
+            height: 64px;
+            object-fit: contain;
+            align-self: flex-end;
+            filter: drop-shadow(0 0 12px rgba(255, 170, 0, 0.35));
+            transition: transform 0.35s ease;
+        }
+        .trophy-pillar:hover .trophy-badge-img {
+            transform: scale(1.18) rotate(-5deg);
+        }
+
+        /* ===================================================
+           ROOM 04: TRANSMISSION NEXUS (CONTACT & SECRET LAB)
+           =================================================== */
+        .nexus-box {
+            width: 100%;
+            max-width: 860px;
+            background: rgba(10, 12, 20, 0.82);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-bright);
+            border-radius: 28px;
+            padding: 3.5rem 3rem;
+            text-align: center;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.85), 0 0 50px rgba(0, 240, 255, 0.12);
+            position: relative;
+        }
+        .nexus-title {
+            font-size: clamp(2.4rem, 5vw, 4.5rem);
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 1rem;
+        }
+        .nexus-title i {
+            font-family: var(--font-serif);
+            font-weight: 400;
+            color: var(--neon-cyan);
+        }
+        .nexus-lead {
+            font-size: 1.08rem;
+            color: var(--text-muted);
+            max-width: 580px;
+            margin: 0 auto 2.25rem;
+            line-height: 1.6;
+        }
+        .email-pill-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+            background: var(--portal-white);
+            color: var(--bg-void);
+            font-family: var(--font-mono);
+            font-size: clamp(0.85rem, 1.5vw, 1.1rem);
+            font-weight: 700;
+            padding: 16px 34px;
+            border-radius: 100px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.35);
+            margin-bottom: 2.25rem;
+        }
+        .email-pill-btn:hover {
+            background: var(--neon-lime);
+            box-shadow: 0 0 40px rgba(191, 255, 0, 0.7);
+            transform: scale(1.04);
+        }
+        .social-row {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 2.5rem;
+        }
+        .social-node {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            padding: 8px 20px;
+            border-radius: 100px;
+            border: 1px solid var(--border-subtle);
+            transition: all 0.25s ease;
+        }
+        .social-node:hover {
+            border-color: var(--neon-cyan);
+            color: var(--neon-cyan);
+            background: rgba(0, 240, 255, 0.08);
+        }
+        .lab-signature {
+            display: inline-block;
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            border-bottom: 1px dashed rgba(255,255,255,0.3);
+            padding-bottom: 4px;
+            cursor: pointer;
+            transition: color 0.25s;
+        }
+        .lab-signature:hover {
+            color: var(--neon-crimson);
+            border-bottom-color: var(--neon-crimson);
+        }
+
+        /* --- CUSTOM RIGHT-CLICK CONTEXT MENU --- */
         #custom-context-menu {
             position: fixed;
-            z-index: 99990; /* Just below cursor */
-            width: 220px;
-            background: rgba(10, 10, 10, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 12px;
+            z-index: 99995;
+            width: 230px;
+            background: rgba(8, 10, 16, 0.96);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 240, 255, 0.35);
+            border-radius: 14px;
             padding: 8px;
             display: none;
             flex-direction: column;
             gap: 4px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
-            transform-origin: top left;
-            animation: menuPop 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.9);
         }
-
-        @keyframes menuPop {
-            0% { opacity: 0; transform: scale(0.9); }
-            100% { opacity: 1; transform: scale(1); }
+        .ctx-header {
+            padding: 6px 12px 2px;
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--neon-cyan);
         }
-
         .ctx-item {
-            padding: 10px 16px;
-            font-family: 'Outfit', sans-serif;
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.6);
+            padding: 9px 12px;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--text-primary);
             border-radius: 8px;
-            transition: all 0.2s ease;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            cursor: pointer;
             text-decoration: none;
+            transition: all 0.2s;
         }
-
         .ctx-item:hover {
-            background-color: #fff;
-            color: #000;
-            transform: translateX(4px);
+            background: var(--neon-cyan);
+            color: var(--bg-void);
+            font-weight: 700;
         }
-        
-        .ctx-item span { pointer-events: none; }
-        .ctx-shortcut { font-size: 0.7rem; opacity: 0.5; font-family: monospace; pointer-events: none;}
-        
         .ctx-divider {
             height: 1px;
             background: rgba(255, 255, 255, 0.1);
-            margin: 4px 8px;
+            margin: 4px 6px;
         }
 
-        .ctx-header {
-            padding: 8px 16px 4px 16px;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: rgba(255,255,255,0.3);
+        /* --- TOAST NOTIFICATION --- */
+        #toast {
+            position: fixed;
+            bottom: 96px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--portal-white);
+            color: var(--bg-void);
+            font-family: var(--font-mono);
+            font-size: 0.82rem;
             font-weight: 700;
+            padding: 12px 26px;
+            border-radius: 100px;
+            box-shadow: 0 10px 35px rgba(0, 240, 255, 0.4);
+            opacity: 0;
             pointer-events: none;
-        }
-
-        /* --- NAVIGATION --- */
-        nav {
-            position: fixed; top: 0; width: 100%; padding: 2rem 5%;
-            display: flex; justify-content: space-between; align-items: center;
-            z-index: 100; mix-blend-mode: difference; color: white;
-        }
-        .logo { font-size: 1.5rem; font-weight: 700; letter-spacing: -1px; }
-        .nav-links { display: flex; gap: 2rem; }
-        .nav-links a {
-            position: relative; font-size: 0.9rem; text-transform: uppercase;
-            letter-spacing: 1px; font-weight: 500;
-        }
-        .nav-links a::after {
-            content: ''; position: absolute; width: 0; height: 1px; bottom: -5px; left: 0;
-            background-color: white; transition: width 0.3s ease;
-        }
-        .nav-links a:hover::after { width: 100%; }
-
-        /* --- SECTIONS --- */
-        section {
-            min-height: 100vh; padding: 100px 10%; position: relative; display: flex;
-            flex-direction: column; justify-content: center; transition: background-color 0.5s ease;
-            width: 100%; overflow: hidden;
-            /* Performance fix */
-            will-change: transform; 
-        }
-        .section-dark { background-color: var(--bg-dark); color: var(--text-dark); }
-        .section-light { background-color: var(--bg-light); color: var(--text-light); }
-        .section-title {
-            font-size: clamp(3rem, 10vw, 8rem); margin-bottom: 4rem; opacity: 0.05;
-            position: absolute; top: 10%; right: 5%; z-index: 0; pointer-events: none;
-            text-transform: uppercase; white-space: nowrap;
-        }
-
-        h1, h2, h3, h4 {
-            font-family: 'Playfair Display', serif;
-            font-weight: 600;
-        }
-        a { text-decoration: none; color: inherit; }
-
-        /* --- HERO --- */
-        #hero { height: 100vh; align-items: flex-start; justify-content: center; position: relative; overflow: hidden; }
-        .hero-text { z-index: 10; position: relative; pointer-events: none; width: 100%; }
-        .hero-text h1, .hero-text p { pointer-events: auto; }
-        .hero-text h1 { font-size: clamp(3.5rem, 8vw, 6.5rem); line-height: 1.1; margin-bottom: 1.5rem; word-wrap: break-word; }
-        .hero-text p {
-            font-size: clamp(1rem, 2vw, 1.5rem); font-weight: 300; opacity: 0.8;
-            max-width: 600px; border-left: 2px solid currentColor; padding-left: 20px;
-        }
-
-        /* --- BOXY CARDS --- */
-        .list-item {
-            display: flex; flex-direction: column; 
-            padding: 2rem; 
-            margin-bottom: 1rem;
-            border: 1px solid rgba(125, 125, 125, 0.2); 
-            border-radius: 12px;
-            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-            position: relative; 
-            overflow: hidden; 
-            background: transparent; 
-            cursor: pointer;
-            width: 100%;
-        }
-        
-        .list-header {
-            display: flex; justify-content: space-between; align-items: center; width: 100%;
-            position: relative; z-index: 2;
-        }
-
-        .list-info {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            gap: 5px; 
-        }
-
-        .list-title { font-size: clamp(1.2rem, 4vw, 1.8rem); font-family: 'Playfair Display', serif; font-weight: 600; line-height: 1.2; }
-        .list-role { display: block; font-size: 0.9rem; font-family: 'Outfit', sans-serif; opacity: 0.7; }
-        
-        .list-meta { 
-            font-size: 0.9rem; 
-            font-weight: 600; 
-            border: 1px solid currentColor; 
-            padding: 5px 12px; 
-            border-radius: 50px; 
-            transition: all 0.3s;
+            z-index: 100000;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
             white-space: nowrap;
         }
-
-        .list-details {
-            max-height: 0; overflow: hidden; opacity: 0;
-            transition: all 0.4s ease; margin-top: 0;
-            font-size: 1rem; line-height: 1.5; font-weight: 300;
-            position: relative; z-index: 2;
-        }
-
-        /* Hover States for Boxy Cards */
-        .list-item:hover {
-            background-color: #000; color: #fff;
-            transform: scale(1.02);
-            box-shadow: 10px 10px 0px rgba(0,0,0,0.2);
-            border-color: #000;
-        }
-        .list-item:hover .list-details {
-            max-height: 200px; opacity: 1; margin-top: 1.5rem;
-            padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.2);
-        }
-        .list-item:hover .list-meta { border-color: #fff; background: #fff; color: #000; }
-
-        /* --- SKILLS TICKER --- */
-        .skills-section {
-            width: 100%;
-            overflow: hidden;
-            background-color: #000;
-            padding: 5rem 0;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            position: relative;
-            cursor: grab;
-        }
-        
-        .skills-section:active {
-            cursor: grabbing;
-        }
-
-        .skills-track {
-            display: flex;
-            width: fit-content;
-            gap: 4rem;
-            will-change: transform;
-        }
-
-        .skill-item {
-            font-family: 'Outfit', sans-serif;
-            font-size: clamp(3rem, 6vw, 5rem);
-            font-weight: 800;
-            text-transform: uppercase;
-            white-space: nowrap;
-            color: transparent; 
-            -webkit-text-stroke: 1px rgba(255,255,255,0.4);
-            transition: all 0.3s ease-out;
-            cursor: default;
-            user-select: none;
-        }
-
-        .skill-item:hover {
-            color: #fff;
-            -webkit-text-stroke: 0px;
-            text-shadow: 0 0 20px rgba(255,255,255,0.5);
-            transform: scale(1.05);
-        }
-
-        /* --- PROJECTS --- */
-        .chat-container {
-            display: flex; flex-direction: column; gap: 4rem; width: 100%; max-width: 800px;
-            margin: 0 auto; position: relative; z-index: 2;
-        }
-        .chat-bubble {
-            position: relative; max-width: 70%; padding: 2.5rem; background: #ffffff; color: #000000;
-            border: 3px solid #000000; border-radius: 20px; box-shadow: 8px 8px 0px #000000;
-            opacity: 0; transform: translateY(30px); transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-            background-image: radial-gradient(#e5e5e5 1.5px, transparent 1.5px);
-            background-size: 15px 15px; background-position: 0 0; background-color: #ffffff;
-        }
-        @keyframes movingDots { 0% { background-position: 0 0; } 100% { background-position: 15px 15px; } }
-        .chat-bubble:hover { transform: translateY(-5px); box-shadow: 12px 12px 0px #000000; animation: movingDots 1s linear infinite; }
-        .section-dark .chat-bubble, .section-light .chat-bubble { background-color: #ffffff; color: #000000; }
-        .chat-bubble:nth-child(odd) { align-self: flex-start; margin-right: auto; border-bottom-left-radius: 0; }
-        .chat-bubble:nth-child(even) { align-self: flex-end; margin-left: auto; text-align: right; border-bottom-right-radius: 0; }
-        .chat-bubble::after, .chat-bubble::before { content: ''; position: absolute; width: 0; height: 0; border-style: solid; }
-        .chat-bubble:nth-child(odd)::before { bottom: -23px; left: -3px; border-width: 20px 20px 0 0; border-color: #000000 transparent transparent transparent; }
-        .chat-bubble:nth-child(odd)::after { bottom: -17px; left: 0px; border-width: 17px 17px 0 0; border-color: #ffffff transparent transparent transparent; }
-        .chat-bubble:nth-child(even)::before { bottom: -23px; right: -3px; border-width: 20px 0 0 20px; border-color: #000000 transparent transparent transparent; }
-        .chat-bubble:nth-child(even)::after { bottom: -17px; right: 0px; border-width: 17px 0 0 17px; border-color: #ffffff transparent transparent transparent; }
-        .chat-bubble.visible { opacity: 1; transform: translateY(0); }
-        .project-title { font-size: 2rem; margin-bottom: 0.5rem; font-weight: 700; font-family: 'Playfair Display', serif; }
-        .project-desc { font-size: 1.1rem; margin-bottom: 1.5rem; font-weight: 400; font-family: 'Outfit', sans-serif; }
-        .project-link {
-            font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
-            border: 2px solid black; padding: 10px 24px; border-radius: 50px;
-            transition: all 0.3s; display: inline-block; background-color: white; color: black;
-            box-shadow: 2px 2px 0px #000; position: relative; z-index: 2;
-        }
-        .project-link:hover { background-color: black; color: white; box-shadow: 4px 4px 0px rgba(255,255,255,0.5); }
-
-        /* --- TRAIL & CARD & TOAST & MOBILE --- */
-        .trail-image {
-            position: absolute; width: 200px; height: 120px; object-fit: cover; border-radius: 8px;
-            pointer-events: none; transform: translate(-50%, -50%) scale(0.5); opacity: 0; z-index: 1;
-            animation: popInFadeOut 1s forwards; filter: grayscale(100%); border: 1px solid rgba(255,255,255,0.2);
-            will-change: transform, opacity;
-        }
-        .persistent-card {
-            position: absolute; width: 240px; height: 150px; border-radius: 10px;
-            transform: translate(-50%, -50%) scale(0.5) rotate(var(--rot)); opacity: 0; z-index: 5;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; pointer-events: auto;
-            border: 2px solid rgba(255,255,255,0.8); overflow: hidden; display: block;
-        }
-        .persistent-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
-        .persistent-card.active { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(var(--rot)); }
-        .persistent-card:hover { z-index: 20; border-color: #fff; transform: translate(-50%, -50%) scale(1.1) rotate(0deg) !important; }
-        
-        @keyframes popInFadeOut {
-            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8) rotate(var(--rot)); }
-            20% { opacity: 0.8; transform: translate(-50%, -50%) scale(1) rotate(var(--rot)); }
-            100% { opacity: 0; transform: translate(-50%, -50%) scale(1) rotate(var(--rot)); }
-        }
-
-        .toast-message {
-            position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px);
-            background: #ffffff; color: #000000; padding: 12px 28px; border-radius: 50px;
-            font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 0.95rem; opacity: 0;
-            pointer-events: none; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 100000; box-shadow: 0 10px 40px rgba(255,255,255,0.1); text-align: center; white-space: nowrap;
-        }
-        .toast-message.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-        /* --- FOOTER --- */
-        .footer-brand { 
-            margin-top: 5rem; 
-            font-size: 0.9rem; 
-            opacity: 0.5; 
-            font-family: monospace; 
-            letter-spacing: 2px;
-            border-bottom: 1px dotted rgba(255, 255, 255, 0.5); 
-            display: inline-block;
-            cursor: help; 
-            padding-bottom: 2px;
-        }
-        .social-grid { display: flex; gap: 2rem; margin-top: 3rem; justify-content: center; flex-wrap: wrap; }
-        .social-link { font-size: 1.2rem; border-bottom: 1px solid transparent; padding-bottom: 5px; }
-        .social-link:hover { border-bottom: 1px solid currentColor; }
-
-        /* --- MOBILE VISUALS --- */
-        .mobile-visuals {
-            display: none; position: fixed; bottom: 110px; right: 20px; width: 140px; height: 140px;
-            pointer-events: none; z-index: 50;
-        }
-        .mobile-visuals img {
-            width: 100%; height: 100%; object-fit: contain; opacity: 0;
-            transition: opacity 0.5s ease, transform 0.5s ease; position: absolute; top:0; left:0;
-            transform: scale(0.8) translateY(10px);
-        }
-        .mobile-visuals img.active { opacity: 1; transform: scale(1) translateY(0); }
-
-        /* ========================================= */
-        /* JELLY ISLAND NAVIGATION (POPUP & SLIDE)  */
-        /* ========================================= */
-        .bottom-nav-container {
-            display: none; 
-            position: fixed; bottom: 30px; left: 50%; 
-            /* Start state: Hidden below screen (150% down) */
-            transform: translateX(-50%) translateY(150%);
-            z-index: 9999;
-            /* Spring Physics for the POP UP */
-            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        /* Class added by JS to show the nav */
-        .bottom-nav-container.visible {
+        #toast.show {
+            opacity: 1;
             transform: translateX(-50%) translateY(0);
         }
-        
-        .island-nav {
-            position: relative;
-            background: rgba(18, 18, 18, 0.9);
-            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 50px;
-            padding: 8px; 
-            display: flex; align-items: center; justify-content: center;
-            gap: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.7);
-        }
 
-        /* The Jelly Glint */
-        .nav-glint {
-            position: absolute;
-            top: 50%; left: 0;
-            height: 44px; width: 44px;
-            background: rgba(255,255,255,0.15); 
-            border-radius: 50%;
-            z-index: 0; 
-            pointer-events: none;
-            /* Spring Physics for moving sideways */
-            transition: transform 0.4s cubic-bezier(0.5, 1.6, 0.4, 0.7), width 0.3s ease;
-            transform-origin: center center;
-            transform: translateY(-50%) translateX(0);
-        }
-
-        .island-item {
-            position: relative; z-index: 1;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            width: 44px; height: 44px; border-radius: 50%;
-            color: rgba(255,255,255,0.5); 
-            cursor: pointer; 
-            -webkit-tap-highlight-color: transparent;
-            transition: color 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        
-        .island-item svg { width: 22px; height: 22px; fill: currentColor; pointer-events: none; }
-        
-        /* Active State */
-        .island-item.active { color: #fff; transform: scale(1.1); }
-
-
-        /* ========================================= */
-        /* THE DEBUGGER GAME CSS                     */
-        /* ========================================= */
+        /* ===================================================
+           THE DEBUGGER ARCADE OVERLAY
+           =================================================== */
         #game-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000000; z-index: 20000; display: none;
-            flex-direction: column; align-items: center; justify-content: center;
-            cursor: none;
-            font-family: 'Share Tech Mono', monospace;
-            overflow: hidden;
-            touch-action: none; 
+            position: fixed;
+            inset: 0;
+            background: #020204;
+            z-index: 99990;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-mono);
+            touch-action: none;
         }
         #game-overlay.active { display: flex; }
-        
-        /* CRT Scanline Overlay */
-        .crt-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 20010;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            background-size: 100% 2px, 3px 100%;
-            animation: crt-flicker 0.15s infinite;
+        #gameCanvas { width: 100%; height: 100%; display: block; }
+        .game-ui {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
-        @keyframes crt-flicker { 0% { opacity: 0.9; } 50% { opacity: 0.95; } 100% { opacity: 0.9; } }
-
-        #gameCanvas { 
-            background: #050505; 
-            width: 100%; height: 100%; display: block;
-        }
-        
-        .game-ui-layer {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 20003;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-        }
-
-        /* HUD */
         .game-hud {
-            position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
-            display: flex; gap: 40px;
-            color: var(--game-neon); font-size: 1.5rem; 
-            text-shadow: 0 0 10px var(--game-neon);
-            background: rgba(0,0,0,0.7); border: 1px solid var(--game-neon);
-            padding: 10px 30px; border-radius: 4px;
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+            position: absolute;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 32px;
+            padding: 10px 28px;
+            background: rgba(0, 20, 10, 0.85);
+            border: 1px solid var(--neon-lime);
+            border-radius: 100px;
+            color: var(--neon-lime);
+            font-size: 1.1rem;
+            box-shadow: 0 0 25px rgba(191, 255, 0, 0.25);
         }
-        .hud-label { opacity: 0.7; font-size: 0.8rem; margin-right: 5px; }
-
-        /* Screens */
-        .game-start-screen, .game-over-screen {
-            background: rgba(0, 10, 0, 0.9); padding: 3rem 4rem; 
-            border: 2px solid var(--game-neon);
-            text-align: center; pointer-events: auto; backdrop-filter: blur(10px);
-            display: none; flex-direction: column; gap: 1.5rem;
-            box-shadow: 0 0 50px rgba(0, 255, 0, 0.3), inset 0 0 20px rgba(0, 255, 0, 0.1);
-            position: relative; overflow: hidden;
-            animation: slideUpFade 0.5s ease-out;
-            max-width: 90%;
+        .game-modal {
+            pointer-events: auto;
+            background: rgba(6, 10, 14, 0.94);
+            border: 2px solid var(--neon-lime);
+            border-radius: 20px;
+            padding: 2.5rem 3.5rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            box-shadow: 0 0 60px rgba(191, 255, 0, 0.25);
+            max-width: 90vw;
         }
-        
-        .game-over-screen { border-color: var(--game-danger); box-shadow: 0 0 50px rgba(255, 0, 85, 0.3); }
-
-        @keyframes slideUpFade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .game-title { 
-            font-family: 'Share Tech Mono', monospace; font-size: 3.5rem; 
-            color: #fff; line-height: 1; margin: 0; text-transform: uppercase;
-            letter-spacing: 5px; text-shadow: 2px 2px 0px rgba(255,255,255,0.3);
+        .game-modal h2 {
+            font-family: var(--font-display);
+            font-size: 2.6rem;
+            color: var(--portal-white);
         }
-        .game-subtitle { 
-            font-family: 'Share Tech Mono', monospace; color: var(--game-neon); 
-            font-size: 1.1rem; letter-spacing: 2px;
-        }
-        
         .game-btn {
-            background: transparent; color: var(--game-neon); 
-            border: 2px solid var(--game-neon); padding: 15px 40px;
-            font-family: 'Share Tech Mono', monospace; font-weight: 700; font-size: 1.5rem;
-            cursor: pointer; text-transform: uppercase; transition: all 0.2s;
-            position: relative; overflow: hidden;
+            background: var(--neon-lime);
+            color: #000;
+            font-family: var(--font-mono);
+            font-weight: 700;
+            font-size: 1rem;
+            padding: 14px 32px;
+            border: none;
+            border-radius: 100px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
-        .game-btn::before {
-            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
-            background: var(--game-neon); transition: left 0.3s; z-index: -1;
+        .close-game-btn {
+            position: absolute;
+            top: 24px;
+            right: 28px;
+            pointer-events: auto;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.25);
+            color: #fff;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            font-family: var(--font-mono);
+            cursor: pointer;
+            z-index: 20;
         }
-        .game-btn:hover { color: black; box-shadow: 0 0 30px var(--game-neon); }
-        .game-btn:hover::before { left: 0; }
-        .game-btn:active { transform: scale(0.95); }
-        
-        .game-btn.danger { color: var(--game-danger); border-color: var(--game-danger); }
-        .game-btn.danger::before { background: var(--game-danger); }
-        .game-btn.danger:hover { box-shadow: 0 0 30px var(--game-danger); }
 
-        .close-game { 
-            position: absolute; top: 30px; right: 30px; color: var(--text-dark); cursor: pointer; 
-            font-size: 1.2rem; pointer-events: auto; font-family: monospace; 
-            width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; 
-            border: 1px solid rgba(255,255,255,0.3); border-radius: 50%; z-index: 20020;
-            background: rgba(0,0,0,0.5); transition: all 0.3s;
-        }
-        .close-game:hover { border-color: var(--game-danger); color: var(--game-danger); transform: rotate(90deg); }
-
-        /* --- RESPONSIVE --- */
-        @media (max-width: 768px) {
-            body { padding-bottom: 80px; }
-            section { padding: 80px 5%; }
-            .section-title { top: 5%; right: 5%; font-size: 3.5rem; opacity: 0.08; }
-            .chat-container { gap: 3rem; }
-            .chat-bubble { max-width: 90%; padding: 2rem; }
-            nav { padding: 1.5rem 5%; }
-            .nav-links { display: none; }
-            /* Use new nav */
-            .bottom-nav-container { display: block; }
-            
-            .list-item { padding: 1.5rem; }
-            .list-info { gap: 2px; }
-            .list-meta { text-align: left; margin-left: 0; font-size: 0.85rem; opacity: 0.5; margin-top: 5px; border: none; padding: 0; }
-            
-            .list-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
-            
-            .trail-image { display: block !important; }
-            .persistent-card { display: none !important; }
-            /* Hide custom cursor on mobile to save performance */
-            .cursor-dot, .cursor-outline { display: none !important; }
-            .mobile-visuals { display: block; }
-            * { cursor: auto !important; }
-            
-            .skill-item { font-size: 3rem; -webkit-text-stroke: 1px rgba(255,255,255,0.6); }
-            .skill-item:hover { transform: scale(1.05); }
-
-            /* Game Responsive */
-            #gameCanvas { width: 100%; height: 100%; border: none; }
-            .game-hud { top: 10px; padding: 5px 15px; font-size: 1rem; width: 90%; justify-content: space-around; }
-            .game-start-screen, .game-over-screen { padding: 2rem; width: 90%; }
-            .game-title { font-size: 2rem; }
+        /* ===================================================
+           MOBILE & TABLET RESPONSIVENESS
+           =================================================== */
+        @media (max-width: 960px) {
+            .hud-top { padding: 1rem 1.25rem; }
+            .hud-telemetry { display: none; }
+            .room { padding: 4.5rem 1.25rem 6rem; justify-content: flex-start; overflow-y: auto; }
+            .threshold-layout { margin-top: auto; margin-bottom: auto; }
+            .portal-assembly { width: 200px; height: 300px; margin-bottom: 1.25rem; }
+            .exp-grid { grid-template-columns: 1fr; gap: 0.85rem; }
+            .exp-card { padding: 1.2rem; }
+            .vault-layout { grid-template-columns: 1fr; gap: 1rem; }
+            .projects-matrix { max-height: 36vh; grid-template-columns: 1fr; }
+            .holo-visual-wrap { height: 170px; }
+            .trophy-grid { grid-template-columns: 1fr; gap: 1rem; }
+            .trophy-pillar { min-height: auto; padding: 1.35rem; }
+            .nexus-box { padding: 2rem 1.25rem; margin-top: auto; margin-bottom: auto; }
+            .spatial-dock {
+                width: 94vw;
+                justify-content: space-between;
+                bottom: 16px;
+                padding: 6px;
+            }
+            .dock-btn { padding: 9px 10px; font-size: 0.68rem; }
+            .dock-btn .dock-label { display: none; }
+            .dock-btn.active .dock-label { display: inline; }
         }
     </style>
 </head>
-<body>
+<body class="custom-cursor">
 
-    <div id="mockToast" class="toast-message">Nice try. It's confidential. Unless you have clearance, keep scrolling.</div>
+    <!-- Ambient Layers -->
+    <div class="ambient-vignette"></div>
+    <div class="scanlines"></div>
+    <div id="portal-flash"></div>
+    <canvas id="corridor-canvas"></canvas>
 
+    <!-- Custom Smart Cursor -->
+    <div class="cursor-reticle" id="cursorReticle"></div>
+    <div class="cursor-core" id="cursorCore"></div>
+
+    <!-- Notification Toast -->
+    <div id="toast">Notification</div>
+
+    <!-- Custom Right-Click Context Menu -->
     <div id="custom-context-menu">
-        <div class="ctx-header">Navigation</div>
-        <a href="#work" class="ctx-item hover-trigger" onclick="closeContextMenu()">
-            <span>Experience</span>
-            <span class="ctx-shortcut">01</span>
-        </a>
-        <a href="#projects" class="ctx-item hover-trigger" onclick="closeContextMenu()">
-            <span>Projects</span>
-            <span class="ctx-shortcut">02</span>
-        </a>
-        <a href="#contact" class="ctx-item hover-trigger" onclick="closeContextMenu()">
-            <span>Contact</span>
-            <span class="ctx-shortcut">03</span>
-        </a>
+        <div class="ctx-header">Teleport Room</div>
+        <div class="ctx-item hover-target" onclick="jumpToRoom(0); hideContextMenu()"><span>00 // Threshold</span><span>HOME</span></div>
+        <div class="ctx-item hover-target" onclick="jumpToRoom(1); hideContextMenu()"><span>01 // Command Core</span><span>WORK</span></div>
+        <div class="ctx-item hover-target" onclick="jumpToRoom(2); hideContextMenu()"><span>02 // The Vault</span><span>PROJ</span></div>
+        <div class="ctx-item hover-target" onclick="jumpToRoom(3); hideContextMenu()"><span>03 // Trophy Hall</span><span>WINS</span></div>
+        <div class="ctx-item hover-target" onclick="jumpToRoom(4); hideContextMenu()"><span>04 // Uplink Nexus</span><span>PING</span></div>
         <div class="ctx-divider"></div>
-        <div class="ctx-header">System</div>
-        <div class="ctx-item hover-trigger" onclick="triggerConsoleLog(); closeContextMenu()">
-            <span>System Logs</span>
-            <span class="ctx-shortcut">CMD+I</span>
-        </div>
-        <div class="ctx-item hover-trigger" onclick="location.reload(); closeContextMenu()">
-            <span>Reboot</span>
-            <span class="ctx-shortcut">R</span>
-        </div>
+        <div class="ctx-header">Diagnostics</div>
+        <div class="ctx-item hover-target" onclick="launchGameEngine(); hideContextMenu()"><span>Launch Debugger</span><span>EXE</span></div>
+        <div class="ctx-item hover-target" onclick="copyEmail(); hideContextMenu()"><span>Copy Email</span><span>CMD+C</span></div>
     </div>
 
-    <div id="game-overlay">
-        <div class="crt-overlay"></div> <div class="close-game" onclick="closeGame()">ESC</div>
-        <canvas id="gameCanvas"></canvas>
-        
-        <div class="game-ui-layer">
-            <div id="gameHud" class="game-hud" style="display:none;">
-                <div><span class="hud-label">SCORE</span><span id="scoreVal">0</span></div>
-                <div><span class="hud-label">BUGS</span><span id="bugVal">0</span></div>
-            </div>
-
-            <div id="startScreen" class="game-start-screen" style="display: flex;">
-                <h1 class="game-title">THE DEBUGGER</h1>
-                <p class="game-subtitle">// SYSTEM COMPROMISED //<br>INITIATE CLEANUP PROTOCOL</p>
-                <button class="game-btn" onclick="startGame()">INITIALIZE >></button>
-            </div>
-
-            <div id="gameOverScreen" class="game-over-screen">
-                <h1 class="game-title" style="color: var(--game-danger); text-shadow: 0 0 20px var(--game-danger);">RUNTIME ERROR</h1>
-                <p class="game-subtitle" id="finalScoreMsg" style="color: #fff;">SCORE: 0</p>
-                <button class="game-btn danger" onclick="startGame()">REBOOT SYSTEM</button>
-            </div>
+    <!-- Top Architectural Telemetry HUD -->
+    <header class="hud-top">
+        <a href="#top" onclick="jumpToRoom(0); return false;" class="hud-brand hover-target">
+            <div class="brand-cube"></div>
+            <span class="brand-text">SPANDAN SAXENA</span>
+            <span class="brand-sub">S² ARCH // v4.2</span>
+        </a>
+        <div class="hud-telemetry">
+            <div class="telemetry-item">CHAMBER: <span id="hudRoomName">00 // THRESHOLD</span></div>
+            <div class="telemetry-item">Z-COORD: <span id="hudZCoord">0000m</span></div>
+            <div class="telemetry-item">LOC: <span>BLR, IN</span></div>
         </div>
-    </div>
+    </header>
 
-    <div class="cursor-dot" data-cursor-dot></div>
-    <div class="cursor-outline" data-cursor-outline></div>
-
-    <div class="mobile-visuals" id="mobilePreview"></div>
-
-    <nav>
-        <div class="logo hover-trigger">SPANDAN.</div>
-        <div class="nav-links">
-            <a href="#work" class="hover-trigger">Experience</a>
-            <a href="#projects" class="hover-trigger">Projects</a>
-            <a href="#recognition" class="hover-trigger">Recognition</a>
-            <a href="#contact" class="hover-trigger">Contact</a>
-        </div>
+    <!-- Bottom Spatial Room Switcher Dock -->
+    <nav class="spatial-dock" aria-label="Spatial Room Navigation">
+        <button class="dock-btn active hover-target" onclick="jumpToRoom(0)">
+            <span class="dock-idx">00</span><span class="dock-label">Portal</span>
+        </button>
+        <button class="dock-btn hover-target" onclick="jumpToRoom(1)">
+            <span class="dock-idx">01</span><span class="dock-label">Experience</span>
+        </button>
+        <button class="dock-btn hover-target" onclick="jumpToRoom(2)">
+            <span class="dock-idx">02</span><span class="dock-label">The Vault</span>
+        </button>
+        <button class="dock-btn hover-target" onclick="jumpToRoom(3)">
+            <span class="dock-idx">03</span><span class="dock-label">Honors</span>
+        </button>
+        <button class="dock-btn hover-target" onclick="jumpToRoom(4)">
+            <span class="dock-idx">04</span><span class="dock-label">Uplink</span>
+        </button>
     </nav>
 
-    <div class="bottom-nav-container" id="popupNav">
-        <div class="island-nav">
-            <div class="nav-glint" id="navGlint"></div>
-            
-            <a href="#work" class="island-item" data-target="work">
-                 <svg viewBox="0 0 24 24"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/></svg>
-            </a>
-            
-            <a href="#projects" class="island-item" data-target="projects">
-                 <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg>
-            </a>
-            
-            <a href="#recognition" class="island-item" data-target="recognition">
-                <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-            </a>
+    <!-- ===================================================
+         3D SPATIAL WORLD VIEWPORT
+         =================================================== -->
+    <main id="viewport">
+        <div id="world">
 
-            <a href="#contact" class="island-item" data-target="contact">
-                 <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-            </a>
+            <!-- ROOM 00: THE THRESHOLD (LIGHT PORTAL DOORWAY) -->
+            <section class="room room-interactive" data-room="0" data-name="00 // THRESHOLD">
+                <div class="threshold-layout">
+                    <div class="room-marker">ARCHITECTURAL ENTRYWAY // SCROLL OR CLICK TO BREACH</div>
+
+                    <div class="portal-assembly hover-target" onclick="jumpToRoom(1)" title="Click or scroll to step through the portal">
+                        <div class="portal-floor-glow" id="portalFloorGlow"></div>
+                        <div class="portal-frame">
+                            <div class="portal-core-light">
+                                <span>ENTER</span>
+                                <span style="font-size:0.55rem; opacity:0.65; margin-top:4px;">CHAMBER 01</span>
+                            </div>
+                            <div class="portal-door portal-door-left" id="doorLeft">
+                                <div class="door-handle-line"></div>
+                            </div>
+                            <div class="portal-door portal-door-right" id="doorRight">
+                                <div class="door-handle-line"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hero-headline">
+                        <h1>From <i>Logic</i> to Launch.</h1>
+                        <p class="hero-sub">
+                            Software Development Engineer at IBM India Software Labs. Architecting resilient backend systems, native mobile experiences, and empathetic AI.
+                        </p>
+                        <button class="enter-cta hover-target" onclick="jumpToRoom(1)">
+                            <span>Step Into The Corridor</span>
+                            <span>→</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ROOM 01: COMMAND CORE (EXPERIENCE & TECH STACK) -->
+            <section class="room" data-room="1" data-name="01 // COMMAND CORE">
+                <div class="chamber-container">
+                    <div class="room-marker">CHAMBER 01 // CAREER TELEMETRY</div>
+                    <div class="chamber-header">
+                        <h2 class="chamber-title">Command <span>Core</span></h2>
+                        <span class="chamber-subtitle">ENTERPRISE ENGINEERING & APPLIED RESEARCH</span>
+                    </div>
+
+                    <div class="exp-grid">
+                        <div class="exp-card hover-target">
+                            <div class="exp-top">
+                                <div>
+                                    <div class="exp-org">IBM India Software Labs</div>
+                                    <div class="exp-role">Software Development Engineer (Apptio)</div>
+                                </div>
+                                <span class="exp-date">2026 — PRESENT</span>
+                            </div>
+                            <p class="exp-desc">
+                                Engineering cloud-native backend services and high-throughput enterprise financial/operational tooling within the Apptio division using Java, Spring Boot, and Kubernetes.
+                            </p>
+                        </div>
+
+                        <div class="exp-card hover-target">
+                            <div class="exp-top">
+                                <div>
+                                    <div class="exp-org">IBM Consulting</div>
+                                    <div class="exp-role">Application Developer</div>
+                                </div>
+                                <span class="exp-date">2023 — 2026</span>
+                            </div>
+                            <p class="exp-desc">
+                                Spearheaded enterprise modernization, legacy codebase rebasing, and custom Retrieval-Augmented Generation (RAG) &amp; IBM watsonx AI architectures.
+                            </p>
+                        </div>
+
+                        <div class="exp-card hover-target">
+                            <div class="exp-top">
+                                <div>
+                                    <div class="exp-org">MNIT Jaipur</div>
+                                    <div class="exp-role">Research Intern</div>
+                                </div>
+                                <span class="exp-date">2022 — 2023</span>
+                            </div>
+                            <p class="exp-desc">
+                                Conducted experimental computer vision and deep learning research focused on automated Citrus Fruit Disease Identification.
+                            </p>
+                        </div>
+
+                        <div class="exp-card hover-target">
+                            <div class="exp-top">
+                                <div>
+                                    <div class="exp-org">Unacademy</div>
+                                    <div class="exp-role">Software Developer Intern</div>
+                                </div>
+                                <span class="exp-date">INTERNSHIP</span>
+                            </div>
+                            <p class="exp-desc">
+                                Contributed to core mobile learning applications, shipping modular UI components and improving runtime rendering performance by 15%.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="ticker-shell hover-target" id="skillsTickerShell">
+                        <div class="ticker-track" id="skillsTickerTrack">
+                            <div class="ticker-pill">Java</div>
+                            <div class="ticker-pill">Spring Boot</div>
+                            <div class="ticker-pill">Python</div>
+                            <div class="ticker-pill">Kotlin &amp; Jetpack Compose</div>
+                            <div class="ticker-pill">RAG &amp; IBM watsonx</div>
+                            <div class="ticker-pill">Docker &amp; Kubernetes</div>
+                            <div class="ticker-pill">Microsoft Azure (AZ-204)</div>
+                            <div class="ticker-pill">SQL &amp; REST APIs</div>
+                            <div class="ticker-pill">Neobrutalist UI/UX</div>
+                            <!-- Duplicated for seamless loop -->
+                            <div class="ticker-pill">Java</div>
+                            <div class="ticker-pill">Spring Boot</div>
+                            <div class="ticker-pill">Python</div>
+                            <div class="ticker-pill">Kotlin &amp; Jetpack Compose</div>
+                            <div class="ticker-pill">RAG &amp; IBM watsonx</div>
+                            <div class="ticker-pill">Docker &amp; Kubernetes</div>
+                            <div class="ticker-pill">Microsoft Azure (AZ-204)</div>
+                            <div class="ticker-pill">SQL &amp; REST APIs</div>
+                            <div class="ticker-pill">Neobrutalist UI/UX</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ROOM 02: THE VAULT (INTERACTIVE PROJECT GALLERY) -->
+            <section class="room" data-room="2" data-name="02 // THE VAULT">
+                <div class="chamber-container">
+                    <div class="room-marker">CHAMBER 02 // SHIPPED ARTIFACTS</div>
+                    <div class="chamber-header">
+                        <h2 class="chamber-title">The <span>Artifact</span> Vault</h2>
+                        <span class="chamber-subtitle">SELECT OR HOVER ANY ARTIFACT TO INSPECT HOLOGRAM</span>
+                    </div>
+
+                    <div class="vault-layout">
+                        <div class="projects-matrix" id="projectMatrix">
+                            <!-- Populated dynamically via JS for synchronized holographic inspection -->
+                        </div>
+
+                        <div class="holo-stage">
+                            <div>
+                                <div class="holo-visual-wrap">
+                                    <span class="holo-overlay-badge" id="holoTag">WEB APPLICATION</span>
+                                    <img id="holoImage" src="https://i.ibb.co/1Vmw65c/poster-1-spandan.png" alt="Project Preview">
+                                </div>
+                                <div class="holo-meta">
+                                    <h4 id="holoTitle">The Day Grid</h4>
+                                    <p id="holoDesc">Time is finite. Your wallpaper was wasting it. Interactive life-calendar grid generator designed for focus.</p>
+                                </div>
+                            </div>
+                            <div class="holo-btn-row">
+                                <a id="holoPrimaryLink" href="https://the-day-grid.vercel.app" target="_blank" class="btn-neon hover-target">Launch Artifact ↗</a>
+                                <a href="https://github.com/the-rebooted-coder" target="_blank" class="btn-ghost hover-target">All Repos</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ROOM 03: HALL OF RECOGNITION -->
+            <section class="room" data-room="3" data-name="03 // TROPHY HALL">
+                <div class="chamber-container">
+                    <div class="room-marker">CHAMBER 03 // GLOBAL DISTINCTIONS</div>
+                    <div class="chamber-header">
+                        <h2 class="chamber-title">Hall of <span>Recognition</span></h2>
+                        <span class="chamber-subtitle">HOVER PILLARS FOR CREDENTIAL TELEMETRY</span>
+                    </div>
+
+                    <div class="trophy-grid">
+                        <div class="trophy-pillar preview-trigger" data-img="https://i.ibb.co/3yzjFkBy/converge-cursor.png">
+                            <div>
+                                <div class="trophy-year">2025 // GLOBAL RANK #2</div>
+                                <h3 class="trophy-title">IBM Converge Runner-Up</h3>
+                                <div class="trophy-issuer">IBM Global Innovation</div>
+                                <p class="trophy-desc">
+                                    Earned 2nd place globally among 600+ contenders for presenting the "Beyond the Algorithm" whitepaper and solution on Empathetic AI.
+                                </p>
+                            </div>
+                            <img class="trophy-badge-img" src="https://i.ibb.co/3yzjFkBy/converge-cursor.png" alt="IBM Converge">
+                        </div>
+
+                        <div class="trophy-pillar preview-trigger" data-img="https://i.ibb.co/KjWN4c6Y/gem-cursor.png">
+                            <div>
+                                <div class="trophy-year">2025 // LAB EXCELLENCE</div>
+                                <h3 class="trophy-title">GEMs of Development</h3>
+                                <div class="trophy-issuer">IBM India</div>
+                                <p class="trophy-desc">
+                                    Recognized for standout engineering execution, architectural ownership, and measurable impact across enterprise deliverables.
+                                </p>
+                            </div>
+                            <img class="trophy-badge-img" src="https://i.ibb.co/KjWN4c6Y/gem-cursor.png" alt="GEMs of Development">
+                        </div>
+
+                        <div class="trophy-pillar preview-trigger" data-img="https://i.ibb.co/35v1R5Nk/gratitude-cursor.png">
+                            <div>
+                                <div class="trophy-year">2026 // HIGH IMPACT</div>
+                                <h3 class="trophy-title">Top Performer Gratitude</h3>
+                                <div class="trophy-issuer">IBM</div>
+                                <p class="trophy-desc">
+                                    Awarded for sustained high-velocity delivery, technical leadership, and zero-defect milestone execution.
+                                </p>
+                            </div>
+                            <img class="trophy-badge-img" src="https://i.ibb.co/35v1R5Nk/gratitude-cursor.png" alt="Top Performer">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ROOM 04: TRANSMISSION NEXUS (CONTACT) -->
+            <section class="room" data-room="4" data-name="04 // UPLINK NEXUS">
+                <div class="nexus-box">
+                    <div class="room-marker" style="margin-bottom: 1.5rem;">CHAMBER 04 // DIRECT TRANSMISSION</div>
+                    <h2 class="nexus-title">Let's <i>Architect</i> The Next Thing.</h2>
+                    <p class="nexus-lead">
+                        I build software that actually works, scale systems that don’t fall apart, and ship ideas instead of just talking about them.
+                    </p>
+
+                    <button class="email-pill-btn hover-target" onclick="copyEmail()">
+                        <span>connectwithspandan@gmail.com</span>
+                        <span style="font-size: 0.75rem; opacity: 0.65;">[COPY]</span>
+                    </button>
+
+                    <div class="social-row">
+                        <a href="https://www.linkedin.com/in/spandn/" target="_blank" class="social-node hover-target">LinkedIn ↗</a>
+                        <a href="https://github.com/the-rebooted-coder" target="_blank" class="social-node hover-target">GitHub ↗</a>
+                        <a href="https://www.instagram.com/simply.spandan/" target="_blank" class="social-node hover-target">Instagram ↗</a>
+                    </div>
+
+                    <div class="lab-signature hover-target" id="secretTrigger" title="Click 5 times to breach defense mainframe">
+                        An S² Labs Spatial Product 🥼 // Tap 5x for Mainframe Override
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- ===================================================
+         THE DEBUGGER MINI-GAME OVERLAY
+         =================================================== -->
+    <div id="game-overlay">
+        <button class="close-game-btn" onclick="closeGame()">ESC</button>
+        <canvas id="gameCanvas"></canvas>
+        <div class="game-ui">
+            <div id="gameHud" class="game-hud" style="display:none;">
+                <div>SCORE: <span id="scoreVal">0</span></div>
+                <div>BUGS ACTIVE: <span id="bugVal">0</span></div>
+            </div>
+            <div id="startScreen" class="game-modal">
+                <h2>THE DEBUGGER</h2>
+                <p style="color: var(--neon-cyan);">// MAINFRAME BREACH DETECTED //</p>
+                <button class="game-btn" onclick="startGame()">INITIALIZE CLEANUP &gt;&gt;</button>
+            </div>
+            <div id="gameOverScreen" class="game-modal" style="display:none; border-color: var(--neon-crimson);">
+                <h2 style="color: var(--neon-crimson);">RUNTIME EXCEPTION</h2>
+                <p id="finalScoreMsg">BUGS PATCHED: 0</p>
+                <button class="game-btn" style="background: var(--neon-crimson); color:#fff;" onclick="startGame()">REBOOT KERNEL</button>
+            </div>
         </div>
     </div>
-
-    <section id="hero" class="section-dark">
-        <div class="hero-text" data-speed="0.2">
-            <h1>Software<br><i>Developer</i></h1>
-            <p>From Logic to Launch.</p>
-        </div>
-    </section>
-
-    <section id="work" class="section-light">
-        <div class="section-title">Experience</div>
-        
-        <div class="list-item hover-trigger">
-            <div class="list-header">
-                <div class="list-info">
-                    <span class="list-title">IBM</span>
-                    <span class="list-role">Application Developer</span>
-                </div>
-                <span class="list-meta">2023 - Current</span>
-            </div>
-            <div class="list-details">
-                Leading development on enterprise-scale software solutions. Focused on optimizing legacy codebases and integrating empathetic AI architectures.
-            </div>
-        </div>
-
-        <div class="list-item hover-trigger">
-            <div class="list-header">
-                <div class="list-info">
-                    <span class="list-title">NIT Jaipur</span>
-                    <span class="list-role">Research Intern</span>
-                </div>
-                <span class="list-meta">2022 - 2023</span>
-            </div>
-            <div class="list-details">
-                Conducting experimental research on Citrus Fruit Disease Identification using Computer Vision and Machine Learning models.
-            </div>
-        </div>
-
-        <div class="list-item hover-trigger">
-            <div class="list-header">
-                <div class="list-info">
-                    <span class="list-title">Unacademy</span>
-                    <span class="list-role">Software Developer Intern</span>
-                </div>
-                <span class="list-meta">Internship</span>
-            </div>
-            <div class="list-details">
-                Contributed to the core learning mobile application. Implemented new UI libraries and improved app performance metrics by 15%.
-            </div>
-        </div>
-    </section>
-
-    <div class="skills-section section-light hover-trigger" id="skillsContainer">
-        <div class="skills-track" id="skillsTrack">
-            <div class="skill-item">Android</div><div class="skill-item">Kotlin</div><div class="skill-item">Java</div>
-            <div class="skill-item">React</div><div class="skill-item">Node.js</div><div class="skill-item">AWS</div>
-            <div class="skill-item">Git</div><div class="skill-item">Neobrutalism</div><div class="skill-item">UI/UX</div>
-            
-            <div class="skill-item">Android</div><div class="skill-item">Kotlin</div><div class="skill-item">Java</div>
-            <div class="skill-item">React</div><div class="skill-item">Node.js</div><div class="skill-item">AWS</div>
-            <div class="skill-item">Git</div><div class="skill-item">Neobrutalism</div><div class="skill-item">UI/UX</div>
-
-            <div class="skill-item">Android</div><div class="skill-item">Kotlin</div><div class="skill-item">Java</div>
-            <div class="skill-item">React</div><div class="skill-item">Node.js</div><div class="skill-item">AWS</div>
-            <div class="skill-item">Git</div><div class="skill-item">Neobrutalism</div><div class="skill-item">UI/UX</div>
-        </div>
-    </div>
-
-    <section id="projects" class="section-dark">
-        <div class="section-title">Projects</div>
-        <div class="chat-container">
-            <div class="chat-bubble hover-bubble">
-                <h3 class="project-title">The Day Grid</h3>
-                <p class="project-desc">Time is finite. Your wallpaper was wasting it.</p>
-                <a href="https://the-day-grid.vercel.app" target="_blank" class="project-link">Get Grid</a>
-            </div>
-            <div class="chat-bubble hover-bubble">
-                <h3 class="project-title">Legacy to Modern Rebase</h3>
-                <p class="project-desc">Because code from 2003 deserves a second chance.</p>
-                <span class="project-link" style="opacity:0.5; cursor: not-allowed; border-color: #777; color: #777;">IBM Confidential</span>
-            </div>
-            <div class="chat-bubble hover-bubble">
-                <h3 class="project-title">Safe Charge</h3>
-                <p class="project-desc">Your charger can’t be trusted. This app can.</p>
-                <a href="https://play.google.com/store/apps/details?id=com.onesilicondiode.batterywise&pcampaignid=web_share" target="_blank" class="project-link">Play Store</a>
-            </div>
-             <div class="chat-bubble hover-bubble">
-                <h3 class="project-title">Mail Canon</h3>
-                <p class="project-desc">Upload a CSV. We do the spamming. Legally.</p>
-                <a href="https://github.com/the-rebooted-coder/Mail-Canon" target="_blank" class="project-link">View Repo</a>
-            </div>
-            <div class="chat-bubble hover-bubble">
-                <h3 class="project-title">Forecasted</h3>
-                <p class="project-desc">AI-powered stock predictions. Confidence sold separately.</p>
-                <a href="https://github.com/the-rebooted-coder/Forecasted" target="_blank" class="project-link">View Repo</a>
-            </div>
-            <div class="chat-bubble hover-bubble">
-                <h3 class="project-title">Bow Film</h3>
-                <p class="project-desc">Noir aesthetics. Drama included.</p>
-                <a href="https://www.snapchat.com/unlock/?type=SNAPCODE&uuid=58a604a1379140089d56a02ec0917f05&metadata=01" target="_blank" class="project-link">Unlock Lens</a>
-            </div>
-            <div class="chat-bubble hover-bubble">
-                <h3 class="project-title">Sandhya</h3>
-                <p class="project-desc">Golden hour is now an on-demand service.</p>
-                <a href="https://www.snapchat.com/unlock/?type=SNAPCODE&uuid=ee8c25b7cf994a6d918a156b1bdd9a08&metadata=01" target="_blank" class="project-link">Unlock Lens</a>
-            </div>
-            <div style="text-align: center; margin-top: 2rem;">
-                <a href="https://github.com/the-rebooted-coder" target="_blank" class="project-link hover-trigger">More on GitHub</a>
-            </div>
-        </div>
-    </section>
-
-    <section id="recognition" class="section-light">
-        <div class="section-title">Recognition</div>
-        
-        <div class="list-item recognition-trigger" data-img="https://i.ibb.co/3yzjFkBy/converge-cursor.png">
-            <div class="list-header">
-                <div class="list-info">
-                    <span class="list-title">Converge Runnerup</span>
-                    <span class="list-role">IBM</span>
-                </div>
-                <span class="list-meta">2025</span>
-            </div>
-            <div class="list-details">
-                Won 2nd place globally among 600 participants for "Beyond the Algorithm" whitepaper.
-            </div>
-        </div>
-        
-        <div class="list-item recognition-trigger" data-img="https://i.ibb.co/KjWN4c6Y/gem-cursor.png">
-             <div class="list-header">
-                <div class="list-info">
-                    <span class="list-title">GEMs of Development</span>
-                    <span class="list-role">IBM India</span>
-                </div>
-                <span class="list-meta">2025</span>
-            </div>
-            <div class="list-details">
-                Recognized for technical excellence and impact within the IBM India Development Lab.
-            </div>
-        </div>
-        
-        <div class="list-item recognition-trigger" data-img="https://i.ibb.co/35v1R5Nk/gratitude-cursor.png">
-             <div class="list-header">
-                <div class="list-info">
-                    <span class="list-title">Top Performer Gratitude</span>
-                    <span class="list-role">IBM</span>
-                </div>
-                <span class="list-meta">2026</span>
-            </div>
-            <div class="list-details">
-                Awarded for consistent high performance and delivery of critical project milestones.
-            </div>
-        </div>
-    </section>
-
-    <section id="contact" class="section-dark" style="text-align: center; align-items: center;">
-        <h2 style="font-size: 3rem; margin-bottom: 2rem;">Let's Build.</h2>
-        <p style="font-size: 1.2rem; opacity: 0.8; max-width: 600px; margin-bottom: 2rem;">
-            I build software that actually works, scale systems that don’t fall apart, and ship ideas instead of talking about them.
-        </p>
-        <div class="project-link hover-trigger" onclick="copyEmail()" style="font-size: 1.2rem; padding: 1rem 3rem; border-radius: 50px; cursor: pointer;">
-            connectwithspandan@gmail.com
-        </div>
-        <div class="social-grid">
-            <a href="https://www.linkedin.com/in/spandn/" target="_blank" class="social-link hover-trigger">LinkedIn</a>
-            <a href="https://github.com/the-rebooted-coder" target="_blank" class="social-link hover-trigger">GitHub</a>
-            <a href="https://www.instagram.com/simply.spandan/" target="_blank" class="social-link hover-trigger">Instagram</a>
-        </div>
-        <div class="footer-brand hover-trigger" id="secretTrigger">An S² Labs Product 🥼</div>
-    </section>
-
-    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
 
     <script>
-        // Check for mobile 
-        const isMobile = window.innerWidth < 768;
+        /* ===================================================
+           1. ARTIFACT VAULT DATA & HOLOGRAPHIC STAGE
+           =================================================== */
+        const vaultProjects = [
+            {
+                title: "The Day Grid",
+                tag: "PWA // VISUAL TIME ENGINE",
+                desc: "Time is finite. Your wallpaper was wasting it. Dynamic life-grid wallpaper engine built for intentional focus.",
+                img: "https://i.ibb.co/1Vmw65c/poster-1-spandan.png",
+                link: "https://the-day-grid.vercel.app",
+                cta: "Get Grid ↗"
+            },
+            {
+                title: "Safe Charge (BatteryWise)",
+                tag: "NATIVE ANDROID // KOTLIN",
+                desc: "Your charger can’t be trusted. This app can. Real-time hardware charge telemetry and battery health guardian.",
+                img: "https://i.ibb.co/7xxg2HwS/poster-2-spandan.png",
+                link: "https://play.google.com/store/apps/details?id=com.onesilicondiode.batterywise&pcampaignid=web_share",
+                cta: "Play Store ↗"
+            },
+            {
+                title: "Legacy to Modern Rebase",
+                tag: "ENTERPRISE AI // RAG",
+                desc: "Because code from 2003 deserves a second chance. Automated enterprise code analyzer and architectural migration suite.",
+                img: "https://i.ibb.co/1fKX3zQD/poster-4-spandan.png",
+                link: "#confidential",
+                confidential: true,
+                cta: "IBM Confidential 🔒"
+            },
+            {
+                title: "What's In",
+                tag: "WATCHOS & WINDOWS // CROSS-DEVICE",
+                desc: "Glanceable weekly meal & menu synchronization utility engineered across desktop and Apple Watch.",
+                img: "https://i.ibb.co/qFW4Wjnw/poster-6-spandan.png",
+                link: "https://github.com/the-rebooted-coder/What-s-In",
+                cta: "View Repo ↗"
+            },
+            {
+                title: "Mail Canon",
+                tag: "AUTOMATION ENGINE",
+                desc: "Upload a CSV. High-throughput personalized dispatch pipeline without the bloat.",
+                img: "https://i.ibb.co/NgrK3wx9/poster-3-spandan.png",
+                link: "https://github.com/the-rebooted-coder/Mail-Canon",
+                cta: "View Repo ↗"
+            },
+            {
+                title: "Forecasted",
+                tag: "MACHINE LEARNING // FINTECH",
+                desc: "AI-powered quantitative stock trajectory modeling. Confidence sold separately.",
+                img: "https://i.ibb.co/yc96f8P3/poster-5-spandan.png",
+                link: "https://github.com/the-rebooted-coder/Forecasted",
+                cta: "View Repo ↗"
+            },
+            {
+                title: "Bow Film & Sandhya AR",
+                tag: "SNAP LENS STUDIO // AR SHADERS",
+                desc: "Custom real-time camera LUT shaders delivering noir cinema and golden-hour optics on demand.",
+                img: "https://i.ibb.co/NgN1cFTF/poster-12-spandan.png",
+                link: "https://www.snapchat.com/unlock/?type=SNAPCODE&uuid=58a604a1379140089d56a02ec0917f05&metadata=01",
+                cta: "Unlock Lens ↗"
+            },
+            {
+                title: "Kaagaz Dynamic Desktop",
+                tag: "DESKTOP ENGINE",
+                desc: "Minimalist reactive desktop environment and productivity surface.",
+                img: "https://i.ibb.co/hFxCyx4W/poster-10-spandan.png",
+                link: "https://github.com/the-rebooted-coder/Kaagaz-Dynamic-Desktop",
+                cta: "View Repo ↗"
+            }
+        ];
 
-        // Only add custom cursor class if NOT mobile
-        if (!isMobile) {
-            document.body.classList.add('custom-cursor-active');
-        }
+        const projectMatrix = document.getElementById('projectMatrix');
+        const holoImage = document.getElementById('holoImage');
+        const holoTag = document.getElementById('holoTag');
+        const holoTitle = document.getElementById('holoTitle');
+        const holoDesc = document.getElementById('holoDesc');
+        const holoPrimaryLink = document.getElementById('holoPrimaryLink');
 
-        // --- LENIS SMOOTH SCROLL ---
-        const lenis = new Lenis({
-            duration: 1.2,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            direction: 'vertical',
-            gestureDirection: 'vertical',
-            smooth: true,
-            mouseMultiplier: 1,
-            smoothTouch: false,
-            touchMultiplier: 2,
-        });
-
-        function raf(time) {
-            lenis.raf(time);
-            requestAnimationFrame(raf);
-        }
-        requestAnimationFrame(raf);
-
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                // Ignore context menu links to prevent double fire
-                if(this.classList.contains('ctx-item')) return;
-                
-                e.preventDefault();
-                lenis.scrollTo(this.getAttribute('href'));
+        function selectVaultProject(index) {
+            const p = vaultProjects[index];
+            document.querySelectorAll('.proj-card').forEach((c, idx) => {
+                c.classList.toggle('active-proj', idx === index);
             });
+            holoImage.style.opacity = '0.3';
+            setTimeout(() => {
+                holoImage.src = p.img;
+                holoImage.style.opacity = '1';
+            }, 120);
+            holoTag.textContent = p.tag;
+            holoTitle.textContent = p.title;
+            holoDesc.textContent = p.desc;
+            holoPrimaryLink.textContent = p.cta;
+
+            if (p.confidential) {
+                holoPrimaryLink.href = "javascript:void(0)";
+                holoPrimaryLink.onclick = (e) => {
+                    e.preventDefault();
+                    showToast("Nice try. It's IBM Confidential. Clearance required.");
+                };
+            } else {
+                holoPrimaryLink.href = p.link;
+                holoPrimaryLink.onclick = null;
+            }
+        }
+
+        vaultProjects.forEach((p, idx) => {
+            const card = document.createElement('div');
+            card.className = `proj-card hover-target ${idx === 0 ? 'active-proj' : ''}`;
+            card.innerHTML = `
+                <div>
+                    <div class="proj-tag">${p.tag}</div>
+                    <div class="proj-name">${p.title}</div>
+                    <div class="proj-Copy">${p.desc}</div>
+                </div>
+                <div class="proj-action">
+                    <span>${p.cta}</span>
+                    <span>→</span>
+                </div>
+            `;
+            card.addEventListener('mouseenter', () => selectVaultProject(idx));
+            card.addEventListener('click', () => {
+                selectVaultProject(idx);
+                if (p.confidential) {
+                    showToast("Nice try. It's IBM Confidential. Clearance required.");
+                } else if (window.innerWidth < 960) {
+                    window.open(p.link, '_blank');
+                }
+            });
+            projectMatrix.appendChild(card);
+
+            // Preload poster image
+            const preload = new Image();
+            preload.src = p.img;
         });
 
-        // --- CUSTOM CONTEXT MENU LOGIC ---
+        /* ===================================================
+           2. 3D SPATIAL CAMERA & PORTAL DOOR ENGINE
+           =================================================== */
+        const rooms = document.querySelectorAll('.room');
+        const dockBtns = document.querySelectorAll('.dock-btn');
+        const hudRoomName = document.getElementById('hudRoomName');
+        const hudZCoord = document.getElementById('hudZCoord');
+        const doorLeft = document.getElementById('doorLeft');
+        const doorRight = document.getElementById('doorRight');
+        const portalFlash = document.getElementById('portal-flash');
+        const portalFloorGlow = document.getElementById('portalFloorGlow');
+
+        const ROOM_SPACING = 1600; // Z-distance between architectural chambers
+        const TOTAL_ROOMS = rooms.length;
+        let targetProgress = 0;
+        let smoothProgress = 0;
+        let mouseNormX = 0;
+        let mouseNormY = 0;
+
+        function updateScrollTarget() {
+            const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+            targetProgress = maxScroll > 0 ? Math.min(1, Math.max(0, window.scrollY / maxScroll)) : 0;
+        }
+        window.addEventListener('scroll', updateScrollTarget, { passive: true });
+        updateScrollTarget();
+
+        function jumpToRoom(roomIndex) {
+            const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+            const targetScrollY = (roomIndex / (TOTAL_ROOMS - 1)) * maxScroll;
+            window.scrollTo({ top: targetScrollY, behavior: 'smooth' });
+        }
+
+        window.addEventListener('mousemove', (e) => {
+            mouseNormX = (e.clientX / window.innerWidth - 0.5) * 2;
+            mouseNormY = (e.clientY / window.innerHeight - 0.5) * 2;
+        }, { passive: true });
+
+        /* ===================================================
+           3. ARCHITECTURAL WIREFRAME CORRIDOR CANVAS
+           =================================================== */
+        const bgCanvas = document.getElementById('corridor-canvas');
+        const bgCtx = bgCanvas.getContext('2d');
+
+        function resizeBgCanvas() {
+            bgCanvas.width = window.innerWidth;
+            bgCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeBgCanvas);
+        resizeBgCanvas();
+
+        function renderCorridor(cameraZ) {
+            const w = bgCanvas.width;
+            const h = bgCanvas.height;
+            bgCtx.clearRect(0, 0, w, h);
+
+            const cx = w * 0.5 - mouseNormX * 35;
+            const cy = h * 0.5 - mouseNormY * 25;
+
+            // Perspective radial guide lines
+            bgCtx.strokeStyle = 'rgba(0, 240, 255, 0.07)';
+            bgCtx.lineWidth = 1;
+            const rays = 12;
+            for (let i = 0; i < rays; i++) {
+                const angle = (i / rays) * Math.PI * 2;
+                bgCtx.beginPath();
+                bgCtx.moveTo(cx, cy);
+                bgCtx.lineTo(cx + Math.cos(angle) * w, cy + Math.sin(angle) * h);
+                bgCtx.stroke();
+            }
+
+            // Moving depth frames along the Z corridor
+            const frameCount = 14;
+            const loopDepth = 2000;
+            const offsetZ = cameraZ % (loopDepth / frameCount);
+
+            for (let i = 1; i <= frameCount; i++) {
+                const z = i * (loopDepth / frameCount) - offsetZ;
+                if (z <= 10) continue;
+                const scale = 320 / z;
+                const fw = w * scale;
+                const fh = h * scale;
+                const alpha = Math.min(0.22, (1 - z / loopDepth) * 0.28);
+
+                bgCtx.strokeStyle = i % 3 === 0
+                    ? `rgba(191, 255, 0, ${alpha})`
+                    : `rgba(0, 240, 255, ${alpha})`;
+                bgCtx.strokeRect(cx - fw * 0.5, cy - fh * 0.5, fw, fh);
+            }
+        }
+
+        /* ===================================================
+           4. MASTER 60FPS SPATIAL RENDER LOOP
+           =================================================== */
+        function animateSpatialWorld() {
+            // Smooth damping for silky camera travel on both desktop wheel and mobile touch
+            smoothProgress += (targetProgress - smoothProgress) * 0.085;
+
+            const maxZ = (TOTAL_ROOMS - 1) * ROOM_SPACING;
+            const cameraZ = smoothProgress * maxZ;
+
+            // Update Telemetry HUD
+            hudZCoord.textContent = `${String(Math.round(cameraZ)).padStart(4, '0')}m`;
+            const activeRoomIdx = Math.min(TOTAL_ROOMS - 1, Math.max(0, Math.round(cameraZ / ROOM_SPACING)));
+            hudRoomName.textContent = rooms[activeRoomIdx].getAttribute('data-name');
+
+            dockBtns.forEach((btn, idx) => {
+                btn.classList.toggle('active', idx === activeRoomIdx);
+            });
+
+            // Portal Blast Door Mechanics (Room 00 -> Room 01 transition)
+            const portalPhase = Math.min(1, Math.max(0, cameraZ / (ROOM_SPACING * 0.55)));
+            const doorSlide = portalPhase * 105;
+            doorLeft.style.transform = `translateX(-${doorSlide}%)`;
+            doorRight.style.transform = `translateX(${doorSlide}%)`;
+            portalFloorGlow.style.transform = `translateX(-50%) rotateX(78deg) scale(${1 + portalPhase * 1.4})`;
+
+            // Light Bloom Flash as user steps right through the threshold (around portalPhase 0.45 - 0.85)
+            const flashIntensity = Math.sin(portalPhase * Math.PI) * (portalPhase > 0.05 && portalPhase < 0.95 ? 0.55 : 0);
+            portalFlash.style.opacity = Math.max(0, flashIntensity).toFixed(3);
+
+            // Position each 3D Room relative to cameraZ
+            rooms.forEach((room, idx) => {
+                const roomZ = idx * ROOM_SPACING;
+                const relZ = cameraZ - roomZ; // Positive when camera has passed room, negative when room is ahead
+
+                // Visibility & opacity envelope
+                let opacity = 0;
+                if (relZ > -ROOM_SPACING * 0.95 && relZ < ROOM_SPACING * 0.75) {
+                    const normDist = Math.abs(relZ) / (ROOM_SPACING * 0.75);
+                    opacity = Math.max(0, 1 - Math.pow(normDist, 1.6));
+                }
+
+                const translateZ = relZ;
+                const tiltX = mouseNormY * -2.2;
+                const tiltY = mouseNormX * 2.2;
+
+                room.style.opacity = opacity.toFixed(3);
+                room.style.transform = `translate3d(0px, 0px, ${translateZ.toFixed(1)}px) rotateX(${tiltX.toFixed(2)}deg) rotateY(${tiltY.toFixed(2)}deg)`;
+                room.style.visibility = opacity > 0.02 ? 'visible' : 'hidden';
+
+                // Enable pointer events only for the currently focused room
+                if (Math.abs(relZ) < ROOM_SPACING * 0.38) {
+                    room.classList.add('room-interactive');
+                } else {
+                    room.classList.remove('room-interactive');
+                }
+            });
+
+            renderCorridor(cameraZ);
+            requestAnimationFrame(animateSpatialWorld);
+        }
+        requestAnimationFrame(animateSpatialWorld);
+
+        /* ===================================================
+           5. DRAGGABLE KINETIC SKILLS TICKER
+           =================================================== */
+        const tickerShell = document.getElementById('skillsTickerShell');
+        const tickerTrack = document.getElementById('skillsTickerTrack');
+        let tickerPos = 0;
+        let isDraggingTicker = false;
+        let tickerStartX = 0;
+        let tickerVelocity = -1.1;
+
+        function updateTicker() {
+            const halfWidth = tickerTrack.scrollWidth / 2;
+            if (!isDraggingTicker) {
+                tickerPos += tickerVelocity;
+                tickerVelocity += (-1.1 - tickerVelocity) * 0.04;
+            }
+            if (tickerPos <= -halfWidth) tickerPos += halfWidth;
+            if (tickerPos > 0) tickerPos -= halfWidth;
+            tickerTrack.style.transform = `translate3d(${tickerPos}px, 0, 0)`;
+            requestAnimationFrame(updateTicker);
+        }
+        requestAnimationFrame(updateTicker);
+
+        tickerShell.addEventListener('mousedown', (e) => {
+            isDraggingTicker = true;
+            tickerStartX = e.pageX;
+        });
+        window.addEventListener('mousemove', (e) => {
+            if (!isDraggingTicker) return;
+            const delta = e.pageX - tickerStartX;
+            tickerStartX = e.pageX;
+            tickerPos += delta;
+            tickerVelocity = delta;
+        });
+        window.addEventListener('mouseup', () => { isDraggingTicker = false; });
+
+        /* ===================================================
+           6. SMART RETICLE CURSOR & HOVER PREVIEWS
+           =================================================== */
+        const cursorReticle = document.getElementById('cursorReticle');
+        const cursorCore = document.getElementById('cursorCore');
+
+        if (window.matchMedia("(pointer: fine)").matches) {
+            window.addEventListener('mousemove', (e) => {
+                cursorCore.style.left = `${e.clientX}px`;
+                cursorCore.style.top = `${e.clientY}px`;
+                cursorReticle.animate(
+                    { left: `${e.clientX}px`, top: `${e.clientY}px` },
+                    { duration: 320, fill: 'forwards' }
+                );
+            });
+
+            document.querySelectorAll('.hover-target').forEach(el => {
+                el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+                el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+            });
+
+            document.querySelectorAll('.preview-trigger').forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    const img = el.getAttribute('data-img');
+                    if (img) {
+                        cursorReticle.style.backgroundImage = `url('${img}')`;
+                        document.body.classList.add('cursor-preview');
+                    }
+                });
+                el.addEventListener('mouseleave', () => {
+                    cursorReticle.style.backgroundImage = 'none';
+                    document.body.classList.remove('cursor-preview');
+                });
+            });
+        }
+
+        /* ===================================================
+           7. CONTEXT MENU, CLIPBOARD & TOAST UTILITIES
+           =================================================== */
         const contextMenu = document.getElementById('custom-context-menu');
-        
-        // Disable default right click
         document.addEventListener('contextmenu', (e) => {
             e.preventDefault();
-            
-            // Calculate Position to avoid overflow
-            let x = e.clientX;
-            let y = e.clientY;
-            
-            const menuWidth = contextMenu.offsetWidth || 220;
-            const menuHeight = contextMenu.offsetHeight || 200;
-            
-            if (x + menuWidth > window.innerWidth) {
-                x = x - menuWidth;
-            }
-            if (y + menuHeight > window.innerHeight) {
-                y = y - menuHeight;
-            }
-            
+            const x = Math.min(e.clientX, window.innerWidth - 245);
+            const y = Math.min(e.clientY, window.innerHeight - 280);
             contextMenu.style.left = `${x}px`;
             contextMenu.style.top = `${y}px`;
             contextMenu.style.display = 'flex';
         });
-
-        // Close on Click anywhere
         document.addEventListener('click', (e) => {
-            if (!contextMenu.contains(e.target)) {
-                closeContextMenu();
-            }
+            if (!contextMenu.contains(e.target)) hideContextMenu();
         });
-        
-        // Close on scroll
-        window.addEventListener('scroll', closeContextMenu);
-
-        function closeContextMenu() {
+        function hideContextMenu() {
             contextMenu.style.display = 'none';
         }
-        
-        function triggerConsoleLog() {
-            console.clear();
-            console.log(
-                "%c SYSTEM ACCESS GRANTED ",
-                "color: #000; background: #0f0; font-size: 1.5rem; padding: 10px; font-weight: bold;"
-            );
-            console.log("To view source, elements, and networking: Press F12 or CMD+OPT+I");
-            showToast("Log generated. Press F12 to view Console.");
-        }
 
-        // --- COPY EMAIL & TOAST ---
-        let toastTimeout;
-        function showToast(message) {
-            const toast = document.getElementById('mockToast');
-            const originalText = "Nice try. It's confidential. Unless you have clearance, keep scrolling.";
-            
-            toast.innerText = message || originalText;
+        let toastTimer;
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
             toast.classList.add('show');
-            
-            clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => {
-                toast.classList.remove('show');
-                if(message) {
-                      setTimeout(() => { toast.innerText = originalText; }, 500);
-                }
-            }, 3000);
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => toast.classList.remove('show'), 3200);
         }
 
         function copyEmail() {
-            const email = "connectwithspandan@gmail.com";
-            navigator.clipboard.writeText(email).then(() => {
-                showToast("Email copied to clipboard! 📋");
+            navigator.clipboard.writeText("connectwithspandan@gmail.com").then(() => {
+                showToast("Copied connectwithspandan@gmail.com to clipboard 📋");
             });
         }
 
-        // --- EASTER EGG ---
-        console.log(
-            "%c It's going to be... %c wait for it... %c LEGENDARY! ",
-            "color: white; background: black; font-size: 1.2rem; padding: 5px;",
-            "color: black; background: #E5E5E5; font-size: 1.2rem; padding: 5px;",
-            "color: white; background: #FF9900; font-weight: bold; font-size: 1.2rem; padding: 5px;"
-        );
-        console.log("Welcome to the console. If you're looking for bugs, I hope you brought a suit. 👔");
-
-        // --- SKILLS TICKER LOGIC (FIXED: SMOOTH DRAG & INERTIA) ---
-        const skillsContainer = document.getElementById('skillsContainer');
-        const skillsTrack = document.getElementById('skillsTrack');
-        
-        let scrollPos = 0;
-        let defaultSpeed = 1.5; // Auto scroll speed
-        let isDragging = false;
-        let startX = 0;
-        let currentX = 0;
-        let previousTranslate = 0;
-        let animationId;
-        let velocity = 0; // For inertia
-
-        function animateTicker() {
-            const trackWidth = skillsTrack.scrollWidth / 3; 
-
-            if (isDragging) {
-                // While dragging, just track position, no auto-move
-            } else {
-                // Apply inertia or default speed
-                if (Math.abs(velocity) > 0.1) {
-                    scrollPos += velocity;
-                    velocity *= 0.95; // Friction
-                } else {
-                    scrollPos -= defaultSpeed; // Default left movement
-                }
-            }
-
-            // Infinite Loop Reset
-            // We use a larger buffer to prevent snapping
-            if (scrollPos <= -trackWidth) {
-                scrollPos += trackWidth;
-                previousTranslate += trackWidth; // Adjust prev to prevent jump on drag resume
-            } else if (scrollPos > 0) {
-                scrollPos -= trackWidth;
-                previousTranslate -= trackWidth;
-            }
-
-            skillsTrack.style.transform = `translateX(${scrollPos}px)`;
-            animationId = requestAnimationFrame(animateTicker);
-        }
-
-        animateTicker();
-
-        // --- DRAG EVENTS ---
-        function startDrag(e) {
-            isDragging = true;
-            startX = getPositionX(e);
-            currentX = startX;
-            previousTranslate = scrollPos;
-            velocity = 0; // Stop inertia
-            skillsContainer.style.cursor = 'grabbing';
-        }
-
-        function moveDrag(e) {
-            if (!isDragging) return;
-            const x = getPositionX(e);
-            const delta = x - currentX;
-            currentX = x;
-            
-            // Move immediate
-            scrollPos += delta;
-            
-            // Track velocity for release
-            velocity = delta; 
-        }
-
-        function endDrag() {
-            isDragging = false;
-            skillsContainer.style.cursor = 'grab';
-        }
-
-        function getPositionX(e) {
-            return e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
-        }
-
-        skillsContainer.addEventListener('mousedown', startDrag);
-        skillsContainer.addEventListener('touchstart', startDrag);
-
-        skillsContainer.addEventListener('mousemove', moveDrag);
-        skillsContainer.addEventListener('touchmove', moveDrag);
-
-        skillsContainer.addEventListener('mouseup', endDrag);
-        skillsContainer.addEventListener('mouseleave', endDrag);
-        skillsContainer.addEventListener('touchend', endDrag);
-
-
-        // --- GENERIC ASSETS & CURSOR ---
-        const projectData = [
-            { src: "https://i.ibb.co/1Vmw65c/poster-1-spandan.png", link: "https://the-day-grid.vercel.app", alt: "The Day Grid" },
-            { src: "https://i.ibb.co/7xxg2HwS/poster-2-spandan.png", link: "https://github.com/the-rebooted-coder/BatteryWise", alt: "Battery Wise" },
-            { src: "https://i.ibb.co/NgrK3wx9/poster-3-spandan.png", link: "https://github.com/the-rebooted-coder/Mail-Canon", alt: "Mail Canon" },
-            { src: "https://i.ibb.co/1fKX3zQD/poster-4-spandan.png", link: "#", isConfidential: true, alt: "Confidential" },
-            { src: "https://i.ibb.co/yc96f8P3/poster-5-spandan.png", link: "https://github.com/the-rebooted-coder/Forecasted", alt: "Forecasted" },
-            { src: "https://i.ibb.co/qFW4Wjnw/poster-6-spandan.png", link: "https://github.com/the-rebooted-coder/What-s-In", alt: "What's In" },
-            { src: "https://i.ibb.co/DP7VG34R/poster-7-spandan.png", link: "https://github.com/the-rebooted-coder/knack", alt: "Knack" },
-            { src: "https://i.ibb.co/XfDCNP7q/poster-8-spandan.png", link: "https://github.com/the-rebooted-coder/Hanuman-Chalisa-Lyrical", alt: "Lyrical" },
-            { src: "https://i.ibb.co/nMMXgkjp/poster-9-spandan.png", link: "https://github.com/the-rebooted-coder/Digital-Desk", alt: "Digital Desk" },
-            { src: "https://i.ibb.co/hFxCyx4W/poster-10-spandan.png", link: "https://github.com/the-rebooted-coder/Kaagaz-Dynamic-Desktop", alt: "Kaagaz" },
-            { src: "https://i.ibb.co/MkGRvdJw/poster-11-spandan.png", link: "mailto:connectwithspandan@gmail.com?subject=Secret", alt: "Secret" },
-            { src: "https://i.ibb.co/NgN1cFTF/poster-12-spandan.png", link: "#", alt: "Snap 1" },
-            { src: "https://i.ibb.co/tTyP4pWM/poster-13-spandan.png", link: "#", alt: "Snap 2" }
-        ];
-
-        const cursorDot = document.querySelector('[data-cursor-dot]');
-        const cursorOutline = document.querySelector('[data-cursor-outline]');
-        const hoverTriggers = document.querySelectorAll('.hover-trigger');
-        const bubbleTriggers = document.querySelectorAll('.hover-bubble');
-        const recognitionTriggers = document.querySelectorAll('.recognition-trigger');
-
-        // Only add custom cursor logic if NOT mobile to save CPU
-        if (!isMobile) {
-            window.addEventListener('mousemove', (e) => {
-                const posX = e.clientX; const posY = e.clientY;
-                cursorDot.style.left = `${posX}px`; cursorDot.style.top = `${posY}px`;
-                cursorOutline.animate({ left: `${posX}px`, top: `${posY}px` }, { duration: 500, fill: "forwards" });
-            });
-             
-            function addHoverListeners(element) {
-                element.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
-                element.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
-            }
-            function addHighlighterListeners(element) {
-                element.addEventListener('mouseenter', () => document.body.classList.add('highlighting'));
-                element.addEventListener('mouseleave', () => document.body.classList.remove('highlighting'));
-            }
-            function addRecognitionListeners(element) {
-                element.addEventListener('mouseenter', () => {
-                    const imgUrl = element.getAttribute('data-img');
-                    if(imgUrl) { cursorOutline.style.backgroundImage = `url('${imgUrl}')`; document.body.classList.add('img-preview-mode'); }
-                });
-                element.addEventListener('mouseleave', () => { cursorOutline.style.backgroundImage = 'none'; document.body.classList.remove('img-preview-mode'); });
-            }
-
-            // Need to re-select triggers as context menu is new
-            const allHoverTriggers = document.querySelectorAll('.hover-trigger');
-            allHoverTriggers.forEach(addHoverListeners);
-            
-            bubbleTriggers.forEach(addHighlighterListeners);
-            recognitionTriggers.forEach(addRecognitionListeners);
-
-            const textElements = document.querySelectorAll("p, h1, h2, h3, h4, span, li, .skill-item");
-            textElements.forEach(el => {
-                if (!el.closest('.chat-bubble') && !el.closest('a') && !el.closest('.hover-trigger') && !el.closest('.recognition-trigger') && !el.closest('#hero')) {
-                    el.addEventListener('mouseenter', () => document.body.classList.add('text-mode'));
-                    el.addEventListener('mouseleave', () => document.body.classList.remove('text-mode'));
-                }
-            });
-        }
-
-        // --- FIXED: JELLY NAV LOGIC WITH SLIDE & POPUP ---
-        const islandItems = document.querySelectorAll('.island-item');
-        const navGlint = document.getElementById('navGlint');
-        const popupNav = document.getElementById('popupNav');
-        const heroSection = document.getElementById('hero');
-        const islandNav = document.querySelector('.island-nav');
-
-        function moveGlintTo(element) {
-            if (!element) return;
-            // Calculations for perfect centering
-            const left = element.offsetLeft;
-            const width = element.offsetWidth;
-            
-            navGlint.style.transform = `translateY(-50%) translateX(${left}px)`;
-            navGlint.style.width = `${width}px`;
-        }
-        
-        // Initial init
-        if(islandItems.length > 0) setTimeout(() => moveGlintTo(islandItems[0]), 100);
-
-        islandItems.forEach(item => {
-            item.addEventListener('click', (e) => {
-                islandItems.forEach(i => i.classList.remove('active'));
-                item.classList.add('active');
-                moveGlintTo(item);
-            });
-        });
-
-        // 1. POPUP LOGIC (Scroll Observer)
-        const heroObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (!entry.isIntersecting) {
-                    // Hero is gone -> Show Nav
-                    popupNav.classList.add('visible');
-                } else {
-                    // Hero is visible -> Hide Nav
-                    popupNav.classList.remove('visible');
-                }
-            });
-        }, { threshold: 0.1 }); // Trigger as soon as hero starts leaving
-        
-        if(heroSection) heroObserver.observe(heroSection);
-
-        // 2. SLIDE/SCRUB INTERACTION
-        islandNav.addEventListener('touchmove', (e) => {
-            e.preventDefault(); // Stop page scroll
-            const touch = e.touches[0];
-            
-            // Find element under finger
-            const targetElement = document.elementFromPoint(touch.clientX, touch.clientY);
-            const item = targetElement?.closest('.island-item');
-
-            if (item) {
-                // Visual update only
-                moveGlintTo(item);
-                islandItems.forEach(i => i.classList.remove('active'));
-                item.classList.add('active');
-            }
-        }, { passive: false });
-
-        islandNav.addEventListener('touchend', (e) => {
-            const activeItem = islandNav.querySelector('.island-item.active');
-            if(activeItem) {
-                // Manually trigger click to navigate
-                activeItem.click();
-            }
-        });
-
-        // --- MOBILE NAV SCROLL SPY ---
-        const sections = document.querySelectorAll('section');
-        const observerOptions = { threshold: 0.3 };
-        const navObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const id = entry.target.getAttribute('id');
-                    // Map ids to nav targets
-                    const activeLink = document.querySelector(`.island-item[data-target="${id}"]`);
-                    if (activeLink) {
-                          islandItems.forEach(i => i.classList.remove('active'));
-                          activeLink.classList.add('active');
-                          moveGlintTo(activeLink);
-                    }
-                }
-            });
-        }, observerOptions);
-        
-        if (isMobile) {
-            sections.forEach(section => navObserver.observe(section));
-        }
-
-        // --- HERO TRAIL (UPDATED FOR MOBILE PERFORMANCE) ---
-        let lastX = 0, lastY = 0, imageIndex = 0;
-        let interactionTimeout, currentPersistentCard = null;
-        let throttleTimer = 0; // NEW: For Lag Reduction
-
-        function spawnTrail(x, y) {
-            const data = projectData[imageIndex % projectData.length];
-            const img = document.createElement('img'); img.src = data.src; img.className = 'trail-image';
-            const randomRot = Math.random() * 20 - 10; img.style.setProperty('--rot', `${randomRot}deg`);
-            img.style.left = `${x}px`; img.style.top = `${y}px`;
-            heroSection.appendChild(img); setTimeout(() => img.remove(), 1000); imageIndex++;
-        }
-        
-        // Mouse Move Listener
-        heroSection.addEventListener('mousemove', (e) => {
-            // Disable trail on desktop-sized touch screens to avoid conflict, only fine pointers
-            if(window.matchMedia("(pointer: coarse)").matches) return; 
-            handleTrailMove(e.clientX, e.clientY);
-        });
-
-        // Touch Move Listener (NEW: THROTTLED)
-        heroSection.addEventListener('touchmove', (e) => {
-             const now = Date.now();
-             // Only allow trail generation every 80ms on mobile (approx 12fps update)
-             if (now - throttleTimer < 80) return;
-             throttleTimer = now;
-
-             const touch = e.touches[0];
-             handleTrailMove(touch.clientX, touch.clientY);
-        });
-
-        function handleTrailMove(x, y) {
-            if (currentPersistentCard) {
-                currentPersistentCard.style.opacity = '0'; currentPersistentCard.style.transform = 'translate(-50%, -50%) scale(0.8)';
-                setTimeout(() => currentPersistentCard?.remove(), 300); currentPersistentCard = null;
-            }
-            clearTimeout(interactionTimeout);
-            if (y < 100) return;
-            if (Math.abs(x - lastX) > 60 || Math.abs(y - lastY) > 60) {
-                lastX = x; lastY = y; spawnTrail(x, y);
-            }
-            interactionTimeout = setTimeout(() => { spawnPersistentCard(x, y); }, 200);
-        }
-
-        function spawnPersistentCard(x, y) {
-            if (y < 100) return;
-            const data = projectData[imageIndex % projectData.length];
-            const card = document.createElement('a'); card.href = data.link; card.className = 'persistent-card hover-trigger';
-            if (data.isConfidential) { card.addEventListener('click', (e) => { e.preventDefault(); showToast(); }); }
-            else { card.target = "_blank"; }
-            const img = document.createElement('img'); img.src = data.src; card.appendChild(img);
-            card.style.left = `${x}px`; card.style.top = `${y}px`;
-            const randomRot = Math.random() * 10 - 5; card.style.setProperty('--rot', `${randomRot}deg`);
-            heroSection.appendChild(card); requestAnimationFrame(() => { card.classList.add('active'); });
-            currentPersistentCard = card; 
-            if(!isMobile) addHoverListeners(card);
-        }
-
-        document.addEventListener('scroll', () => {
-            const scrollY = window.scrollY;
-            const heroText = document.querySelector('.hero-text');
-            if(heroText) heroText.style.transform = `translateY(${scrollY * 0.2}px)`;
-        });
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
-        }, { threshold: 0.1 });
-        document.querySelectorAll('.chat-bubble').forEach(bubble => observer.observe(bubble));
-
-        // --- TAB MOCKERY (UPDATED) ---
-        let isRedirecting = false; const originalTitle = document.title;
-        document.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                if (link.target === "_blank" || link.href.startsWith('http')) { isRedirecting = true; setTimeout(() => isRedirecting = false, 2000); }
-            });
-        });
+        // Dynamic Tab Title
+        const baseTitle = document.title;
         document.addEventListener('visibilitychange', () => {
-            if (document.hidden) { document.title = isRedirecting ? "Go get 'em! 🚀" : "Hire Me? 👀"; }
-            else { document.title = originalTitle; isRedirecting = false; }
+            document.title = document.hidden ? "Portal Open — Step Back In 👀" : baseTitle;
         });
 
-        // --- PRELOAD ---
-        function preloadImages() {
-            if (isMobile) {
-                const mobilePreviewContainer = document.getElementById('mobilePreview');
-                const centerStageObserver = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            const targetImg = entry.target.getAttribute('data-img');
-                            mobilePreviewContainer.querySelectorAll('img').forEach(img => img.classList.remove('active'));
-                            
-                            // Check/Create Img
-                            let activeImg = mobilePreviewContainer.querySelector(`img[data-for="${targetImg}"]`);
-                            if(!activeImg) {
-                                activeImg = document.createElement('img');
-                                activeImg.src = targetImg;
-                                activeImg.setAttribute('data-for', targetImg);
-                                mobilePreviewContainer.appendChild(activeImg);
-                            }
-                            // Small Delay for render
-                            setTimeout(() => activeImg.classList.add('active'), 10);
-                        }
-                    });
-                }, { rootMargin: "-45% 0px -45% 0px" });
-                recognitionTriggers.forEach(trigger => centerStageObserver.observe(trigger));
-            }
-            projectData.forEach(data => { const img = new Image(); img.src = data.src; });
-        }
-        window.addEventListener('load', preloadImages);
-
-        // ==========================================
-        //         THE DEBUGGER GAME LOGIC
-        // ==========================================
+        /* ===================================================
+           8. THE DEBUGGER ARCADE GAME ENGINE
+           =================================================== */
         let secretClicks = 0;
         const secretTrigger = document.getElementById('secretTrigger');
-        
         secretTrigger.addEventListener('click', () => {
             secretClicks++;
-            const warnings = [
-                "Hey! That tickles!", 
-                "Stop poking the footer.", 
-                "Seriously, do you not have work to do?", 
-                "I'm warning you...", 
-                "FINE. HAVE IT YOUR WAY."
+            const alerts = [
+                "Mainframe pinged (1/5)...",
+                "Bypassing firewall (2/5)...",
+                "Escalating privileges (3/5)...",
+                "Loading weaponized debugger (4/5)...",
+                "BREACH CONFIRMED. INITIALIZING..."
             ];
-            
-            if(secretClicks <= 5) showToast(warnings[secretClicks - 1]);
-            
-            if (secretClicks === 5) {
-                setTimeout(launchGameEngine, 1000);
+            showToast(alerts[secretClicks - 1]);
+            if (secretClicks >= 5) {
                 secretClicks = 0;
+                setTimeout(launchGameEngine, 700);
             }
         });
 
-        const overlay = document.getElementById('game-overlay');
+        const gameOverlay = document.getElementById('game-overlay');
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
-        
-        // UI Elements
         const startScreen = document.getElementById('startScreen');
         const gameOverScreen = document.getElementById('gameOverScreen');
         const hud = document.getElementById('gameHud');
@@ -1375,253 +1939,140 @@
         const bugVal = document.getElementById('bugVal');
         const finalScoreMsg = document.getElementById('finalScoreMsg');
 
-        let gameLoopId;
-        let score = 0;
-        let gameActive = false;
-        let frame = 0;
-        let gridOffset = 0; // For background animation
-        
-        let player = { x: 0, y: 0, size: 20 };
-        let bullets = [];
-        let enemies = [];
-        let particles = [];
-        let mouseX = 0, mouseY = 0;
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resizeCanvas);
+        let gameLoopId, score = 0, gameActive = false, frame = 0;
+        let player = { x: window.innerWidth / 2, y: window.innerHeight * 0.8 };
+        let bullets = [], enemies = [], particles = [];
 
         function launchGameEngine() {
-            resizeCanvas();
-            overlay.classList.add('active');
-            if(!isMobile) document.body.classList.remove('custom-cursor-active'); 
-            // Reset UI
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            gameOverlay.classList.add('active');
             startScreen.style.display = 'flex';
             gameOverScreen.style.display = 'none';
             hud.style.display = 'none';
-            
-            // Mouse Listeners
-            window.addEventListener('mousemove', updateGameMouse);
+            window.addEventListener('mousemove', onGameMouseMove);
             window.addEventListener('mousedown', shootBullet);
-            
-            // Touch Listeners (Mobile Support)
-            window.addEventListener('touchmove', handleTouchMove, { passive: false });
-            window.addEventListener('touchstart', handleTouchStart, { passive: false });
+            window.addEventListener('touchmove', onGameTouchMove, { passive: false });
+            window.addEventListener('touchstart', onGameTouchStart, { passive: false });
         }
 
         function closeGame() {
-            cancelAnimationFrame(gameLoopId);
             gameActive = false;
-            overlay.classList.remove('active');
-            if(!isMobile) document.body.classList.add('custom-cursor-active');
-            
-            // Clean listeners
-            window.removeEventListener('mousemove', updateGameMouse);
+            cancelAnimationFrame(gameLoopId);
+            gameOverlay.classList.remove('active');
+            window.removeEventListener('mousemove', onGameMouseMove);
             window.removeEventListener('mousedown', shootBullet);
-            window.removeEventListener('touchmove', handleTouchMove);
-            window.removeEventListener('touchstart', handleTouchStart);
+            window.removeEventListener('touchmove', onGameTouchMove);
+            window.removeEventListener('touchstart', onGameTouchStart);
         }
 
-        function updateGameMouse(e) {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-            player.x = mouseX;
-            player.y = mouseY;
+        function onGameMouseMove(e) { player.x = e.clientX; player.y = e.clientY; }
+        function onGameTouchMove(e) {
+            e.preventDefault();
+            player.x = e.touches[0].clientX;
+            player.y = e.touches[0].clientY;
         }
-
-        // --- NEW MOBILE HANDLERS ---
-        function handleTouchMove(e) {
-            e.preventDefault(); // Stop scrolling
-            const touch = e.touches[0];
-            player.x = touch.clientX;
-            player.y = touch.clientY;
-        }
-
-        function handleTouchStart(e) {
-             if(e.target.classList.contains('close-game') || e.target.classList.contains('game-btn')) return; 
-             e.preventDefault();
-             shootBullet();
-             const touch = e.touches[0];
-             player.x = touch.clientX;
-             player.y = touch.clientY;
+        function onGameTouchStart(e) {
+            if (e.target.tagName === 'BUTTON') return;
+            e.preventDefault();
+            player.x = e.touches[0].clientX;
+            player.y = e.touches[0].clientY;
+            shootBullet();
         }
 
         function shootBullet() {
-            if(!gameActive) return;
-            bullets.push({
-                x: player.x,
-                y: player.y - 20,
-                w: 4, h: 20,
-                color: '#0f0',
-                speed: 20
-            });
+            if (!gameActive) return;
+            bullets.push({ x: player.x, y: player.y - 20, w: 4, h: 18, speed: 18 });
         }
 
         function startGame() {
             startScreen.style.display = 'none';
             gameOverScreen.style.display = 'none';
             hud.style.display = 'flex';
-            
-            score = 0;
-            bullets = [];
-            enemies = [];
-            particles = [];
-            gameActive = true;
-            frame = 0;
-            
-            loop();
+            score = 0; bullets = []; enemies = []; particles = [];
+            gameActive = true; frame = 0;
+            gameLoop();
         }
 
-        function spawnEnemy() {
-            const size = Math.random() * 30 + 20;
-            enemies.push({
-                x: Math.random() * canvas.width,
-                y: -50,
-                w: size, h: size,
-                speed: 3 + (score * 0.1) + Math.random() * 2,
-                color: '#ff0055',
-                jitter: 0
-            });
-        }
-
-        function createExplosion(x, y, color) {
-            for(let i=0; i<15; i++) {
-                particles.push({
-                    x: x, y: y,
-                    vx: (Math.random() - 0.5) * 15,
-                    vy: (Math.random() - 0.5) * 15,
-                    life: 1.0,
-                    color: color,
-                    size: Math.random() * 5 + 2
-                });
-            }
-        }
-
-        function loop() {
-            if(!gameActive) return;
-            
-            // Clear
+        function gameLoop() {
+            if (!gameActive) return;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // --- Animated Grid Background ---
-            gridOffset += 2 + (score * 0.05);
-            if(gridOffset > 50) gridOffset = 0;
-            
-            ctx.strokeStyle = 'rgba(0, 50, 0, 0.3)';
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            // Vertical lines
-            for(let i=0; i<canvas.width; i+=100) { 
-                ctx.moveTo(i,0); ctx.lineTo(i, canvas.height); 
-            }
-            // Horizontal moving lines
-            for(let i=gridOffset; i<canvas.height; i+=50) { 
-                ctx.moveTo(0,i); ctx.lineTo(canvas.width, i); 
-            }
-            ctx.stroke();
 
-            // --- Draw Player ---
-            // Thruster
-            ctx.fillStyle = `rgba(0, 255, 255, ${Math.random() * 0.5 + 0.2})`;
+            // Player Ship
+            ctx.fillStyle = '#00f0ff';
             ctx.beginPath();
-            ctx.moveTo(player.x - 5, player.y + 15);
-            ctx.lineTo(player.x + 5, player.y + 15);
-            ctx.lineTo(player.x, player.y + 30 + Math.random()*10);
-            ctx.fill();
-
-            // Ship Body
-            ctx.shadowBlur = 15; ctx.shadowColor = '#0f0';
-            ctx.fillStyle = '#fff';
-            ctx.beginPath();
-            ctx.moveTo(player.x, player.y - 20);
-            ctx.lineTo(player.x - 15, player.y + 15);
-            ctx.lineTo(player.x + 15, player.y + 15);
+            ctx.moveTo(player.x, player.y - 18);
+            ctx.lineTo(player.x - 14, player.y + 14);
+            ctx.lineTo(player.x + 14, player.y + 14);
             ctx.closePath();
             ctx.fill();
-            ctx.shadowBlur = 0;
 
-            // --- Bullets ---
-            ctx.fillStyle = '#0f0';
-            ctx.shadowBlur = 10; ctx.shadowColor = '#0f0';
+            // Bullets
+            ctx.fillStyle = '#bfff00';
             for (let i = bullets.length - 1; i >= 0; i--) {
-                let b = bullets[i];
+                const b = bullets[i];
                 b.y -= b.speed;
-                ctx.fillRect(b.x - b.w/2, b.y, b.w, b.h);
+                ctx.fillRect(b.x - 2, b.y, b.w, b.h);
                 if (b.y < 0) bullets.splice(i, 1);
             }
-            ctx.shadowBlur = 0;
 
-            // --- Enemies ---
-            if (frame % (Math.max(20, 60 - score)) === 0) spawnEnemy(); 
-            
+            // Spawn & Update Bugs
+            if (frame % Math.max(18, 55 - score) === 0) {
+                const size = 24 + Math.random() * 24;
+                enemies.push({
+                    x: Math.random() * (canvas.width - size),
+                    y: -40,
+                    w: size, h: size,
+                    speed: 2.8 + score * 0.12 + Math.random() * 1.8
+                });
+            }
+
             for (let i = enemies.length - 1; i >= 0; i--) {
-                let e = enemies[i];
+                const e = enemies[i];
                 e.y += e.speed;
-                
-                let jitterX = (Math.random() - 0.5) * 5;
-                
-                ctx.fillStyle = e.color;
-                ctx.shadowBlur = 10; ctx.shadowColor = 'red';
-                ctx.fillRect(e.x + jitterX, e.y, e.w, e.h);
-                
-                if(Math.random() > 0.9) {
-                    ctx.fillStyle = 'white';
-                    ctx.fillRect(e.x - 5, e.y + Math.random()*e.h, e.w + 10, 2);
-                }
-                ctx.shadowBlur = 0;
+                ctx.fillStyle = '#ff0055';
+                ctx.fillRect(e.x, e.y, e.w, e.h);
 
-                // Collision Player
-                if (
-                    player.x > e.x && player.x < e.x + e.w &&
-                    player.y > e.y && player.y < e.y + e.h
-                ) {
-                    endGame();
+                if (player.x > e.x && player.x < e.x + e.w && player.y > e.y && player.y < e.y + e.h) {
+                    gameActive = false;
+                    hud.style.display = 'none';
+                    gameOverScreen.style.display = 'flex';
+                    finalScoreMsg.textContent = `BUGS PATCHED: ${score}`;
+                    return;
                 }
 
-                // Collision Bullets
                 for (let j = bullets.length - 1; j >= 0; j--) {
-                    let b = bullets[j];
-                    if (
-                        b.x > e.x && b.x < e.x + e.w &&
-                        b.y < e.y + e.h && b.y > e.y
-                    ) {
-                        createExplosion(e.x + e.w/2, e.y + e.h/2, '#ff0055');
+                    const b = bullets[j];
+                    if (b.x > e.x && b.x < e.x + e.w && b.y > e.y && b.y < e.y + e.h) {
+                        for (let p = 0; p < 12; p++) {
+                            particles.push({
+                                x: e.x + e.w / 2, y: e.y + e.h / 2,
+                                vx: (Math.random() - 0.5) * 12, vy: (Math.random() - 0.5) * 12,
+                                life: 1
+                            });
+                        }
                         enemies.splice(i, 1);
                         bullets.splice(j, 1);
                         score++;
-                        break; 
+                        break;
                     }
                 }
-
-                if (e.y > canvas.height) enemies.splice(i, 1); 
+                if (e.y > canvas.height) enemies.splice(i, 1);
             }
 
-            // --- Particles ---
-            for(let i = particles.length - 1; i >= 0; i--) {
-                let p = particles[i];
-                p.x += p.vx; p.y += p.vy;
-                p.life -= 0.05;
-                ctx.fillStyle = p.color;
-                ctx.globalAlpha = p.life;
-                ctx.fillRect(p.x, p.y, p.size, p.size);
-                ctx.globalAlpha = 1.0;
-                if(p.life <= 0) particles.splice(i, 1);
+            // Explosion Particles
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.x += p.vx; p.y += p.vy; p.life -= 0.06;
+                ctx.fillStyle = `rgba(255, 0, 85, ${Math.max(0, p.life)})`;
+                ctx.fillRect(p.x, p.y, 4, 4);
+                if (p.life <= 0) particles.splice(i, 1);
             }
 
-            // Update HUD
-            scoreVal.innerText = score;
-            bugVal.innerText = enemies.length;
+            scoreVal.textContent = score;
+            bugVal.textContent = enemies.length;
             frame++;
-            gameLoopId = requestAnimationFrame(loop);
-        }
-
-        function endGame() {
-            gameActive = false;
-            hud.style.display = 'none';
-            gameOverScreen.style.display = 'flex';
-            finalScoreMsg.innerText = `BUGS FIXED: ${score}`;
+            gameLoopId = requestAnimationFrame(gameLoop);
         }
     </script>
 </body>
