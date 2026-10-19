@@ -4,34 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <title>Spandan Saxena | Spatial Architecture & Software Engineering</title>
-    <meta name="description" content="Interactive 3D Spatial Portfolio of Spandan Saxena — Software Development Engineer at IBM India Software Labs.">
+    <title>Spandan Saxena — Software Development Engineer</title>
+    <meta name="description" content="Spandan Saxena. Software Development Engineer at IBM India Software Labs. Precision engineering, enterprise architecture, and native experiences.">
     
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://the-rebooted-coder.github.io/Spandan-Saxena-Portfolio/">
-    <meta property="og:title" content="Spandan Saxena | Spatial Portfolio">
-    <meta property="og:description" content="From Logic to Launch. Step through the portal into my interactive architecture.">
+    <meta property="og:title" content="Spandan Saxena — Software Development Engineer">
+    <meta property="og:description" content="From Logic to Launch. Precision-engineered software.">
     <meta property="og:image" content="https://the-rebooted-coder.github.io/Spandan-Saxena-Portfolio/og-image.jpg">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --bg-void: #030306;
-            --bg-surface: rgba(12, 13, 20, 0.72);
-            --bg-glass: rgba(18, 20, 32, 0.55);
-            --text-primary: #f4f5f8;
-            --text-muted: #8a90a6;
-            --neon-cyan: #00f0ff;
-            --neon-lime: #bfff00;
-            --neon-amber: #ffaa00;
-            --neon-crimson: #ff0055;
-            --portal-white: #ffffff;
-            --border-subtle: rgba(255, 255, 255, 0.1);
-            --border-bright: rgba(0, 240, 255, 0.45);
-            --font-display: 'Syne', sans-serif;
+            --bg-obsidian: #000000;
+            --bg-elevated: #0a0a0c;
+            --glass-fill: rgba(255, 255, 255, 0.045);
+            --glass-fill-hover: rgba(255, 255, 255, 0.075);
+            --glass-border: rgba(255, 255, 255, 0.11);
+            --glass-highlight: rgba(255, 255, 255, 0.28);
+            --text-primary: #f5f5f7;
+            --text-secondary: #86868b;
+            --text-tertiary: #515154;
+            --accent-titanium: #e8e8ed;
+            --accent-amber: #ff9f0a;
+            --accent-green: #30d158;
+            --accent-crimson: #ff453a;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             --font-serif: 'Instrument Serif', serif;
             --font-mono: 'JetBrains Mono', monospace;
         }
@@ -40,2039 +41,2138 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
             -webkit-tap-highlight-color: transparent;
-            user-select: none;
         }
 
-        html, body {
-            width: 100%;
-            height: 100%;
-            background-color: var(--bg-void);
+        html {
+            background-color: var(--bg-obsidian);
             color: var(--text-primary);
-            font-family: var(--font-display);
+            font-family: var(--font-sans);
             overflow-x: hidden;
+            scroll-behavior: auto;
         }
 
-        /* Virtual scroll track drives the 3D Z-axis camera */
         body {
-            height: 750vh;
-            overflow-y: scroll;
-            scrollbar-width: none;
-        }
-        body::-webkit-scrollbar {
-            display: none;
-        }
-
-        /* --- AMBIENT FILM GRAIN & VIGNETTE --- */
-        .ambient-vignette {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 90;
-            background: radial-gradient(circle at 50% 50%, transparent 55%, rgba(2, 2, 5, 0.88) 100%);
+            background-color: var(--bg-obsidian);
+            overflow-x: hidden;
+            width: 100%;
+            selection-background-color: #fff;
+            selection-color: #000;
         }
 
-        .scanlines {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 91;
-            background: repeating-linear-gradient(
-                to bottom,
-                transparent 0px,
-                transparent 2px,
-                rgba(255, 255, 255, 0.012) 3px
-            );
+        ::selection {
+            background: rgba(255, 255, 255, 0.9);
+            color: #000;
         }
 
-        /* --- PORTAL BLOOM FLASH --- */
-        #portal-flash {
-            position: fixed;
-            inset: 0;
-            background: radial-gradient(circle at center, #ffffff 0%, #e0ffff 40%, transparent 100%);
-            opacity: 0;
-            pointer-events: none;
-            z-index: 85;
-            mix-blend-mode: screen;
-            transition: opacity 0.12s ease-out;
-        }
-
-        /* --- BACKGROUND ARCHITECTURAL CANVAS --- */
-        #corridor-canvas {
+        /* --- AMBIENT STUDIO AURORA CANVAS --- */
+        #ambient-canvas {
             position: fixed;
             inset: 0;
             width: 100vw;
             height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.65;
+        }
+
+        /* Subtle Apple-grade anodized noise texture */
+        .noise-overlay {
+            position: fixed;
+            inset: 0;
             z-index: 1;
             pointer-events: none;
+            opacity: 0.028;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
 
-        /* --- CUSTOM SMART RETICLE CURSOR --- */
-        .cursor-reticle {
-            position: fixed;
-            top: 0; left: 0;
-            width: 36px; height: 36px;
-            border: 1px solid rgba(0, 240, 255, 0.6);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
+        /* ===================================================
+           LIQUID GLASS MATERIAL SYSTEM (visionOS + iOS 19)
+           =================================================== */
+        .liquid-glass {
+            position: relative;
+            background: linear-gradient(
+                135deg,
+                rgba(255, 255, 255, 0.08) 0%,
+                rgba(255, 255, 255, 0.025) 50%,
+                rgba(255, 255, 255, 0.05) 100%
+            );
+            backdrop-filter: blur(40px) saturate(190%);
+            -webkit-backdrop-filter: blur(40px) saturate(190%);
+            border: 1px solid var(--glass-border);
+            box-shadow:
+                0 24px 60px rgba(0, 0, 0, 0.65),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.22),
+                inset 0 -1px 0 0 rgba(255, 255, 255, 0.05);
+            overflow: hidden;
+            transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                        border-color 0.35s ease,
+                        box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Interactive Specular Glare that follows the mouse */
+        .liquid-glass::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(
+                600px circle at var(--mouse-x, -500px) var(--mouse-y, -500px),
+                rgba(255, 255, 255, 0.13),
+                transparent 40%
+            );
             pointer-events: none;
-            z-index: 99999;
-            transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-                        height 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-                        border-color 0.25s ease,
-                        background-color 0.25s ease,
-                        border-radius 0.25s ease;
-            display: none;
-            background-size: cover;
-            background-position: center;
+            z-index: 2;
+            transition: opacity 0.3s ease;
         }
-        .cursor-core {
-            position: fixed;
-            top: 0; left: 0;
-            width: 6px; height: 6px;
-            background: var(--neon-cyan);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
+
+        /* Refractive border glow tracking cursor */
+        .liquid-glass::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: radial-gradient(
+                350px circle at var(--mouse-x, -500px) var(--mouse-y, -500px),
+                rgba(255, 255, 255, 0.45),
+                transparent 100%
+            );
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
             pointer-events: none;
-            z-index: 99999;
-            box-shadow: 0 0 12px var(--neon-cyan);
-            display: none;
-        }
-        @media (pointer: fine) {
-            body.custom-cursor * { cursor: none !important; }
-            body.custom-cursor .cursor-reticle,
-            body.custom-cursor .cursor-core { display: block; }
-        }
-        body.cursor-hover .cursor-reticle {
-            width: 64px; height: 64px;
-            border-color: var(--neon-lime);
-            background-color: rgba(191, 255, 0, 0.08);
-        }
-        body.cursor-hover .cursor-core {
-            background: var(--neon-lime);
-            transform: translate(-50%, -50%) scale(1.6);
-        }
-        body.cursor-preview .cursor-reticle {
-            width: 210px; height: 135px;
-            border-radius: 12px;
-            border: 2px solid var(--portal-white);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.85), 0 0 25px rgba(0, 240, 255, 0.35);
-        }
-        body.cursor-preview .cursor-core {
-            opacity: 0;
+            z-index: 3;
         }
 
-        /* --- TOP HUD & TELEMETRY --- */
-        .hud-top {
+        /* ===================================================
+           FLOATING LIQUID GLASS DYNAMIC ISLAND NAVBAR
+           =================================================== */
+        .island-header {
             position: fixed;
-            top: 0; left: 0; width: 100%;
-            padding: 1.5rem 3rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 100;
-            pointer-events: none;
-        }
-        .hud-brand {
-            pointer-events: auto;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            text-decoration: none;
-            color: var(--text-primary);
-        }
-        .brand-cube {
-            width: 12px; height: 12px;
-            background: var(--neon-cyan);
-            box-shadow: 0 0 15px var(--neon-cyan);
-            animation: pulseCube 2.5s infinite ease-in-out;
-        }
-        @keyframes pulseCube {
-            0%, 100% { transform: rotate(0deg) scale(1); }
-            50% { transform: rotate(45deg) scale(1.25); background: var(--neon-lime); box-shadow: 0 0 18px var(--neon-lime); }
-        }
-        .brand-text {
-            font-weight: 800;
-            font-size: 1.15rem;
-            letter-spacing: 2px;
-        }
-        .brand-sub {
-            font-family: var(--font-mono);
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            padding: 2px 8px;
-            border: 1px solid var(--border-subtle);
-            border-radius: 4px;
-        }
-
-        .hud-telemetry {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            background: rgba(8, 10, 16, 0.75);
-            backdrop-filter: blur(12px);
-            padding: 8px 18px;
-            border-radius: 100px;
-            border: 1px solid var(--border-subtle);
-            pointer-events: auto;
-        }
-        .telemetry-item span {
-            color: var(--neon-cyan);
-            font-weight: 700;
-        }
-
-        /* --- BOTTOM SPATIAL ROOM MATRIX DOCK --- */
-        .spatial-dock {
-            position: fixed;
-            bottom: 28px;
+            top: 24px;
             left: 50%;
             transform: translateX(-50%);
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px;
-            background: rgba(10, 12, 18, 0.82);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.14);
-            border-radius: 100px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 240, 255, 0.08);
-        }
-        .dock-btn {
-            position: relative;
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            padding: 10px 18px;
-            border-radius: 100px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 1000;
             display: flex;
             align-items: center;
             gap: 8px;
-            white-space: nowrap;
-        }
-        .dock-btn .dock-idx {
-            opacity: 0.45;
-            font-size: 0.65rem;
-        }
-        .dock-btn.active {
-            color: var(--bg-void);
-            background: var(--portal-white);
-            font-weight: 700;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
-        }
-        .dock-btn.active .dock-idx {
-            opacity: 0.8;
-            color: var(--bg-void);
-        }
-        .dock-btn:hover:not(.active) {
-            color: var(--text-primary);
-            background: rgba(255, 255, 255, 0.07);
+            padding: 6px 8px;
+            border-radius: 100px;
+            background: rgba(18, 18, 22, 0.68);
+            backdrop-filter: blur(35px) saturate(200%);
+            -webkit-backdrop-filter: blur(35px) saturate(200%);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            box-shadow:
+                0 16px 40px rgba(0, 0, 0, 0.7),
+                inset 0 1px 0 rgba(255, 255, 255, 0.25);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* --- 3D SPATIAL VIEWPORT & WORLD --- */
-        #viewport {
-            position: fixed;
-            inset: 0;
-            width: 100vw;
-            height: 100vh;
-            perspective: 1100px;
-            perspective-origin: 50% 50%;
-            overflow: hidden;
-            z-index: 10;
-            pointer-events: none;
-        }
-
-        #world {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            transform-style: preserve-3d;
-            will-change: transform;
-        }
-
-        .room {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
+        .island-brand {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 6rem 6vw 7rem;
-            transform-style: preserve-3d;
-            will-change: transform, opacity;
-            pointer-events: none;
-        }
-        .room.room-interactive {
-            pointer-events: auto;
-        }
-
-        /* Architectural Room Header Tag */
-        .room-marker {
-            display: inline-flex;
             align-items: center;
             gap: 10px;
+            padding: 8px 16px;
+            border-radius: 100px;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 0.88rem;
+            letter-spacing: -0.02em;
+            white-space: nowrap;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--accent-green);
+        }
+
+        .island-nav {
+            display: flex;
+            align-items: center;
+            position: relative;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 100px;
+            padding: 3px;
+        }
+
+        .island-pill-indicator {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            height: calc(100% - 6px);
+            background: rgba(255, 255, 255, 0.14);
+            border-radius: 100px;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .island-link {
+            position: relative;
+            z-index: 1;
+            padding: 7px 16px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 100px;
+            transition: color 0.25s ease;
+            white-space: nowrap;
+        }
+
+        .island-link.active,
+        .island-link:hover {
+            color: var(--text-primary);
+        }
+
+        /* dbrand-style Honesty Toggle inside the Island */
+        .honesty-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 14px;
+            border-radius: 100px;
+            background: rgba(255, 159, 10, 0.12);
+            border: 1px solid rgba(255, 159, 10, 0.3);
+            color: var(--accent-amber);
             font-family: var(--font-mono);
             font-size: 0.72rem;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            color: var(--neon-cyan);
-            margin-bottom: 1rem;
-            padding: 6px 14px;
-            border: 1px solid rgba(0, 240, 255, 0.3);
-            border-radius: 100px;
-            background: rgba(0, 240, 255, 0.05);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            white-space: nowrap;
         }
-        .room-marker::before {
-            content: '';
-            width: 6px; height: 6px;
-            border-radius: 50%;
-            background: var(--neon-cyan);
-            box-shadow: 0 0 8px var(--neon-cyan);
+        .honesty-toggle:hover {
+            background: rgba(255, 159, 10, 0.22);
+            transform: scale(1.03);
+        }
+        .honesty-toggle.brutal-active {
+            background: var(--accent-amber);
+            color: #000;
+            box-shadow: 0 0 20px rgba(255, 159, 10, 0.45);
         }
 
         /* ===================================================
-           ROOM 00: THE THRESHOLD (VOLUMETRIC LIGHT DOORWAY)
+           SECTION 1: PINNED LIQUID GLASS APERTURE PORTAL
            =================================================== */
-        .threshold-layout {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
+        .portal-scroll-track {
             position: relative;
+            height: 230vh;
             width: 100%;
-            max-width: 1100px;
+            z-index: 5;
         }
 
-        .portal-assembly {
-            position: relative;
-            width: 270px;
-            height: 410px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 2rem;
-            cursor: pointer;
-            transform-style: preserve-3d;
-        }
-
-        /* Volumetric floor reflection */
-        .portal-floor-glow {
-            position: absolute;
-            bottom: -95px;
-            left: 50%;
-            transform: translateX(-50%) rotateX(78deg);
-            width: 480px;
-            height: 260px;
-            background: radial-gradient(circle, rgba(255,255,255,0.75) 0%, rgba(0, 240, 255, 0.4) 35%, transparent 70%);
-            filter: blur(16px);
-            pointer-events: none;
-            transition: transform 0.5s ease, opacity 0.5s ease;
-        }
-
-        /* Outer Monolith Frame */
-        .portal-frame {
-            position: relative;
+        .portal-sticky-viewport {
+            position: sticky;
+            top: 0;
             width: 100%;
-            height: 100%;
-            border: 2px solid #ffffff;
-            border-radius: 140px 140px 8px 8px;
+            height: 100vh;
             overflow: hidden;
-            box-shadow:
-                0 0 35px rgba(255, 255, 255, 0.8),
-                0 0 90px rgba(0, 240, 255, 0.55),
-                inset 0 0 50px rgba(255, 255, 255, 0.9);
-            background: radial-gradient(circle at 50% 40%, #ffffff 0%, #d8faff 55%, #00f0ff 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* Inner pure light core */
-        .portal-core-light {
+        /* Outer hero typography before entering the aperture */
+        .hero-prelude {
             position: absolute;
             inset: 0;
-            background: linear-gradient(180deg, #ffffff 0%, #f2ffff 65%, #b8f9ff 100%);
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            color: #030306;
-            font-family: var(--font-mono);
-            font-size: 0.72rem;
-            letter-spacing: 3px;
-            font-weight: 700;
-        }
-
-        /* Heavy Architectural Blast Doors that part on scroll */
-        .portal-door {
-            position: absolute;
-            top: 0;
-            width: 50.5%;
-            height: 100%;
-            background: linear-gradient(145deg, #0b0d14 0%, #05060a 100%);
-            z-index: 3;
-            transition: transform 0.1s linear;
-            display: flex;
-            align-items: center;
-        }
-        .portal-door-left {
-            left: 0;
-            border-right: 1.5px solid rgba(255, 255, 255, 0.9);
-            box-shadow: 8px 0 25px rgba(255, 255, 255, 0.65);
-            justify-content: flex-end;
-            padding-right: 12px;
-        }
-        .portal-door-right {
-            right: 0;
-            border-left: 1.5px solid rgba(255, 255, 255, 0.9);
-            box-shadow: -8px 0 25px rgba(255, 255, 255, 0.65);
-            justify-content: flex-start;
-            padding-left: 12px;
-        }
-        .door-handle-line {
-            width: 2px;
-            height: 60px;
-            background: var(--neon-cyan);
-            box-shadow: 0 0 10px var(--neon-cyan);
-        }
-
-        .hero-headline {
-            position: relative;
-            z-index: 5;
+            justify-content: space-between;
+            padding: 13vh 6vw 7vh;
+            z-index: 20;
             pointer-events: none;
+            text-align: center;
+            will-change: opacity, transform;
         }
-        .hero-headline h1 {
-            font-size: clamp(2.8rem, 6.5vw, 6.2rem);
-            font-weight: 800;
-            line-height: 0.95;
-            letter-spacing: -2px;
+
+        .prelude-eyebrow {
+            font-family: var(--font-mono);
+            font-size: 0.76rem;
             text-transform: uppercase;
-            margin-bottom: 1rem;
-            text-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
+            letter-spacing: 0.2em;
+            color: var(--text-secondary);
+            padding: 6px 16px;
+            border-radius: 100px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
         }
-        .hero-headline h1 i {
+
+        .prelude-headline h1 {
+            font-size: clamp(3.2rem, 8.2vw, 7.8rem);
+            font-weight: 800;
+            letter-spacing: -0.045em;
+            line-height: 0.94;
+            background: linear-gradient(180deg, #ffffff 0%, #a1a1a6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.25rem;
+        }
+
+        .prelude-headline h1 em {
             font-family: var(--font-serif);
             font-weight: 400;
             font-style: italic;
-            color: var(--neon-cyan);
-            letter-spacing: 0;
-            text-transform: none;
-            padding-right: 8px;
+            -webkit-text-fill-color: var(--text-primary);
+            padding-right: 0.08em;
         }
-        .hero-sub {
+
+        .prelude-sub {
+            font-size: clamp(1rem, 1.5vw, 1.25rem);
+            color: var(--text-secondary);
+            max-width: 560px;
+            margin: 0 auto;
+            font-weight: 400;
+            line-height: 1.5;
+        }
+
+        .scroll-cue {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
             font-family: var(--font-mono);
-            font-size: clamp(0.85rem, 1.4vw, 1.05rem);
-            color: var(--text-muted);
-            max-width: 580px;
-            margin: 0 auto 1.75rem;
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
         }
-        .enter-cta {
-            pointer-events: auto;
+
+        .scroll-pill {
+            width: 22px;
+            height: 36px;
+            border-radius: 20px;
+            border: 1.5px solid rgba(255, 255, 255, 0.25);
+            display: flex;
+            justify-content: center;
+            padding-top: 6px;
+        }
+        .scroll-wheel {
+            width: 3px;
+            height: 7px;
+            border-radius: 3px;
+            background: #fff;
+            animation: wheelBounce 1.8s infinite ease-in-out;
+        }
+        @keyframes wheelBounce {
+            0%, 100% { transform: translateY(0); opacity: 1; }
+            60% { transform: translateY(10px); opacity: 0.2; }
+        }
+
+        /* The expanding Liquid Glass Portal Window */
+        .aperture-window {
+            position: relative;
+            width: 340px;
+            height: 460px;
+            border-radius: 200px;
+            overflow: hidden;
+            z-index: 10;
+            border: 1.5px solid rgba(255, 255, 255, 0.45);
+            box-shadow:
+                0 0 120px rgba(255, 255, 255, 0.22),
+                0 0 40px rgba(255, 200, 150, 0.15),
+                inset 0 0 60px rgba(255, 255, 255, 0.35);
+            will-change: width, height, border-radius, box-shadow;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at 50% 30%, #1d1d24 0%, #09090c 70%);
+        }
+
+        /* Volumetric warm doorway bloom that fades out as you step inside */
+        .aperture-bloom {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(
+                circle at 50% 45%,
+                rgba(255, 255, 255, 0.96) 0%,
+                rgba(255, 240, 220, 0.65) 30%,
+                rgba(255, 159, 10, 0.15) 60%,
+                transparent 85%
+            );
+            z-index: 5;
+            pointer-events: none;
+            will-change: opacity;
+        }
+
+        /* Content inside the Portal revealed once expanded */
+        .aperture-interior {
+            width: 100vw;
+            max-width: 1280px;
+            padding: 0 5vw;
+            display: grid;
+            grid-template-columns: 1.3fr 1fr;
+            gap: 24px;
+            opacity: 0.15;
+            transform: scale(0.92);
+            will-change: opacity, transform;
+            z-index: 2;
+        }
+
+        .interior-card {
+            padding: 40px;
+            border-radius: 32px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .interior-badge {
             display: inline-flex;
             align-items: center;
-            gap: 12px;
-            padding: 12px 28px;
+            gap: 8px;
+            width: fit-content;
+            padding: 6px 14px;
             border-radius: 100px;
             background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.35);
-            color: var(--portal-white);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             font-family: var(--font-mono);
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
+            font-size: 0.72rem;
+            color: var(--accent-titanium);
+            margin-bottom: 24px;
         }
-        .enter-cta:hover {
-            background: var(--portal-white);
-            color: var(--bg-void);
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.7);
-            transform: translateY(-2px);
+
+        .interior-card h2 {
+            font-size: clamp(2rem, 3.6vw, 3.4rem);
+            font-weight: 700;
+            letter-spacing: -0.035em;
+            line-height: 1.08;
+            margin-bottom: 18px;
+        }
+
+        .interior-card p {
+            font-size: 1.05rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .metric-tile {
+            padding: 28px;
+            border-radius: 26px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .metric-val {
+            font-size: clamp(2.2rem, 3.5vw, 3.2rem);
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            background: linear-gradient(135deg, #fff 0%, #86868b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .metric-label {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
         }
 
         /* ===================================================
-           ROOM 01: COMMAND CORE (EXPERIENCE & TECH TICKER)
+           SECTION 2: HORIZONTAL SCROLL-JACKED PROJECT VAULT
            =================================================== */
-        .chamber-container {
+        .vault-scroll-section {
+            position: relative;
+            height: 340vh;
             width: 100%;
-            max-width: 1240px;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
+            z-index: 5;
         }
 
-        .chamber-header {
+        .vault-sticky-camera {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-top: 40px;
+        }
+
+        .section-header-bar {
+            width: 100%;
+            max-width: 1320px;
+            margin: 0 auto 36px;
+            padding: 0 5vw;
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
-            width: 100%;
-            margin-bottom: 2rem;
-            border-bottom: 1px solid var(--border-subtle);
-            padding-bottom: 1rem;
-        }
-        .chamber-title {
-            font-size: clamp(2rem, 4.2vw, 3.8rem);
-            font-weight: 800;
-            line-height: 1;
-            letter-spacing: -1px;
-        }
-        .chamber-title span {
-            font-family: var(--font-serif);
-            font-style: italic;
-            font-weight: 400;
-            color: var(--neon-lime);
-        }
-        .chamber-subtitle {
-            font-family: var(--font-mono);
-            font-size: 0.8rem;
-            color: var(--text-muted);
+            flex-wrap: wrap;
+            gap: 20px;
         }
 
-        .exp-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.25rem;
-            width: 100%;
-            margin-bottom: 2rem;
-        }
-
-        .exp-card {
-            background: var(--bg-surface);
-            backdrop-filter: blur(16px);
-            border: 1px solid var(--border-subtle);
-            border-radius: 16px;
-            padding: 1.6rem 1.8rem;
-            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
-            overflow: hidden;
-        }
-        .exp-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 4px; height: 100%;
-            background: var(--neon-cyan);
-            opacity: 0.4;
-            transition: opacity 0.3s, box-shadow 0.3s;
-        }
-        .exp-card:hover {
-            border-color: var(--neon-cyan);
-            transform: translateY(-4px) translateZ(15px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(0, 240, 255, 0.12);
-        }
-        .exp-card:hover::before {
-            opacity: 1;
-            box-shadow: 0 0 15px var(--neon-cyan);
-        }
-
-        .exp-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 1rem;
-            margin-bottom: 0.75rem;
-        }
-        .exp-org {
-            font-size: 1.35rem;
-            font-weight: 800;
-            color: var(--portal-white);
-        }
-        .exp-role {
-            font-family: var(--font-mono);
-            font-size: 0.82rem;
-            color: var(--neon-cyan);
-            margin-top: 2px;
-        }
-        .exp-date {
-            font-family: var(--font-mono);
-            font-size: 0.72rem;
-            padding: 4px 10px;
-            border-radius: 100px;
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            color: var(--text-primary);
-            white-space: nowrap;
-        }
-        .exp-desc {
-            font-size: 0.92rem;
-            line-height: 1.55;
-            color: var(--text-muted);
-        }
-
-        /* Interactive Kinetic Ticker inside Room 01 */
-        .ticker-shell {
-            width: 100%;
-            overflow: hidden;
-            background: rgba(5, 6, 10, 0.85);
-            border: 1px solid var(--border-subtle);
-            border-radius: 12px;
-            padding: 1rem 0;
-            cursor: grab;
-            position: relative;
-        }
-        .ticker-shell:active { cursor: grabbing; }
-        .ticker-track {
-            display: flex;
-            width: fit-content;
-            gap: 2.5rem;
-            will-change: transform;
-        }
-        .ticker-pill {
-            font-family: var(--font-mono);
-            font-size: 0.95rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            white-space: nowrap;
-            transition: color 0.25s, text-shadow 0.25s;
-        }
-        .ticker-pill::before {
-            content: '//';
-            color: var(--neon-lime);
-            font-weight: 400;
-        }
-        .ticker-pill:hover {
-            color: var(--portal-white);
-            text-shadow: 0 0 12px var(--neon-cyan);
-        }
-
-        /* ===================================================
-           ROOM 02: THE VAULT (HOLOGRAPHIC PROJECT SHOWCASE)
-           =================================================== */
-        .vault-layout {
-            width: 100%;
-            max-width: 1280px;
-            display: grid;
-            grid-template-columns: 1.45fr 1fr;
-            gap: 2rem;
-            align-items: stretch;
-        }
-
-        .projects-matrix {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            max-height: 62vh;
-            overflow-y: auto;
-            padding-right: 8px;
-            scrollbar-width: thin;
-            scrollbar-color: var(--neon-cyan) rgba(255,255,255,0.05);
-        }
-        .projects-matrix::-webkit-scrollbar { width: 5px; }
-        .projects-matrix::-webkit-scrollbar-thumb { background: var(--neon-cyan); border-radius: 10px; }
-
-        .proj-card {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-subtle);
-            border-radius: 14px;
-            padding: 1.35rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            gap: 1rem;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-        .proj-card:hover, .proj-card.active-proj {
-            border-color: var(--neon-lime);
-            background: rgba(20, 24, 38, 0.9);
-            transform: translateY(-3px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(191, 255, 0, 0.15);
-        }
-        .proj-tag {
-            font-family: var(--font-mono);
-            font-size: 0.65rem;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: var(--neon-lime);
-        }
-        .proj-name {
-            font-size: 1.3rem;
-            font-weight: 800;
-            margin: 4px 0 6px;
-            color: var(--portal-white);
-        }
-        .proj-Copy {
-            font-size: 0.86rem;
-            color: var(--text-muted);
-            line-height: 1.45;
-        }
-        .proj-action {
-            display: inline-flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-            padding-top: 0.75rem;
-            border-top: 1px solid rgba(255,255,255,0.08);
+        .eyebrow-tag {
             font-family: var(--font-mono);
             font-size: 0.75rem;
-            font-weight: 700;
-            color: var(--portal-white);
-            text-decoration: none;
             text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .proj-action span {
-            color: var(--neon-cyan);
-            transition: transform 0.25s ease;
-        }
-        .proj-card:hover .proj-action span {
-            transform: translateX(5px);
+            letter-spacing: 0.16em;
+            color: var(--accent-amber);
+            margin-bottom: 10px;
+            display: block;
         }
 
-        /* Holographic Inspection Stage on Right */
-        .holo-stage {
-            background: rgba(8, 10, 18, 0.85);
-            border: 1px solid var(--border-bright);
-            border-radius: 18px;
-            padding: 1.5rem;
+        .section-heading {
+            font-size: clamp(2.4rem, 4.8vw, 4.2rem);
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            line-height: 1;
+        }
+
+        .section-heading em {
+            font-family: var(--font-serif);
+            font-weight: 400;
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+
+        .vault-progress-pill {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            padding: 10px 20px;
+            border-radius: 100px;
+        }
+
+        .progress-bar-mini {
+            width: 90px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill-mini {
+            height: 100%;
+            width: 0%;
+            background: #fff;
+            border-radius: 4px;
+        }
+
+        .horizontal-track-wrapper {
+            width: 100%;
+            overflow: visible;
+            padding-left: max(5vw, calc((100vw - 1320px) / 2 + 5vw));
+        }
+
+        .horizontal-vault-track {
+            display: flex;
+            gap: 28px;
+            width: max-content;
+            will-change: transform;
+            padding-right: 15vw;
+        }
+
+        /* Individual Liquid Glass Project Showcase Card */
+        .vault-card {
+            width: clamp(330px, 34vw, 460px);
+            height: 510px;
+            border-radius: 32px;
+            padding: 28px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             position: relative;
-            overflow: hidden;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.75), inset 0 0 40px rgba(0, 240, 255, 0.07);
+            cursor: pointer;
+            transform-style: preserve-3d;
         }
-        .holo-visual-wrap {
+
+        .vault-card:hover {
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-8px);
+        }
+
+        .vault-poster-frame {
             position: relative;
             width: 100%;
-            height: 270px;
-            border-radius: 12px;
+            height: 235px;
+            border-radius: 20px;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            background: #050608;
+            background: #111115;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .holo-visual-wrap img {
+
+        .vault-poster-frame img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
-        }
-        .holo-stage:hover .holo-visual-wrap img {
-            transform: scale(1.05);
-        }
-        .holo-overlay-badge {
-            position: absolute;
-            top: 12px; left: 12px;
-            background: rgba(3, 3, 6, 0.85);
-            backdrop-filter: blur(8px);
-            padding: 5px 12px;
-            border-radius: 100px;
-            border: 1px solid var(--neon-cyan);
-            font-family: var(--font-mono);
-            font-size: 0.68rem;
-            color: var(--neon-cyan);
-        }
-        .holo-meta {
-            margin-top: 1.25rem;
-        }
-        .holo-meta h4 {
-            font-size: 1.5rem;
-            font-weight: 800;
-            margin-bottom: 0.4rem;
-        }
-        .holo-meta p {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-bottom: 1.1rem;
-            line-height: 1.5;
-        }
-        .holo-btn-row {
-            display: flex;
-            gap: 12px;
-        }
-        .btn-neon {
-            flex: 1;
-            text-align: center;
-            padding: 11px 18px;
-            border-radius: 10px;
-            font-family: var(--font-mono);
-            font-size: 0.78rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            text-decoration: none;
-            background: var(--neon-cyan);
-            color: var(--bg-void);
-            transition: all 0.25s ease;
-            cursor: pointer;
-            border: none;
-        }
-        .btn-neon:hover {
-            background: var(--neon-lime);
-            box-shadow: 0 0 25px rgba(191, 255, 0, 0.5);
-        }
-        .btn-ghost {
-            padding: 11px 16px;
-            border-radius: 10px;
-            font-family: var(--font-mono);
-            font-size: 0.78rem;
-            color: var(--text-primary);
-            border: 1px solid var(--border-subtle);
-            text-decoration: none;
-            transition: all 0.25s ease;
-        }
-        .btn-ghost:hover {
-            border-color: var(--portal-white);
-            background: rgba(255,255,255,0.08);
+            transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* ===================================================
-           ROOM 03: HALL OF RECOGNITION (MONOLITH PILLARS)
-           =================================================== */
-        .trophy-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
-            width: 100%;
+        .vault-card:hover .vault-poster-frame img {
+            transform: scale(1.07);
         }
-        .trophy-pillar {
-            background: linear-gradient(180deg, rgba(20, 22, 34, 0.85) 0%, rgba(8, 9, 15, 0.9) 100%);
-            border: 1px solid var(--border-subtle);
-            border-radius: 20px;
-            padding: 2rem;
+
+        .vault-chip {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            padding: 5px 12px;
+            border-radius: 100px;
+            background: rgba(0, 0, 0, 0.68);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #fff;
+        }
+
+        .vault-card-body {
+            margin-top: 20px;
+            flex: 1;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            min-height: 340px;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .trophy-pillar:hover {
-            border-color: var(--neon-amber);
-            transform: translateY(-8px);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.75), 0 0 30px rgba(255, 170, 0, 0.18);
-        }
-        .trophy-year {
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            color: var(--neon-amber);
-            border: 1px solid rgba(255, 170, 0, 0.4);
-            padding: 4px 12px;
-            border-radius: 100px;
-            width: fit-content;
-            margin-bottom: 1.5rem;
-        }
-        .trophy-title {
+
+        .vault-card-title {
             font-size: 1.65rem;
-            font-weight: 800;
-            line-height: 1.15;
-            margin-bottom: 0.5rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 10px;
+            color: var(--text-primary);
         }
-        .trophy-issuer {
-            font-family: var(--font-mono);
-            font-size: 0.82rem;
-            color: var(--neon-cyan);
-            margin-bottom: 1rem;
-        }
-        .trophy-desc {
-            font-size: 0.92rem;
-            color: var(--text-muted);
+
+        .vault-card-desc {
+            font-size: 0.96rem;
             line-height: 1.55;
-            margin-bottom: 1.5rem;
+            color: var(--text-secondary);
+            transition: color 0.25s ease;
         }
-        .trophy-badge-img {
-            width: 64px;
-            height: 64px;
-            object-fit: contain;
-            align-self: flex-end;
-            filter: drop-shadow(0 0 12px rgba(255, 170, 0, 0.35));
-            transition: transform 0.35s ease;
+
+        .vault-card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 18px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            margin-top: 16px;
         }
-        .trophy-pillar:hover .trophy-badge-img {
-            transform: scale(1.18) rotate(-5deg);
+
+        .vault-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.86rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-decoration: none;
+            padding: 9px 18px;
+            border-radius: 100px;
+            background: rgba(255, 255, 255, 0.09);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.25s ease;
+        }
+
+        .vault-card:hover .vault-cta {
+            background: #fff;
+            color: #000;
+        }
+
+        .vault-idx {
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            color: var(--text-tertiary);
         }
 
         /* ===================================================
-           ROOM 04: TRANSMISSION NEXUS (CONTACT & SECRET LAB)
+           SECTION 3: STACKING DEPTH EXPERIENCE ARCHITECTURE
            =================================================== */
-        .nexus-box {
-            width: 100%;
-            max-width: 860px;
-            background: rgba(10, 12, 20, 0.82);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border-bright);
-            border-radius: 28px;
-            padding: 3.5rem 3rem;
-            text-align: center;
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.85), 0 0 50px rgba(0, 240, 255, 0.12);
+        .experience-section {
             position: relative;
+            z-index: 5;
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 140px 5vw;
         }
-        .nexus-title {
-            font-size: clamp(2.4rem, 5vw, 4.5rem);
+
+        .stack-container {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+            margin-top: 60px;
+        }
+
+        .stack-card {
+            position: sticky;
+            top: 120px;
+            border-radius: 32px;
+            padding: 44px 48px;
+            transform-origin: center top;
+            will-change: transform, filter;
+        }
+
+        .stack-card:nth-child(1) { top: 110px; }
+        .stack-card:nth-child(2) { top: 135px; }
+        .stack-card:nth-child(3) { top: 160px; }
+        .stack-card:nth-child(4) { top: 185px; }
+
+        .stack-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+
+        .stack-role {
+            font-size: clamp(1.5rem, 2.6vw, 2.2rem);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            color: var(--text-primary);
+        }
+
+        .stack-company {
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: var(--accent-amber);
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stack-period {
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            color: var(--text-primary);
+            padding: 8px 16px;
+            border-radius: 100px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+        }
+
+        .stack-summary {
+            font-size: 1.08rem;
+            line-height: 1.65;
+            color: var(--text-secondary);
+            max-width: 820px;
+            margin-bottom: 28px;
+        }
+
+        .stack-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tech-pill {
+            font-family: var(--font-mono);
+            font-size: 0.74rem;
+            padding: 6px 14px;
+            border-radius: 100px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--accent-titanium);
+        }
+
+        /* ===================================================
+           INTERACTIVE HARDWARE KINETIC RIBBON
+           =================================================== */
+        .ribbon-wrapper {
+            position: relative;
+            z-index: 5;
+            padding: 36px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.015);
+            overflow: hidden;
+            cursor: grab;
+        }
+        .ribbon-wrapper:active { cursor: grabbing; }
+
+        .ribbon-track {
+            display: flex;
+            gap: 48px;
+            width: max-content;
+            will-change: transform;
+            align-items: center;
+        }
+
+        .ribbon-item {
+            font-size: clamp(1.8rem, 3.5vw, 3rem);
             font-weight: 800;
-            line-height: 1;
-            margin-bottom: 1rem;
+            letter-spacing: -0.04em;
+            color: rgba(255, 255, 255, 0.22);
+            white-space: nowrap;
+            transition: color 0.3s ease, transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 48px;
         }
-        .nexus-title i {
+        .ribbon-item::after {
+            content: '✦';
+            font-size: 1.2rem;
+            color: var(--accent-amber);
+            opacity: 0.6;
+        }
+        .ribbon-item:hover {
+            color: #ffffff;
+            transform: scale(1.04);
+        }
+
+        /* ===================================================
+           SECTION 4: BENTO RECOGNITION GALLERY
+           =================================================== */
+        .recognition-section {
+            position: relative;
+            z-index: 5;
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 140px 5vw;
+        }
+
+        .bento-awards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 56px;
+        }
+
+        .award-card {
+            border-radius: 32px;
+            padding: 38px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 390px;
+        }
+
+        .award-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(255, 255, 255, 0.28);
+        }
+
+        .award-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+        }
+
+        .award-year {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--accent-amber);
+            padding: 5px 12px;
+            border-radius: 100px;
+            background: rgba(255, 159, 10, 0.12);
+            border: 1px solid rgba(255, 159, 10, 0.28);
+        }
+
+        .award-emblem {
+            width: 58px;
+            height: 58px;
+            border-radius: 16px;
+            object-fit: contain;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .award-card:hover .award-emblem {
+            transform: scale(1.14) rotate(4deg);
+        }
+
+        .award-title {
+            font-size: 1.65rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+
+        .award-org {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 18px;
+        }
+
+        .award-desc {
+            font-size: 0.98rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        /* ===================================================
+           SECTION 5: COMMAND DOCK & CONTACT
+           =================================================== */
+        .contact-section {
+            position: relative;
+            z-index: 5;
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 80px 5vw 140px;
+        }
+
+        .contact-monolith {
+            border-radius: 40px;
+            padding: 72px 48px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .contact-monolith h2 {
+            font-size: clamp(2.6rem, 6vw, 5.2rem);
+            font-weight: 800;
+            letter-spacing: -0.045em;
+            line-height: 0.98;
+            margin: 16px 0 24px;
+        }
+
+        .contact-monolith h2 em {
             font-family: var(--font-serif);
             font-weight: 400;
-            color: var(--neon-cyan);
+            font-style: italic;
+            color: var(--text-secondary);
         }
-        .nexus-lead {
-            font-size: 1.08rem;
-            color: var(--text-muted);
+
+        .contact-lead {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
             max-width: 580px;
-            margin: 0 auto 2.25rem;
             line-height: 1.6;
+            margin-bottom: 40px;
         }
-        .email-pill-btn {
+
+        .magnetic-email-btn {
             display: inline-flex;
             align-items: center;
             gap: 14px;
-            background: var(--portal-white);
-            color: var(--bg-void);
-            font-family: var(--font-mono);
-            font-size: clamp(0.85rem, 1.5vw, 1.1rem);
-            font-weight: 700;
-            padding: 16px 34px;
+            padding: 20px 38px;
             border-radius: 100px;
+            background: var(--text-primary);
+            color: var(--bg-obsidian);
+            font-size: clamp(0.95rem, 1.5vw, 1.15rem);
+            font-weight: 700;
+            letter-spacing: -0.01em;
             border: none;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.35);
-            margin-bottom: 2.25rem;
-        }
-        .email-pill-btn:hover {
-            background: var(--neon-lime);
-            box-shadow: 0 0 40px rgba(191, 255, 0, 0.7);
-            transform: scale(1.04);
-        }
-        .social-row {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            flex-wrap: wrap;
-            margin-bottom: 2.5rem;
-        }
-        .social-node {
-            font-family: var(--font-mono);
-            font-size: 0.85rem;
-            color: var(--text-primary);
-            text-decoration: none;
-            padding: 8px 20px;
-            border-radius: 100px;
-            border: 1px solid var(--border-subtle);
-            transition: all 0.25s ease;
-        }
-        .social-node:hover {
-            border-color: var(--neon-cyan);
-            color: var(--neon-cyan);
-            background: rgba(0, 240, 255, 0.08);
-        }
-        .lab-signature {
-            display: inline-block;
-            font-family: var(--font-mono);
-            font-size: 0.78rem;
-            letter-spacing: 2px;
-            color: var(--text-muted);
-            border-bottom: 1px dashed rgba(255,255,255,0.3);
-            padding-bottom: 4px;
-            cursor: pointer;
-            transition: color 0.25s;
-        }
-        .lab-signature:hover {
-            color: var(--neon-crimson);
-            border-bottom-color: var(--neon-crimson);
+            box-shadow: 0 20px 50px rgba(255, 255, 255, 0.22);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                        background-color 0.25s ease,
+                        box-shadow 0.3s ease;
+            margin-bottom: 40px;
         }
 
-        /* --- CUSTOM RIGHT-CLICK CONTEXT MENU --- */
-        #custom-context-menu {
+        .magnetic-email-btn:hover {
+            background: #ffffff;
+            transform: scale(1.04);
+            box-shadow: 0 24px 60px rgba(255, 255, 255, 0.38);
+        }
+
+        .copy-badge {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            border-radius: 100px;
+            background: rgba(0, 0, 0, 0.12);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .social-dock {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 48px;
+        }
+
+        .social-pill {
+            padding: 12px 24px;
+            border-radius: 100px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 500;
+            transition: all 0.25s ease;
+        }
+
+        .social-pill:hover {
+            background: rgba(255, 255, 255, 0.14);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .footer-easter-trigger {
+            font-family: var(--font-mono);
+            font-size: 0.76rem;
+            color: var(--text-tertiary);
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 100px;
+            border: 1px dashed rgba(255, 255, 255, 0.12);
+            transition: all 0.25s ease;
+        }
+
+        .footer-easter-trigger:hover {
+            color: var(--accent-amber);
+            border-color: rgba(255, 159, 10, 0.4);
+        }
+
+        /* ===================================================
+           CUSTOM GLASS CONTEXT MENU & TOAST
+           =================================================== */
+        #glass-context-menu {
             position: fixed;
-            z-index: 99995;
-            width: 230px;
-            background: rgba(8, 10, 16, 0.96);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(0, 240, 255, 0.35);
-            border-radius: 14px;
+            z-index: 9999;
+            width: 240px;
             padding: 8px;
+            border-radius: 20px;
+            background: rgba(20, 20, 25, 0.82);
+            backdrop-filter: blur(35px) saturate(190%);
+            -webkit-backdrop-filter: blur(35px) saturate(190%);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8);
             display: none;
             flex-direction: column;
-            gap: 4px;
-            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.9);
+            gap: 2px;
         }
-        .ctx-header {
-            padding: 6px 12px 2px;
+
+        .ctx-label {
+            padding: 6px 12px 4px;
             font-family: var(--font-mono);
             font-size: 0.65rem;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: var(--neon-cyan);
+            letter-spacing: 0.12em;
+            color: var(--text-tertiary);
         }
-        .ctx-item {
+
+        .ctx-btn {
             padding: 9px 12px;
-            font-family: var(--font-mono);
-            font-size: 0.8rem;
+            border-radius: 12px;
+            font-size: 0.84rem;
             color: var(--text-primary);
-            border-radius: 8px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
             text-decoration: none;
-            transition: all 0.2s;
-        }
-        .ctx-item:hover {
-            background: var(--neon-cyan);
-            color: var(--bg-void);
-            font-weight: 700;
-        }
-        .ctx-divider {
-            height: 1px;
-            background: rgba(255, 255, 255, 0.1);
-            margin: 4px 6px;
+            transition: background 0.15s ease;
         }
 
-        /* --- TOAST NOTIFICATION --- */
-        #toast {
-            position: fixed;
-            bottom: 96px;
-            left: 50%;
-            transform: translateX(-50%) translateY(20px);
-            background: var(--portal-white);
-            color: var(--bg-void);
+        .ctx-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .ctx-key {
             font-family: var(--font-mono);
-            font-size: 0.82rem;
-            font-weight: 700;
-            padding: 12px 26px;
+            font-size: 0.68rem;
+            color: var(--text-secondary);
+        }
+
+        .ctx-sep {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.08);
+            margin: 4px 8px;
+        }
+
+        #apple-toast {
+            position: fixed;
+            bottom: 36px;
+            left: 50%;
+            transform: translateX(-50%) translateY(25px) scale(0.95);
+            padding: 12px 24px;
             border-radius: 100px;
-            box-shadow: 0 10px 35px rgba(0, 240, 255, 0.4);
+            background: rgba(28, 28, 34, 0.88);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-primary);
+            font-size: 0.86rem;
+            font-weight: 500;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75);
             opacity: 0;
             pointer-events: none;
-            z-index: 100000;
+            z-index: 10000;
             transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
             white-space: nowrap;
         }
-        #toast.show {
+
+        #apple-toast.visible {
             opacity: 1;
-            transform: translateX(-50%) translateY(0);
+            transform: translateX(-50%) translateY(0) scale(1);
         }
 
         /* ===================================================
-           THE DEBUGGER ARCADE OVERLAY
+           MACOS KERNEL DEBUGGER GAME MODAL
            =================================================== */
-        #game-overlay {
+        #debugger-modal {
             position: fixed;
             inset: 0;
-            background: #020204;
-            z-index: 99990;
+            z-index: 9998;
+            background: rgba(0, 0, 0, 0.82);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
             display: none;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-family: var(--font-mono);
+            padding: 20px;
             touch-action: none;
         }
-        #game-overlay.active { display: flex; }
-        #gameCanvas { width: 100%; height: 100%; display: block; }
-        .game-ui {
+        #debugger-modal.active { display: flex; }
+
+        .mac-window {
+            width: 100%;
+            max-width: 860px;
+            height: 560px;
+            border-radius: 24px;
+            background: #0d0d11;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .mac-titlebar {
+            height: 44px;
+            padding: 0 18px;
+            background: rgba(255, 255, 255, 0.04);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .mac-traffic {
+            display: flex;
+            gap: 8px;
+        }
+        .traffic-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .dot-close { background: #ff5f56; }
+        .dot-min { background: #ffbd2e; }
+        .dot-max { background: #27c93f; }
+
+        .mac-title {
+            font-family: var(--font-mono);
+            font-size: 0.76rem;
+            color: var(--text-secondary);
+        }
+
+        #debugCanvas {
+            flex: 1;
+            width: 100%;
+            height: 100%;
+            display: block;
+            cursor: crosshair;
+        }
+
+        .debug-overlay-ui {
             position: absolute;
-            inset: 0;
-            pointer-events: none;
+            inset: 44px 0 0 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-        }
-        .game-hud {
-            position: absolute;
-            top: 24px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 32px;
-            padding: 10px 28px;
-            background: rgba(0, 20, 10, 0.85);
-            border: 1px solid var(--neon-lime);
-            border-radius: 100px;
-            color: var(--neon-lime);
-            font-size: 1.1rem;
-            box-shadow: 0 0 25px rgba(191, 255, 0, 0.25);
-        }
-        .game-modal {
-            pointer-events: auto;
-            background: rgba(6, 10, 14, 0.94);
-            border: 2px solid var(--neon-lime);
-            border-radius: 20px;
-            padding: 2.5rem 3.5rem;
+            pointer-events: none;
             text-align: center;
-            display: flex;
-            flex-direction: column;
-            gap: 1.25rem;
-            box-shadow: 0 0 60px rgba(191, 255, 0, 0.25);
-            max-width: 90vw;
+            padding: 24px;
         }
-        .game-modal h2 {
-            font-family: var(--font-display);
-            font-size: 2.6rem;
-            color: var(--portal-white);
-        }
-        .game-btn {
-            background: var(--neon-lime);
-            color: #000;
-            font-family: var(--font-mono);
-            font-weight: 700;
-            font-size: 1rem;
-            padding: 14px 32px;
-            border: none;
-            border-radius: 100px;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-        .close-game-btn {
-            position: absolute;
-            top: 24px;
-            right: 28px;
+
+        .debug-card {
             pointer-events: auto;
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.25);
-            color: #fff;
-            width: 46px;
-            height: 46px;
-            border-radius: 50%;
-            font-family: var(--font-mono);
-            cursor: pointer;
-            z-index: 20;
+            padding: 36px 44px;
+            border-radius: 24px;
+            background: rgba(20, 20, 26, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            max-width: 420px;
         }
 
         /* ===================================================
-           MOBILE & TABLET RESPONSIVENESS
+           RESPONSIVE BREAKPOINTS
            =================================================== */
         @media (max-width: 960px) {
-            .hud-top { padding: 1rem 1.25rem; }
-            .hud-telemetry { display: none; }
-            .room { padding: 4.5rem 1.25rem 6rem; justify-content: flex-start; overflow-y: auto; }
-            .threshold-layout { margin-top: auto; margin-bottom: auto; }
-            .portal-assembly { width: 200px; height: 300px; margin-bottom: 1.25rem; }
-            .exp-grid { grid-template-columns: 1fr; gap: 0.85rem; }
-            .exp-card { padding: 1.2rem; }
-            .vault-layout { grid-template-columns: 1fr; gap: 1rem; }
-            .projects-matrix { max-height: 36vh; grid-template-columns: 1fr; }
-            .holo-visual-wrap { height: 170px; }
-            .trophy-grid { grid-template-columns: 1fr; gap: 1rem; }
-            .trophy-pillar { min-height: auto; padding: 1.35rem; }
-            .nexus-box { padding: 2rem 1.25rem; margin-top: auto; margin-bottom: auto; }
-            .spatial-dock {
+            .island-header {
+                top: 14px;
                 width: 94vw;
                 justify-content: space-between;
-                bottom: 16px;
-                padding: 6px;
+                padding: 6px 10px;
             }
-            .dock-btn { padding: 9px 10px; font-size: 0.68rem; }
-            .dock-btn .dock-label { display: none; }
-            .dock-btn.active .dock-label { display: inline; }
+            .island-brand span { display: none; }
+            .island-link { padding: 6px 10px; font-size: 0.74rem; }
+            .honesty-toggle span { display: none; }
+            .honesty-toggle::after { content: 'RAW'; }
+
+            .aperture-interior {
+                grid-template-columns: 1fr;
+                gap: 16px;
+                max-height: 82vh;
+                overflow-y: auto;
+            }
+            .interior-card { padding: 24px; }
+            .metric-tile { padding: 20px; }
+
+            .bento-awards-grid {
+                grid-template-columns: 1fr;
+            }
+            .award-card { min-height: auto; padding: 28px; }
+
+            .stack-card {
+                padding: 28px 24px;
+                top: 84px !important;
+            }
+            .contact-monolith { padding: 48px 24px; }
         }
     </style>
 </head>
-<body class="custom-cursor">
+<body>
 
-    <!-- Ambient Layers -->
-    <div class="ambient-vignette"></div>
-    <div class="scanlines"></div>
-    <div id="portal-flash"></div>
-    <canvas id="corridor-canvas"></canvas>
+    <!-- Hidden SVG Optical Filter for Liquid Glass Refraction -->
+    <svg width="0" height="0" style="position:absolute; pointer-events:none;">
+        <defs>
+            <filter id="liquid-refraction">
+                <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="2" result="noise" />
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G" />
+            </filter>
+        </defs>
+    </svg>
 
-    <!-- Custom Smart Cursor -->
-    <div class="cursor-reticle" id="cursorReticle"></div>
-    <div class="cursor-core" id="cursorCore"></div>
+    <!-- Subtle Studio Lighting & Anodized Grain -->
+    <canvas id="ambient-canvas"></canvas>
+    <div class="noise-overlay"></div>
 
-    <!-- Notification Toast -->
-    <div id="toast">Notification</div>
+    <!-- Notification Pill -->
+    <div id="apple-toast">Copied to clipboard</div>
 
-    <!-- Custom Right-Click Context Menu -->
-    <div id="custom-context-menu">
-        <div class="ctx-header">Teleport Room</div>
-        <div class="ctx-item hover-target" onclick="jumpToRoom(0); hideContextMenu()"><span>00 // Threshold</span><span>HOME</span></div>
-        <div class="ctx-item hover-target" onclick="jumpToRoom(1); hideContextMenu()"><span>01 // Command Core</span><span>WORK</span></div>
-        <div class="ctx-item hover-target" onclick="jumpToRoom(2); hideContextMenu()"><span>02 // The Vault</span><span>PROJ</span></div>
-        <div class="ctx-item hover-target" onclick="jumpToRoom(3); hideContextMenu()"><span>03 // Trophy Hall</span><span>WINS</span></div>
-        <div class="ctx-item hover-target" onclick="jumpToRoom(4); hideContextMenu()"><span>04 // Uplink Nexus</span><span>PING</span></div>
-        <div class="ctx-divider"></div>
-        <div class="ctx-header">Diagnostics</div>
-        <div class="ctx-item hover-target" onclick="launchGameEngine(); hideContextMenu()"><span>Launch Debugger</span><span>EXE</span></div>
-        <div class="ctx-item hover-target" onclick="copyEmail(); hideContextMenu()"><span>Copy Email</span><span>CMD+C</span></div>
+    <!-- Custom Liquid Glass Right-Click Menu -->
+    <div id="glass-context-menu">
+        <div class="ctx-label">Quick Jump</div>
+        <a href="#portal" class="ctx-btn" onclick="hideCtx()"><span>Overview</span><span class="ctx-key">⌘1</span></a>
+        <a href="#vault" class="ctx-btn" onclick="hideCtx()"><span>The Vault</span><span class="ctx-key">⌘2</span></a>
+        <a href="#experience" class="ctx-btn" onclick="hideCtx()"><span>Experience</span><span class="ctx-key">⌘3</span></a>
+        <a href="#recognition" class="ctx-btn" onclick="hideCtx()"><span>Recognition</span><span class="ctx-key">⌘4</span></a>
+        <div class="ctx-sep"></div>
+        <div class="ctx-label">Engineering Controls</div>
+        <div class="ctx-btn" onclick="toggleBrutalMode(); hideCtx()"><span>Toggle Dbrand Copy</span><span class="ctx-key">RAW</span></div>
+        <div class="ctx-btn" onclick="copyEmail(); hideCtx()"><span>Copy Direct Email</span><span class="ctx-key">⌘C</span></div>
+        <div class="ctx-btn" onclick="openDebugger(); hideCtx()"><span>Kernel Debugger</span><span class="ctx-key">EXE</span></div>
     </div>
 
-    <!-- Top Architectural Telemetry HUD -->
-    <header class="hud-top">
-        <a href="#top" onclick="jumpToRoom(0); return false;" class="hud-brand hover-target">
-            <div class="brand-cube"></div>
-            <span class="brand-text">SPANDAN SAXENA</span>
-            <span class="brand-sub">S² ARCH // v4.2</span>
+    <!-- Floating Liquid Glass Dynamic Island Header -->
+    <header class="island-header">
+        <a href="#portal" class="island-brand">
+            <div class="status-dot"></div>
+            <strong>Spandan</strong>
+            <span style="color:var(--text-secondary); font-weight:400;">Saxena</span>
         </a>
-        <div class="hud-telemetry">
-            <div class="telemetry-item">CHAMBER: <span id="hudRoomName">00 // THRESHOLD</span></div>
-            <div class="telemetry-item">Z-COORD: <span id="hudZCoord">0000m</span></div>
-            <div class="telemetry-item">LOC: <span>BLR, IN</span></div>
-        </div>
+
+        <nav class="island-nav" id="islandNav">
+            <div class="island-pill-indicator" id="navIndicator"></div>
+            <a href="#portal" class="island-link active" data-section="portal">Overview</a>
+            <a href="#vault" class="island-link" data-section="vault">Vault</a>
+            <a href="#experience" class="island-link" data-section="experience">Experience</a>
+            <a href="#recognition" class="island-link" data-section="recognition">Honors</a>
+            <a href="#contact" class="island-link" data-section="contact">Contact</a>
+        </nav>
+
+        <button class="honesty-toggle" id="honestyBtn" onclick="toggleBrutalMode()" title="Switch between Executive Polish and Brutally Honest dbrand mode">
+            <span>TRANSLATOR: OFF</span>
+        </button>
     </header>
 
-    <!-- Bottom Spatial Room Switcher Dock -->
-    <nav class="spatial-dock" aria-label="Spatial Room Navigation">
-        <button class="dock-btn active hover-target" onclick="jumpToRoom(0)">
-            <span class="dock-idx">00</span><span class="dock-label">Portal</span>
-        </button>
-        <button class="dock-btn hover-target" onclick="jumpToRoom(1)">
-            <span class="dock-idx">01</span><span class="dock-label">Experience</span>
-        </button>
-        <button class="dock-btn hover-target" onclick="jumpToRoom(2)">
-            <span class="dock-idx">02</span><span class="dock-label">The Vault</span>
-        </button>
-        <button class="dock-btn hover-target" onclick="jumpToRoom(3)">
-            <span class="dock-idx">03</span><span class="dock-label">Honors</span>
-        </button>
-        <button class="dock-btn hover-target" onclick="jumpToRoom(4)">
-            <span class="dock-idx">04</span><span class="dock-label">Uplink</span>
-        </button>
-    </nav>
-
     <!-- ===================================================
-         3D SPATIAL WORLD VIEWPORT
+         SECTION 1: PINNED LIQUID GLASS PORTAL APERTURE
          =================================================== -->
-    <main id="viewport">
-        <div id="world">
+    <section id="portal" class="portal-scroll-track">
+        <div class="portal-sticky-viewport">
 
-            <!-- ROOM 00: THE THRESHOLD (LIGHT PORTAL DOORWAY) -->
-            <section class="room room-interactive" data-room="0" data-name="00 // THRESHOLD">
-                <div class="threshold-layout">
-                    <div class="room-marker">ARCHITECTURAL ENTRYWAY // SCROLL OR CLICK TO BREACH</div>
-
-                    <div class="portal-assembly hover-target" onclick="jumpToRoom(1)" title="Click or scroll to step through the portal">
-                        <div class="portal-floor-glow" id="portalFloorGlow"></div>
-                        <div class="portal-frame">
-                            <div class="portal-core-light">
-                                <span>ENTER</span>
-                                <span style="font-size:0.55rem; opacity:0.65; margin-top:4px;">CHAMBER 01</span>
-                            </div>
-                            <div class="portal-door portal-door-left" id="doorLeft">
-                                <div class="door-handle-line"></div>
-                            </div>
-                            <div class="portal-door portal-door-right" id="doorRight">
-                                <div class="door-handle-line"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="hero-headline">
-                        <h1>From <i>Logic</i> to Launch.</h1>
-                        <p class="hero-sub">
-                            Software Development Engineer at IBM India Software Labs. Architecting resilient backend systems, native mobile experiences, and empathetic AI.
-                        </p>
-                        <button class="enter-cta hover-target" onclick="jumpToRoom(1)">
-                            <span>Step Into The Corridor</span>
-                            <span>→</span>
-                        </button>
-                    </div>
+            <!-- Prelude Hero Headline (fades & scales out as you step through the glass portal) -->
+            <div class="hero-prelude" id="heroPrelude">
+                <div class="prelude-eyebrow" data-copy-polite="IBM INDIA SOFTWARE LABS · BENGALURU" data-copy-brutal="CAFFEINATED & DEPLOYING TO PROD · BENGALURU">
+                    IBM INDIA SOFTWARE LABS · BENGALURU
                 </div>
-            </section>
 
-            <!-- ROOM 01: COMMAND CORE (EXPERIENCE & TECH STACK) -->
-            <section class="room" data-room="1" data-name="01 // COMMAND CORE">
-                <div class="chamber-container">
-                    <div class="room-marker">CHAMBER 01 // CAREER TELEMETRY</div>
-                    <div class="chamber-header">
-                        <h2 class="chamber-title">Command <span>Core</span></h2>
-                        <span class="chamber-subtitle">ENTERPRISE ENGINEERING & APPLIED RESEARCH</span>
-                    </div>
-
-                    <div class="exp-grid">
-                        <div class="exp-card hover-target">
-                            <div class="exp-top">
-                                <div>
-                                    <div class="exp-org">IBM India Software Labs</div>
-                                    <div class="exp-role">Software Development Engineer (Apptio)</div>
-                                </div>
-                                <span class="exp-date">2026 — PRESENT</span>
-                            </div>
-                            <p class="exp-desc">
-                                Engineering cloud-native backend services and high-throughput enterprise financial/operational tooling within the Apptio division using Java, Spring Boot, and Kubernetes.
-                            </p>
-                        </div>
-
-                        <div class="exp-card hover-target">
-                            <div class="exp-top">
-                                <div>
-                                    <div class="exp-org">IBM Consulting</div>
-                                    <div class="exp-role">Application Developer</div>
-                                </div>
-                                <span class="exp-date">2023 — 2026</span>
-                            </div>
-                            <p class="exp-desc">
-                                Spearheaded enterprise modernization, legacy codebase rebasing, and custom Retrieval-Augmented Generation (RAG) &amp; IBM watsonx AI architectures.
-                            </p>
-                        </div>
-
-                        <div class="exp-card hover-target">
-                            <div class="exp-top">
-                                <div>
-                                    <div class="exp-org">MNIT Jaipur</div>
-                                    <div class="exp-role">Research Intern</div>
-                                </div>
-                                <span class="exp-date">2022 — 2023</span>
-                            </div>
-                            <p class="exp-desc">
-                                Conducted experimental computer vision and deep learning research focused on automated Citrus Fruit Disease Identification.
-                            </p>
-                        </div>
-
-                        <div class="exp-card hover-target">
-                            <div class="exp-top">
-                                <div>
-                                    <div class="exp-org">Unacademy</div>
-                                    <div class="exp-role">Software Developer Intern</div>
-                                </div>
-                                <span class="exp-date">INTERNSHIP</span>
-                            </div>
-                            <p class="exp-desc">
-                                Contributed to core mobile learning applications, shipping modular UI components and improving runtime rendering performance by 15%.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="ticker-shell hover-target" id="skillsTickerShell">
-                        <div class="ticker-track" id="skillsTickerTrack">
-                            <div class="ticker-pill">Java</div>
-                            <div class="ticker-pill">Spring Boot</div>
-                            <div class="ticker-pill">Python</div>
-                            <div class="ticker-pill">Kotlin &amp; Jetpack Compose</div>
-                            <div class="ticker-pill">RAG &amp; IBM watsonx</div>
-                            <div class="ticker-pill">Docker &amp; Kubernetes</div>
-                            <div class="ticker-pill">Microsoft Azure (AZ-204)</div>
-                            <div class="ticker-pill">SQL &amp; REST APIs</div>
-                            <div class="ticker-pill">Neobrutalist UI/UX</div>
-                            <!-- Duplicated for seamless loop -->
-                            <div class="ticker-pill">Java</div>
-                            <div class="ticker-pill">Spring Boot</div>
-                            <div class="ticker-pill">Python</div>
-                            <div class="ticker-pill">Kotlin &amp; Jetpack Compose</div>
-                            <div class="ticker-pill">RAG &amp; IBM watsonx</div>
-                            <div class="ticker-pill">Docker &amp; Kubernetes</div>
-                            <div class="ticker-pill">Microsoft Azure (AZ-204)</div>
-                            <div class="ticker-pill">SQL &amp; REST APIs</div>
-                            <div class="ticker-pill">Neobrutalist UI/UX</div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ROOM 02: THE VAULT (INTERACTIVE PROJECT GALLERY) -->
-            <section class="room" data-room="2" data-name="02 // THE VAULT">
-                <div class="chamber-container">
-                    <div class="room-marker">CHAMBER 02 // SHIPPED ARTIFACTS</div>
-                    <div class="chamber-header">
-                        <h2 class="chamber-title">The <span>Artifact</span> Vault</h2>
-                        <span class="chamber-subtitle">SELECT OR HOVER ANY ARTIFACT TO INSPECT HOLOGRAM</span>
-                    </div>
-
-                    <div class="vault-layout">
-                        <div class="projects-matrix" id="projectMatrix">
-                            <!-- Populated dynamically via JS for synchronized holographic inspection -->
-                        </div>
-
-                        <div class="holo-stage">
-                            <div>
-                                <div class="holo-visual-wrap">
-                                    <span class="holo-overlay-badge" id="holoTag">WEB APPLICATION</span>
-                                    <img id="holoImage" src="https://i.ibb.co/1Vmw65c/poster-1-spandan.png" alt="Project Preview">
-                                </div>
-                                <div class="holo-meta">
-                                    <h4 id="holoTitle">The Day Grid</h4>
-                                    <p id="holoDesc">Time is finite. Your wallpaper was wasting it. Interactive life-calendar grid generator designed for focus.</p>
-                                </div>
-                            </div>
-                            <div class="holo-btn-row">
-                                <a id="holoPrimaryLink" href="https://the-day-grid.vercel.app" target="_blank" class="btn-neon hover-target">Launch Artifact ↗</a>
-                                <a href="https://github.com/the-rebooted-coder" target="_blank" class="btn-ghost hover-target">All Repos</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ROOM 03: HALL OF RECOGNITION -->
-            <section class="room" data-room="3" data-name="03 // TROPHY HALL">
-                <div class="chamber-container">
-                    <div class="room-marker">CHAMBER 03 // GLOBAL DISTINCTIONS</div>
-                    <div class="chamber-header">
-                        <h2 class="chamber-title">Hall of <span>Recognition</span></h2>
-                        <span class="chamber-subtitle">HOVER PILLARS FOR CREDENTIAL TELEMETRY</span>
-                    </div>
-
-                    <div class="trophy-grid">
-                        <div class="trophy-pillar preview-trigger" data-img="https://i.ibb.co/3yzjFkBy/converge-cursor.png">
-                            <div>
-                                <div class="trophy-year">2025 // GLOBAL RANK #2</div>
-                                <h3 class="trophy-title">IBM Converge Runner-Up</h3>
-                                <div class="trophy-issuer">IBM Global Innovation</div>
-                                <p class="trophy-desc">
-                                    Earned 2nd place globally among 600+ contenders for presenting the "Beyond the Algorithm" whitepaper and solution on Empathetic AI.
-                                </p>
-                            </div>
-                            <img class="trophy-badge-img" src="https://i.ibb.co/3yzjFkBy/converge-cursor.png" alt="IBM Converge">
-                        </div>
-
-                        <div class="trophy-pillar preview-trigger" data-img="https://i.ibb.co/KjWN4c6Y/gem-cursor.png">
-                            <div>
-                                <div class="trophy-year">2025 // LAB EXCELLENCE</div>
-                                <h3 class="trophy-title">GEMs of Development</h3>
-                                <div class="trophy-issuer">IBM India</div>
-                                <p class="trophy-desc">
-                                    Recognized for standout engineering execution, architectural ownership, and measurable impact across enterprise deliverables.
-                                </p>
-                            </div>
-                            <img class="trophy-badge-img" src="https://i.ibb.co/KjWN4c6Y/gem-cursor.png" alt="GEMs of Development">
-                        </div>
-
-                        <div class="trophy-pillar preview-trigger" data-img="https://i.ibb.co/35v1R5Nk/gratitude-cursor.png">
-                            <div>
-                                <div class="trophy-year">2026 // HIGH IMPACT</div>
-                                <h3 class="trophy-title">Top Performer Gratitude</h3>
-                                <div class="trophy-issuer">IBM</div>
-                                <p class="trophy-desc">
-                                    Awarded for sustained high-velocity delivery, technical leadership, and zero-defect milestone execution.
-                                </p>
-                            </div>
-                            <img class="trophy-badge-img" src="https://i.ibb.co/35v1R5Nk/gratitude-cursor.png" alt="Top Performer">
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ROOM 04: TRANSMISSION NEXUS (CONTACT) -->
-            <section class="room" data-room="4" data-name="04 // UPLINK NEXUS">
-                <div class="nexus-box">
-                    <div class="room-marker" style="margin-bottom: 1.5rem;">CHAMBER 04 // DIRECT TRANSMISSION</div>
-                    <h2 class="nexus-title">Let's <i>Architect</i> The Next Thing.</h2>
-                    <p class="nexus-lead">
-                        I build software that actually works, scale systems that don’t fall apart, and ship ideas instead of just talking about them.
+                <div class="prelude-headline">
+                    <h1 data-copy-polite="From <em>Logic</em><br>to Launch." data-copy-brutal="Zero <em>Fluff.</em><br>Just Shipped Code.">
+                        From <em>Logic</em><br>to Launch.
+                    </h1>
+                    <p class="prelude-sub" data-copy-polite="Software Development Engineer crafting resilient cloud architectures, native mobile systems, and precision-engineered interfaces." data-copy-brutal="Most developers talk about scalable architecture on LinkedIn. I actually build it so your servers don't catch fire at 3 AM.">
+                        Software Development Engineer crafting resilient cloud architectures, native mobile systems, and precision-engineered interfaces.
                     </p>
+                </div>
 
-                    <button class="email-pill-btn hover-target" onclick="copyEmail()">
-                        <span>connectwithspandan@gmail.com</span>
-                        <span style="font-size: 0.75rem; opacity: 0.65;">[COPY]</span>
-                    </button>
+                <div class="scroll-cue">
+                    <div class="scroll-pill"><div class="scroll-wheel"></div></div>
+                    <span>Scroll to Step Inside</span>
+                </div>
+            </div>
 
-                    <div class="social-row">
-                        <a href="https://www.linkedin.com/in/spandn/" target="_blank" class="social-node hover-target">LinkedIn ↗</a>
-                        <a href="https://github.com/the-rebooted-coder" target="_blank" class="social-node hover-target">GitHub ↗</a>
-                        <a href="https://www.instagram.com/simply.spandan/" target="_blank" class="social-node hover-target">Instagram ↗</a>
+            <!-- The Expanding Liquid Glass Portal Window -->
+            <div class="aperture-window" id="apertureWindow">
+                <div class="aperture-bloom" id="apertureBloom"></div>
+
+                <!-- Revealed Interior Showcase -->
+                <div class="aperture-interior" id="apertureInterior">
+                    <div class="liquid-glass interior-card">
+                        <div>
+                            <div class="interior-badge">
+                                <span class="status-dot"></span>
+                                <span>SYSTEM ARCHITECTURE // 2026</span>
+                            </div>
+                            <h2 data-copy-polite="Engineered for scale. Designed with obsessive restraint." data-copy-brutal="Built to survive enterprise traffic and aggressive code reviews.">
+                                Engineered for scale. Designed with obsessive restraint.
+                            </h2>
+                            <p data-copy-polite="Transitioned from enterprise AI modernization at IBM Consulting to building core cloud-native platforms inside IBM India Software Labs (Apptio). Every system is designed for high availability, clean telemetry, and tactile human interaction." data-copy-brutal="I spent years rescuing legacy codebases from the early 2000s and wiring up enterprise RAG pipelines. Now I build core software at IBM Software Labs while shipping obsessive side projects on weekends.">
+                                Transitioned from enterprise AI modernization at IBM Consulting to building core cloud-native platforms inside IBM India Software Labs (Apptio). Every system is designed for high availability, clean telemetry, and tactile human interaction.
+                            </p>
+                        </div>
+                        <div class="stack-pills" style="margin-top: 28px;">
+                            <span class="tech-pill">Java &amp; Spring Boot</span>
+                            <span class="tech-pill">Kotlin &amp; Jetpack Compose</span>
+                            <span class="tech-pill">RAG &amp; IBM watsonx</span>
+                            <span class="tech-pill">Docker &amp; Kubernetes</span>
+                            <span class="tech-pill">Azure Certified (AZ-204)</span>
+                        </div>
                     </div>
 
-                    <div class="lab-signature hover-target" id="secretTrigger" title="Click 5 times to breach defense mainframe">
-                        An S² Labs Spatial Product 🥼 // Tap 5x for Mainframe Override
+                    <div class="metrics-grid">
+                        <div class="liquid-glass metric-tile">
+                            <div class="metric-val">#2</div>
+                            <div class="metric-label">Global Rank · IBM Converge (600+ Entries)</div>
+                        </div>
+                        <div class="liquid-glass metric-tile">
+                            <div class="metric-val">15%</div>
+                            <div class="metric-label">Mobile Frame-Time Optimization</div>
+                        </div>
+                        <div class="liquid-glass metric-tile">
+                            <div class="metric-val">AZ-204</div>
+                            <div class="metric-label">Microsoft Certified Azure Developer</div>
+                        </div>
+                        <div class="liquid-glass metric-tile">
+                            <div class="metric-val">watsonx</div>
+                            <div class="metric-label">IBM Certified AI Applications Engineer</div>
+                        </div>
                     </div>
                 </div>
-            </section>
+            </div>
 
         </div>
-    </main>
+    </section>
 
     <!-- ===================================================
-         THE DEBUGGER MINI-GAME OVERLAY
+         SECTION 2: HORIZONTAL SCROLL-JACKED PROJECT VAULT
          =================================================== -->
-    <div id="game-overlay">
-        <button class="close-game-btn" onclick="closeGame()">ESC</button>
-        <canvas id="gameCanvas"></canvas>
-        <div class="game-ui">
-            <div id="gameHud" class="game-hud" style="display:none;">
-                <div>SCORE: <span id="scoreVal">0</span></div>
-                <div>BUGS ACTIVE: <span id="bugVal">0</span></div>
+    <section id="vault" class="vault-scroll-section">
+        <div class="vault-sticky-camera">
+            <div class="section-header-bar">
+                <div>
+                    <span class="eyebrow-tag">01 // THE VAULT</span>
+                    <h2 class="section-heading">Shipped <em>Artifacts.</em></h2>
+                </div>
+                <div class="liquid-glass vault-progress-pill">
+                    <span>SCROLL TO GLIDE</span>
+                    <div class="progress-bar-mini">
+                        <div class="progress-fill-mini" id="vaultProgressFill"></div>
+                    </div>
+                    <span id="vaultCounter">01 / 07</span>
+                </div>
             </div>
-            <div id="startScreen" class="game-modal">
-                <h2>THE DEBUGGER</h2>
-                <p style="color: var(--neon-cyan);">// MAINFRAME BREACH DETECTED //</p>
-                <button class="game-btn" onclick="startGame()">INITIALIZE CLEANUP &gt;&gt;</button>
+
+            <div class="horizontal-track-wrapper">
+                <div class="horizontal-vault-track" id="horizontalVaultTrack">
+                    <!-- Populated via JS for synchronized dbrand copy switching & 3D tilt -->
+                </div>
             </div>
-            <div id="gameOverScreen" class="game-modal" style="display:none; border-color: var(--neon-crimson);">
-                <h2 style="color: var(--neon-crimson);">RUNTIME EXCEPTION</h2>
-                <p id="finalScoreMsg">BUGS PATCHED: 0</p>
-                <button class="game-btn" style="background: var(--neon-crimson); color:#fff;" onclick="startGame()">REBOOT KERNEL</button>
+        </div>
+    </section>
+
+    <!-- ===================================================
+         KINETIC HARDWARE RIBBON
+         =================================================== -->
+    <div class="ribbon-wrapper" id="ribbonWrapper">
+        <div class="ribbon-track" id="ribbonTrack">
+            <div class="ribbon-item">BACKEND ARCHITECTURE</div>
+            <div class="ribbon-item">SPRING BOOT</div>
+            <div class="ribbon-item">JETPACK COMPOSE</div>
+            <div class="ribbon-item">RETRIEVAL AUGMENTED GENERATION</div>
+            <div class="ribbon-item">KUBERNETES &amp; OPENSHIFT</div>
+            <div class="ribbon-item">LIQUID GLASS UI</div>
+            <div class="ribbon-item">BACKEND ARCHITECTURE</div>
+            <div class="ribbon-item">SPRING BOOT</div>
+            <div class="ribbon-item">JETPACK COMPOSE</div>
+            <div class="ribbon-item">RETRIEVAL AUGMENTED GENERATION</div>
+            <div class="ribbon-item">KUBERNETES &amp; OPENSHIFT</div>
+            <div class="ribbon-item">LIQUID GLASS UI</div>
+        </div>
+    </div>
+
+    <!-- ===================================================
+         SECTION 3: SEQUENTIAL STACKING EXPERIENCE CARDS
+         =================================================== -->
+    <section id="experience" class="experience-section">
+        <div>
+            <span class="eyebrow-tag">02 // CAREER TELEMETRY</span>
+            <h2 class="section-heading">Proven in <em>Production.</em></h2>
+        </div>
+
+        <div class="stack-container">
+            <article class="liquid-glass stack-card">
+                <div class="stack-header">
+                    <div>
+                        <h3 class="stack-role">Software Development Engineer</h3>
+                        <div class="stack-company">IBM India Software Labs · Apptio Division</div>
+                    </div>
+                    <span class="stack-period">MAR 2026 — PRESENT</span>
+                </div>
+                <p class="stack-summary" data-copy-polite="Architecting and scaling cloud-native backend microservices and enterprise technology business management platforms within the Apptio product division in Bengaluru." data-copy-brutal="Graduated from consulting decks to core product engineering at IBM Software Labs. Writing high-throughput backend services where latency spikes are a personal insult.">
+                    Architecting and scaling cloud-native backend microservices and enterprise technology business management platforms within the Apptio product division in Bengaluru.
+                </p>
+                <div class="stack-pills">
+                    <span class="tech-pill">Java</span>
+                    <span class="tech-pill">Spring Boot</span>
+                    <span class="tech-pill">RESTful APIs</span>
+                    <span class="tech-pill">SQL</span>
+                    <span class="tech-pill">Kubernetes</span>
+                </div>
+            </article>
+
+            <article class="liquid-glass stack-card">
+                <div class="stack-header">
+                    <div>
+                        <h3 class="stack-role">Application Developer</h3>
+                        <div class="stack-company">IBM Consulting</div>
+                    </div>
+                    <span class="stack-period">OCT 2023 — MAR 2026</span>
+                </div>
+                <p class="stack-summary" data-copy-polite="Led enterprise modernization initiatives, refactoring mission-critical legacy architectures and integrating custom Retrieval-Augmented Generation (RAG) and empathetic AI workflows on IBM watsonx." data-copy-brutal="Took enterprise codebases written before the first iPhone launched and dragged them into 2026 without breaking production. Built custom RAG analyzers so humans wouldn't have to read 50,000-line monoliths.">
+                    Led enterprise modernization initiatives, refactoring mission-critical legacy architectures and integrating custom Retrieval-Augmented Generation (RAG) and empathetic AI workflows on IBM watsonx.
+                </p>
+                <div class="stack-pills">
+                    <span class="tech-pill">IBM watsonx</span>
+                    <span class="tech-pill">RAG Architectures</span>
+                    <span class="tech-pill">Python</span>
+                    <span class="tech-pill">OpenShift</span>
+                    <span class="tech-pill">Legacy Modernization</span>
+                </div>
+            </article>
+
+            <article class="liquid-glass stack-card">
+                <div class="stack-header">
+                    <div>
+                        <h3 class="stack-role">Research Intern</h3>
+                        <div class="stack-company">Malaviya National Institute of Technology (MNIT) Jaipur</div>
+                    </div>
+                    <span class="stack-period">2022 — 2023</span>
+                </div>
+                <p class="stack-summary" data-copy-polite="Conducted applied computer vision and deep learning research focused on automated agricultural pathology and Citrus Fruit Disease Identification." data-copy-brutal="Trained neural networks to stare at thousands of diseased lemons until the accuracy metrics beat human agricultural inspectors.">
+                    Conducted applied computer vision and deep learning research focused on automated agricultural pathology and Citrus Fruit Disease Identification.
+                </p>
+                <div class="stack-pills">
+                    <span class="tech-pill">Computer Vision</span>
+                    <span class="tech-pill">Deep Learning</span>
+                    <span class="tech-pill">Python</span>
+                    <span class="tech-pill">Image Processing</span>
+                </div>
+            </article>
+
+            <article class="liquid-glass stack-card">
+                <div class="stack-header">
+                    <div>
+                        <h3 class="stack-role">Software Developer Intern</h3>
+                        <div class="stack-company">Unacademy</div>
+                    </div>
+                    <span class="stack-period">INTERNSHIP</span>
+                </div>
+                <p class="stack-summary" data-copy-polite="Engineered modular UI components for the core Android learning application and optimized rendering pipelines to boost runtime performance metrics by 15%." data-copy-brutal="Shipped production mobile code to millions of students and shaved 15% off UI frame-drop bottlenecks.">
+                    Engineered modular UI components for the core Android learning application and optimized rendering pipelines to boost runtime performance metrics by 15%.
+                </p>
+                <div class="stack-pills">
+                    <span class="tech-pill">Android</span>
+                    <span class="tech-pill">Kotlin</span>
+                    <span class="tech-pill">UI Architecture</span>
+                    <span class="tech-pill">Performance Profiling</span>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <!-- ===================================================
+         SECTION 4: BENTO RECOGNITION HALL
+         =================================================== -->
+    <section id="recognition" class="recognition-section">
+        <div>
+            <span class="eyebrow-tag">03 // DISTINCTIONS</span>
+            <h2 class="section-heading">Verified <em>Impact.</em></h2>
+        </div>
+
+        <div class="bento-awards-grid">
+            <div class="liquid-glass award-card">
+                <div>
+                    <div class="award-top">
+                        <span class="award-year">2025 · GLOBAL RUNNER-UP</span>
+                        <img class="award-emblem" src="https://i.ibb.co/3yzjFkBy/converge-cursor.png" alt="IBM Converge">
+                    </div>
+                    <h3 class="award-title">IBM Converge 2025</h3>
+                    <div class="award-org">2ND PLACE GLOBALLY AMONG 600+ PARTICIPANTS</div>
+                    <p class="award-desc">
+                        Awarded global second place for authoring and presenting the whitepaper &amp; working architecture <em>"Beyond the Algorithm"</em> on Empathetic AI systems.
+                    </p>
+                </div>
+            </div>
+
+            <div class="liquid-glass award-card">
+                <div>
+                    <div class="award-top">
+                        <span class="award-year">2025 · LAB EXCELLENCE</span>
+                        <img class="award-emblem" src="https://i.ibb.co/KjWN4c6Y/gem-cursor.png" alt="GEMs of Development">
+                    </div>
+                    <h3 class="award-title">GEMs of Development</h3>
+                    <div class="award-org">IBM INDIA RECOGNITION</div>
+                    <p class="award-desc">
+                        Honored for technical ownership, architectural reliability, and high-impact engineering execution across complex client deliverables.
+                    </p>
+                </div>
+            </div>
+
+            <div class="liquid-glass award-card">
+                <div>
+                    <div class="award-top">
+                        <span class="award-year">2026 · TOP PERFORMER</span>
+                        <img class="award-emblem" src="https://i.ibb.co/35v1R5Nk/gratitude-cursor.png" alt="Top Performer">
+                    </div>
+                    <h3 class="award-title">Top Performer Gratitude</h3>
+                    <div class="award-org">IBM LEADERSHIP AWARD</div>
+                    <p class="award-desc">
+                        Recognized for sustained delivery velocity, zero-regression production releases, and cross-team technical mentorship.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================================================
+         SECTION 5: COMMAND UPLINK / FOOTER
+         =================================================== -->
+    <section id="contact" class="contact-section">
+        <div class="liquid-glass contact-monolith">
+            <span class="eyebrow-tag">04 // INITIATE HANDSHAKE</span>
+            <h2 data-copy-polite="Let’s build something <em>inevitable.</em>" data-copy-brutal="Stop lurking. <em>Send the email.</em>">
+                Let’s build something <em>inevitable.</em>
+            </h2>
+            <p class="contact-lead" data-copy-polite="I build software that works, scale systems that don’t fall apart under load, and ship products instead of just talking about them." data-copy-brutal="Whether you need a backend that doesn't melt, an Android app that feels native, or someone who actually reads stack traces—hit the button.">
+                I build software that works, scale systems that don’t fall apart under load, and ship products instead of just talking about them.
+            </p>
+
+            <button class="magnetic-email-btn" id="magneticBtn" onclick="copyEmail()">
+                <span>connectwithspandan@gmail.com</span>
+                <span class="copy-badge">Copy</span>
+            </button>
+
+            <div class="social-dock">
+                <a href="https://www.linkedin.com/in/spandn/" target="_blank" class="social-pill">LinkedIn ↗</a>
+                <a href="https://github.com/the-rebooted-coder" target="_blank" class="social-pill">GitHub ↗</a>
+                <a href="https://www.instagram.com/simply.spandan/" target="_blank" class="social-pill">Instagram ↗</a>
+            </div>
+
+            <div class="footer-easter-trigger" id="secretKernelTrigger">
+                Designed by Spandan Saxena · An S² Labs Product 🥼 (Tap 5x for Kernel Debugger)
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================================================
+         MACOS KERNEL DEBUGGER MINI-GAME MODAL
+         =================================================== -->
+    <div id="debugger-modal">
+        <div class="mac-window">
+            <div class="mac-titlebar">
+                <div class="mac-traffic">
+                    <div class="traffic-dot dot-close" onclick="closeDebugger()" title="Close"></div>
+                    <div class="traffic-dot dot-min"></div>
+                    <div class="traffic-dot dot-max"></div>
+                </div>
+                <div class="mac-title">spandan@s2-labs — kernel-debugger — 80×24</div>
+                <div style="font-family:var(--font-mono); font-size:0.75rem; color:var(--accent-green);">
+                    PATCHED: <span id="dbgScore">0</span>
+                </div>
+            </div>
+            <canvas id="debugCanvas"></canvas>
+            <div class="debug-overlay-ui" id="dbgOverlayUi">
+                <div class="debug-card">
+                    <div style="font-family:var(--font-mono); font-size:0.72rem; color:var(--accent-amber); margin-bottom:8px;">
+                        // PRODUCTION ANOMALY DETECTED
+                    </div>
+                    <h3 style="font-size:1.6rem; margin-bottom:10px;" id="dbgTitle">Kernel Panic</h3>
+                    <p style="font-size:0.9rem; color:var(--text-secondary); margin-bottom:24px;" id="dbgSub">
+                        rogue regressions are dropping toward production. Click or drag to intercept them before they hit main.
+                    </p>
+                    <button class="magnetic-email-btn" style="margin-bottom:0; padding:12px 28px; font-size:0.9rem;" onclick="startDebuggerGame()">
+                        Deploy Hotfix
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
         /* ===================================================
-           1. ARTIFACT VAULT DATA & HOLOGRAPHIC STAGE
+           1. VAULT DATA WITH DBRAND HONESTY TOGGLE SUPPORT
            =================================================== */
-        const vaultProjects = [
+        const projects = [
             {
+                idx: "01",
                 title: "The Day Grid",
-                tag: "PWA // VISUAL TIME ENGINE",
-                desc: "Time is finite. Your wallpaper was wasting it. Dynamic life-grid wallpaper engine built for intentional focus.",
+                chip: "Web App · Product Design",
+                politeDesc: "An intentional life-calendar wallpaper engine that visualizes finite time right on your lock screen.",
+                brutalDesc: "Time is finite and your default wallpaper was wasting it. A existential crisis disguised as a productivity tool.",
                 img: "https://i.ibb.co/1Vmw65c/poster-1-spandan.png",
                 link: "https://the-day-grid.vercel.app",
-                cta: "Get Grid ↗"
+                cta: "Launch App ↗"
             },
             {
+                idx: "02",
                 title: "Safe Charge (BatteryWise)",
-                tag: "NATIVE ANDROID // KOTLIN",
-                desc: "Your charger can’t be trusted. This app can. Real-time hardware charge telemetry and battery health guardian.",
+                chip: "Native Android · Kotlin",
+                politeDesc: "Hardware-level charge telemetry and thermal threshold guardian engineered for Android devices.",
+                brutalDesc: "Your cheap hotel wall brick can't be trusted. This native Kotlin app screams before your lithium-ion battery cooks itself.",
                 img: "https://i.ibb.co/7xxg2HwS/poster-2-spandan.png",
                 link: "https://play.google.com/store/apps/details?id=com.onesilicondiode.batterywise&pcampaignid=web_share",
                 cta: "Play Store ↗"
             },
             {
+                idx: "03",
                 title: "Legacy to Modern Rebase",
-                tag: "ENTERPRISE AI // RAG",
-                desc: "Because code from 2003 deserves a second chance. Automated enterprise code analyzer and architectural migration suite.",
+                chip: "Enterprise AI · IBM watsonx",
+                politeDesc: "Automated static analysis and Retrieval-Augmented Generation suite for refactoring enterprise legacy code.",
+                brutalDesc: "Because spaghetti code written in 2003 deserves a second chance. Under strict NDA, so don't ask for the repo.",
                 img: "https://i.ibb.co/1fKX3zQD/poster-4-spandan.png",
                 link: "#confidential",
                 confidential: true,
                 cta: "IBM Confidential 🔒"
             },
             {
+                idx: "04",
                 title: "What's In",
-                tag: "WATCHOS & WINDOWS // CROSS-DEVICE",
-                desc: "Glanceable weekly meal & menu synchronization utility engineered across desktop and Apple Watch.",
+                chip: "watchOS & Windows · Cross-Platform",
+                politeDesc: "Glanceable wrist and desktop utility synchronizing weekly hostel and PG dining schedules in real time.",
+                brutalDesc: "Built for my Apple Watch Series 10 and Windows rig so I know whether it's worth walking downstairs for dinner.",
                 img: "https://i.ibb.co/qFW4Wjnw/poster-6-spandan.png",
                 link: "https://github.com/the-rebooted-coder/What-s-In",
-                cta: "View Repo ↗"
+                cta: "View Source ↗"
             },
             {
+                idx: "05",
                 title: "Mail Canon",
-                tag: "AUTOMATION ENGINE",
-                desc: "Upload a CSV. High-throughput personalized dispatch pipeline without the bloat.",
+                chip: "Automation · Python",
+                politeDesc: "High-throughput CSV dispatch pipeline for automated, personalized transactional outreach.",
+                brutalDesc: "Upload a CSV. We do the mass emailing. Legally, efficiently, and without paying Mailchimp $99 a month.",
                 img: "https://i.ibb.co/NgrK3wx9/poster-3-spandan.png",
                 link: "https://github.com/the-rebooted-coder/Mail-Canon",
-                cta: "View Repo ↗"
+                cta: "View Source ↗"
             },
             {
+                idx: "06",
                 title: "Forecasted",
-                tag: "MACHINE LEARNING // FINTECH",
-                desc: "AI-powered quantitative stock trajectory modeling. Confidence sold separately.",
+                chip: "Machine Learning · FinTech",
+                politeDesc: "Quantitative time-series stock trajectory modeling powered by recurrent neural networks.",
+                brutalDesc: "AI-powered stock market predictions. Financial confidence and SEC immunity sold separately.",
                 img: "https://i.ibb.co/yc96f8P3/poster-5-spandan.png",
                 link: "https://github.com/the-rebooted-coder/Forecasted",
-                cta: "View Repo ↗"
+                cta: "View Source ↗"
             },
             {
-                title: "Bow Film & Sandhya AR",
-                tag: "SNAP LENS STUDIO // AR SHADERS",
-                desc: "Custom real-time camera LUT shaders delivering noir cinema and golden-hour optics on demand.",
+                idx: "07",
+                title: "Bow Film & Sandhya Optics",
+                chip: "Snap Lens Studio · Shaders",
+                politeDesc: "Custom real-time camera LUT shaders and gesture-controlled augmented reality lenses.",
+                brutalDesc: "Golden hour and 1940s noir cinema turned into an on-demand service for your phone's front camera.",
                 img: "https://i.ibb.co/NgN1cFTF/poster-12-spandan.png",
                 link: "https://www.snapchat.com/unlock/?type=SNAPCODE&uuid=58a604a1379140089d56a02ec0917f05&metadata=01",
                 cta: "Unlock Lens ↗"
-            },
-            {
-                title: "Kaagaz Dynamic Desktop",
-                tag: "DESKTOP ENGINE",
-                desc: "Minimalist reactive desktop environment and productivity surface.",
-                img: "https://i.ibb.co/hFxCyx4W/poster-10-spandan.png",
-                link: "https://github.com/the-rebooted-coder/Kaagaz-Dynamic-Desktop",
-                cta: "View Repo ↗"
             }
         ];
 
-        const projectMatrix = document.getElementById('projectMatrix');
-        const holoImage = document.getElementById('holoImage');
-        const holoTag = document.getElementById('holoTag');
-        const holoTitle = document.getElementById('holoTitle');
-        const holoDesc = document.getElementById('holoDesc');
-        const holoPrimaryLink = document.getElementById('holoPrimaryLink');
+        let brutalMode = false;
+        const vaultTrack = document.getElementById('horizontalVaultTrack');
 
-        function selectVaultProject(index) {
-            const p = vaultProjects[index];
-            document.querySelectorAll('.proj-card').forEach((c, idx) => {
-                c.classList.toggle('active-proj', idx === index);
-            });
-            holoImage.style.opacity = '0.3';
-            setTimeout(() => {
-                holoImage.src = p.img;
-                holoImage.style.opacity = '1';
-            }, 120);
-            holoTag.textContent = p.tag;
-            holoTitle.textContent = p.title;
-            holoDesc.textContent = p.desc;
-            holoPrimaryLink.textContent = p.cta;
-
-            if (p.confidential) {
-                holoPrimaryLink.href = "javascript:void(0)";
-                holoPrimaryLink.onclick = (e) => {
-                    e.preventDefault();
-                    showToast("Nice try. It's IBM Confidential. Clearance required.");
-                };
-            } else {
-                holoPrimaryLink.href = p.link;
-                holoPrimaryLink.onclick = null;
-            }
-        }
-
-        vaultProjects.forEach((p, idx) => {
-            const card = document.createElement('div');
-            card.className = `proj-card hover-target ${idx === 0 ? 'active-proj' : ''}`;
-            card.innerHTML = `
-                <div>
-                    <div class="proj-tag">${p.tag}</div>
-                    <div class="proj-name">${p.title}</div>
-                    <div class="proj-Copy">${p.desc}</div>
-                </div>
-                <div class="proj-action">
-                    <span>${p.cta}</span>
-                    <span>→</span>
-                </div>
-            `;
-            card.addEventListener('mouseenter', () => selectVaultProject(idx));
-            card.addEventListener('click', () => {
-                selectVaultProject(idx);
-                if (p.confidential) {
-                    showToast("Nice try. It's IBM Confidential. Clearance required.");
-                } else if (window.innerWidth < 960) {
-                    window.open(p.link, '_blank');
-                }
-            });
-            projectMatrix.appendChild(card);
-
-            // Preload poster image
-            const preload = new Image();
-            preload.src = p.img;
-        });
-
-        /* ===================================================
-           2. 3D SPATIAL CAMERA & PORTAL DOOR ENGINE
-           =================================================== */
-        const rooms = document.querySelectorAll('.room');
-        const dockBtns = document.querySelectorAll('.dock-btn');
-        const hudRoomName = document.getElementById('hudRoomName');
-        const hudZCoord = document.getElementById('hudZCoord');
-        const doorLeft = document.getElementById('doorLeft');
-        const doorRight = document.getElementById('doorRight');
-        const portalFlash = document.getElementById('portal-flash');
-        const portalFloorGlow = document.getElementById('portalFloorGlow');
-
-        const ROOM_SPACING = 1600; // Z-distance between architectural chambers
-        const TOTAL_ROOMS = rooms.length;
-        let targetProgress = 0;
-        let smoothProgress = 0;
-        let mouseNormX = 0;
-        let mouseNormY = 0;
-
-        function updateScrollTarget() {
-            const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-            targetProgress = maxScroll > 0 ? Math.min(1, Math.max(0, window.scrollY / maxScroll)) : 0;
-        }
-        window.addEventListener('scroll', updateScrollTarget, { passive: true });
-        updateScrollTarget();
-
-        function jumpToRoom(roomIndex) {
-            const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-            const targetScrollY = (roomIndex / (TOTAL_ROOMS - 1)) * maxScroll;
-            window.scrollTo({ top: targetScrollY, behavior: 'smooth' });
-        }
-
-        window.addEventListener('mousemove', (e) => {
-            mouseNormX = (e.clientX / window.innerWidth - 0.5) * 2;
-            mouseNormY = (e.clientY / window.innerHeight - 0.5) * 2;
-        }, { passive: true });
-
-        /* ===================================================
-           3. ARCHITECTURAL WIREFRAME CORRIDOR CANVAS
-           =================================================== */
-        const bgCanvas = document.getElementById('corridor-canvas');
-        const bgCtx = bgCanvas.getContext('2d');
-
-        function resizeBgCanvas() {
-            bgCanvas.width = window.innerWidth;
-            bgCanvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resizeBgCanvas);
-        resizeBgCanvas();
-
-        function renderCorridor(cameraZ) {
-            const w = bgCanvas.width;
-            const h = bgCanvas.height;
-            bgCtx.clearRect(0, 0, w, h);
-
-            const cx = w * 0.5 - mouseNormX * 35;
-            const cy = h * 0.5 - mouseNormY * 25;
-
-            // Perspective radial guide lines
-            bgCtx.strokeStyle = 'rgba(0, 240, 255, 0.07)';
-            bgCtx.lineWidth = 1;
-            const rays = 12;
-            for (let i = 0; i < rays; i++) {
-                const angle = (i / rays) * Math.PI * 2;
-                bgCtx.beginPath();
-                bgCtx.moveTo(cx, cy);
-                bgCtx.lineTo(cx + Math.cos(angle) * w, cy + Math.sin(angle) * h);
-                bgCtx.stroke();
-            }
-
-            // Moving depth frames along the Z corridor
-            const frameCount = 14;
-            const loopDepth = 2000;
-            const offsetZ = cameraZ % (loopDepth / frameCount);
-
-            for (let i = 1; i <= frameCount; i++) {
-                const z = i * (loopDepth / frameCount) - offsetZ;
-                if (z <= 10) continue;
-                const scale = 320 / z;
-                const fw = w * scale;
-                const fh = h * scale;
-                const alpha = Math.min(0.22, (1 - z / loopDepth) * 0.28);
-
-                bgCtx.strokeStyle = i % 3 === 0
-                    ? `rgba(191, 255, 0, ${alpha})`
-                    : `rgba(0, 240, 255, ${alpha})`;
-                bgCtx.strokeRect(cx - fw * 0.5, cy - fh * 0.5, fw, fh);
-            }
-        }
-
-        /* ===================================================
-           4. MASTER 60FPS SPATIAL RENDER LOOP
-           =================================================== */
-        function animateSpatialWorld() {
-            // Smooth damping for silky camera travel on both desktop wheel and mobile touch
-            smoothProgress += (targetProgress - smoothProgress) * 0.085;
-
-            const maxZ = (TOTAL_ROOMS - 1) * ROOM_SPACING;
-            const cameraZ = smoothProgress * maxZ;
-
-            // Update Telemetry HUD
-            hudZCoord.textContent = `${String(Math.round(cameraZ)).padStart(4, '0')}m`;
-            const activeRoomIdx = Math.min(TOTAL_ROOMS - 1, Math.max(0, Math.round(cameraZ / ROOM_SPACING)));
-            hudRoomName.textContent = rooms[activeRoomIdx].getAttribute('data-name');
-
-            dockBtns.forEach((btn, idx) => {
-                btn.classList.toggle('active', idx === activeRoomIdx);
-            });
-
-            // Portal Blast Door Mechanics (Room 00 -> Room 01 transition)
-            const portalPhase = Math.min(1, Math.max(0, cameraZ / (ROOM_SPACING * 0.55)));
-            const doorSlide = portalPhase * 105;
-            doorLeft.style.transform = `translateX(-${doorSlide}%)`;
-            doorRight.style.transform = `translateX(${doorSlide}%)`;
-            portalFloorGlow.style.transform = `translateX(-50%) rotateX(78deg) scale(${1 + portalPhase * 1.4})`;
-
-            // Light Bloom Flash as user steps right through the threshold (around portalPhase 0.45 - 0.85)
-            const flashIntensity = Math.sin(portalPhase * Math.PI) * (portalPhase > 0.05 && portalPhase < 0.95 ? 0.55 : 0);
-            portalFlash.style.opacity = Math.max(0, flashIntensity).toFixed(3);
-
-            // Position each 3D Room relative to cameraZ
-            rooms.forEach((room, idx) => {
-                const roomZ = idx * ROOM_SPACING;
-                const relZ = cameraZ - roomZ; // Positive when camera has passed room, negative when room is ahead
-
-                // Visibility & opacity envelope
-                let opacity = 0;
-                if (relZ > -ROOM_SPACING * 0.95 && relZ < ROOM_SPACING * 0.75) {
-                    const normDist = Math.abs(relZ) / (ROOM_SPACING * 0.75);
-                    opacity = Math.max(0, 1 - Math.pow(normDist, 1.6));
-                }
-
-                const translateZ = relZ;
-                const tiltX = mouseNormY * -2.2;
-                const tiltY = mouseNormX * 2.2;
-
-                room.style.opacity = opacity.toFixed(3);
-                room.style.transform = `translate3d(0px, 0px, ${translateZ.toFixed(1)}px) rotateX(${tiltX.toFixed(2)}deg) rotateY(${tiltY.toFixed(2)}deg)`;
-                room.style.visibility = opacity > 0.02 ? 'visible' : 'hidden';
-
-                // Enable pointer events only for the currently focused room
-                if (Math.abs(relZ) < ROOM_SPACING * 0.38) {
-                    room.classList.add('room-interactive');
-                } else {
-                    room.classList.remove('room-interactive');
-                }
-            });
-
-            renderCorridor(cameraZ);
-            requestAnimationFrame(animateSpatialWorld);
-        }
-        requestAnimationFrame(animateSpatialWorld);
-
-        /* ===================================================
-           5. DRAGGABLE KINETIC SKILLS TICKER
-           =================================================== */
-        const tickerShell = document.getElementById('skillsTickerShell');
-        const tickerTrack = document.getElementById('skillsTickerTrack');
-        let tickerPos = 0;
-        let isDraggingTicker = false;
-        let tickerStartX = 0;
-        let tickerVelocity = -1.1;
-
-        function updateTicker() {
-            const halfWidth = tickerTrack.scrollWidth / 2;
-            if (!isDraggingTicker) {
-                tickerPos += tickerVelocity;
-                tickerVelocity += (-1.1 - tickerVelocity) * 0.04;
-            }
-            if (tickerPos <= -halfWidth) tickerPos += halfWidth;
-            if (tickerPos > 0) tickerPos -= halfWidth;
-            tickerTrack.style.transform = `translate3d(${tickerPos}px, 0, 0)`;
-            requestAnimationFrame(updateTicker);
-        }
-        requestAnimationFrame(updateTicker);
-
-        tickerShell.addEventListener('mousedown', (e) => {
-            isDraggingTicker = true;
-            tickerStartX = e.pageX;
-        });
-        window.addEventListener('mousemove', (e) => {
-            if (!isDraggingTicker) return;
-            const delta = e.pageX - tickerStartX;
-            tickerStartX = e.pageX;
-            tickerPos += delta;
-            tickerVelocity = delta;
-        });
-        window.addEventListener('mouseup', () => { isDraggingTicker = false; });
-
-        /* ===================================================
-           6. SMART RETICLE CURSOR & HOVER PREVIEWS
-           =================================================== */
-        const cursorReticle = document.getElementById('cursorReticle');
-        const cursorCore = document.getElementById('cursorCore');
-
-        if (window.matchMedia("(pointer: fine)").matches) {
-            window.addEventListener('mousemove', (e) => {
-                cursorCore.style.left = `${e.clientX}px`;
-                cursorCore.style.top = `${e.clientY}px`;
-                cursorReticle.animate(
-                    { left: `${e.clientX}px`, top: `${e.clientY}px` },
-                    { duration: 320, fill: 'forwards' }
-                );
-            });
-
-            document.querySelectorAll('.hover-target').forEach(el => {
-                el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
-                el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
-            });
-
-            document.querySelectorAll('.preview-trigger').forEach(el => {
-                el.addEventListener('mouseenter', () => {
-                    const img = el.getAttribute('data-img');
-                    if (img) {
-                        cursorReticle.style.backgroundImage = `url('${img}')`;
-                        document.body.classList.add('cursor-preview');
+        function renderVaultCards() {
+            vaultTrack.innerHTML = '';
+            projects.forEach((p) => {
+                const card = document.createElement('article');
+                card.className = 'liquid-glass vault-card';
+                card.innerHTML = `
+                    <div class="vault-poster-frame">
+                        <img src="${p.img}" alt="${p.title}" loading="lazy">
+                        <span class="vault-chip">${p.chip}</span>
+                    </div>
+                    <div class="vault-card-body">
+                        <div>
+                            <h3 class="vault-card-title">${p.title}</h3>
+                            <p class="vault-card-desc" data-copy-polite="${p.politeDesc}" data-copy-brutal="${p.brutalDesc}">
+                                ${brutalMode ? p.brutalDesc : p.politeDesc}
+                            </p>
+                        </div>
+                        <div class="vault-card-footer">
+                            <span class="vault-cta">${p.cta}</span>
+                            <span class="vault-idx">${p.idx} / 07</span>
+                        </div>
+                    </div>
+                `;
+                card.addEventListener('click', () => {
+                    if (p.confidential) {
+                        showToast("Nice try. That codebase is IBM Confidential.");
+                    } else {
+                        window.open(p.link, '_blank');
                     }
                 });
-                el.addEventListener('mouseleave', () => {
-                    cursorReticle.style.backgroundImage = 'none';
-                    document.body.classList.remove('cursor-preview');
-                });
+                vaultTrack.appendChild(card);
             });
+            bindLiquidGlassListeners();
+        }
+        renderVaultCards();
+
+        /* ===================================================
+           2. DBRAND "HONESTY TRANSLATOR" MODE
+           =================================================== */
+        function toggleBrutalMode() {
+            brutalMode = !brutalMode;
+            const btn = document.getElementById('honestyBtn');
+            btn.classList.toggle('brutal-active', brutalMode);
+            btn.querySelector('span').textContent = brutalMode ? 'TRANSLATOR: BRUTAL' : 'TRANSLATOR: OFF';
+
+            document.querySelectorAll('[data-copy-polite]').forEach(el => {
+                const targetCopy = brutalMode
+                    ? el.getAttribute('data-copy-brutal')
+                    : el.getAttribute('data-copy-polite');
+                el.innerHTML = targetCopy;
+            });
+
+            showToast(brutalMode
+                ? "Corporate filter disabled. Reading raw engineering truth."
+                : "Executive polish restored.");
         }
 
         /* ===================================================
-           7. CONTEXT MENU, CLIPBOARD & TOAST UTILITIES
+           3. LIQUID GLASS SPECULAR CURSOR TRACKING
            =================================================== */
-        const contextMenu = document.getElementById('custom-context-menu');
-        document.addEventListener('contextmenu', (e) => {
-            e.preventDefault();
-            const x = Math.min(e.clientX, window.innerWidth - 245);
-            const y = Math.min(e.clientY, window.innerHeight - 280);
-            contextMenu.style.left = `${x}px`;
-            contextMenu.style.top = `${y}px`;
-            contextMenu.style.display = 'flex';
+        function bindLiquidGlassListeners() {
+            const glassNodes = document.querySelectorAll('.liquid-glass');
+            glassNodes.forEach(node => {
+                node.onmousemove = (e) => {
+                    const rect = node.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    node.style.setProperty('--mouse-x', `${x}px`);
+                    node.style.setProperty('--mouse-y', `${y}px`);
+                };
+            });
+        }
+        bindLiquidGlassListeners();
+
+        /* ===================================================
+           4. MASTER SCROLL CHOREOGRAPHY (PORTAL + VAULT + STACK)
+           =================================================== */
+        const portalTrack = document.querySelector('.portal-scroll-track');
+        const apertureWindow = document.getElementById('apertureWindow');
+        const apertureBloom = document.getElementById('apertureBloom');
+        const apertureInterior = document.getElementById('apertureInterior');
+        const heroPrelude = document.getElementById('heroPrelude');
+
+        const vaultSection = document.querySelector('.vault-scroll-section');
+        const vaultProgressFill = document.getElementById('vaultProgressFill');
+        const vaultCounter = document.getElementById('vaultCounter');
+        const stackCards = document.querySelectorAll('.stack-card');
+        const navLinks = document.querySelectorAll('.island-link');
+        const navIndicator = document.getElementById('navIndicator');
+
+        function moveIslandIndicator(activeLink) {
+            if (!activeLink) return;
+            navIndicator.style.width = `${activeLink.offsetWidth}px`;
+            navIndicator.style.transform = `translateX(${activeLink.offsetLeft - 3}px)`;
+        }
+        window.addEventListener('load', () => {
+            moveIslandIndicator(document.querySelector('.island-link.active'));
         });
-        document.addEventListener('click', (e) => {
-            if (!contextMenu.contains(e.target)) hideContextMenu();
+        window.addEventListener('resize', () => {
+            moveIslandIndicator(document.querySelector('.island-link.active'));
         });
-        function hideContextMenu() {
-            contextMenu.style.display = 'none';
+
+        function updateScrollChoreography() {
+            const scrollY = window.scrollY;
+            const vw = window.innerWidth;
+            const vh = window.innerHeight;
+
+            /* --- A. PINNED PORTAL APERTURE EXPANSION --- */
+            const portalRect = portalTrack.getBoundingClientRect();
+            const portalScrollable = portalTrack.offsetHeight - vh;
+            const portalProgress = Math.min(1, Math.max(0, -portalRect.top / portalScrollable));
+
+            // Ease-in-out curve for physical aperture expansion
+            const easedPortal = portalProgress < 0.5
+                ? 2 * portalProgress * portalProgress
+                : 1 - Math.pow(-2 * portalProgress + 2, 2) / 2;
+
+            const startW = Math.min(340, vw * 0.78);
+            const startH = Math.min(460, vh * 0.58);
+            const currentW = startW + (vw - startW) * easedPortal;
+            const currentH = startH + (vh - startH) * easedPortal;
+            const currentRadius = 200 * (1 - easedPortal);
+
+            apertureWindow.style.width = `${currentW}px`;
+            apertureWindow.style.height = `${currentH}px`;
+            apertureWindow.style.borderRadius = `${currentRadius}px`;
+
+            // Fade out the warm doorway light bloom & prelude text as user steps inside
+            const preludeFade = Math.max(0, 1 - portalProgress * 2.4);
+            heroPrelude.style.opacity = preludeFade.toFixed(3);
+            heroPrelude.style.transform = `scale(${1 + portalProgress * 0.18})`;
+
+            const bloomFade = Math.max(0, 1 - Math.pow(portalProgress * 1.35, 2));
+            apertureBloom.style.opacity = bloomFade.toFixed(3);
+
+            // Reveal interior bento showcase inside the portal
+            const interiorReveal = Math.min(1, Math.max(0, (portalProgress - 0.25) / 0.65));
+            apertureInterior.style.opacity = (0.12 + interiorReveal * 0.88).toFixed(3);
+            apertureInterior.style.transform = `scale(${0.92 + interiorReveal * 0.08})`;
+
+            /* --- B. HORIZONTAL VAULT SCROLL-JACK --- */
+            const vaultRect = vaultSection.getBoundingClientRect();
+            const vaultScrollable = vaultSection.offsetHeight - vh;
+            const vaultProgress = Math.min(1, Math.max(0, -vaultRect.top / vaultScrollable));
+
+            const maxTranslateX = Math.max(0, vaultTrack.scrollWidth - vw + (vw * 0.1));
+            const currentTranslateX = vaultProgress * maxTranslateX;
+            vaultTrack.style.transform = `translate3d(-${currentTranslateX.toFixed(1)}px, 0, 0)`;
+
+            vaultProgressFill.style.width = `${(vaultProgress * 100).toFixed(1)}%`;
+            const currentProjIdx = Math.min(projects.length, Math.max(1, Math.ceil(vaultProgress * projects.length + 0.01)));
+            vaultCounter.textContent = `0${currentProjIdx} / 0${projects.length}`;
+
+            /* --- C. STACKING EXPERIENCE CARDS DEPTH RECESSION --- */
+            stackCards.forEach((card, i) => {
+                const nextCard = stackCards[i + 1];
+                if (!nextCard) return;
+                const nextRect = nextCard.getBoundingClientRect();
+                const overlapStart = vh * 0.75;
+                const overlapEnd = 150;
+                if (nextRect.top < overlapStart) {
+                    const depthFactor = Math.min(1, Math.max(0, (overlapStart - nextRect.top) / (overlapStart - overlapEnd)));
+                    const scale = 1 - depthFactor * 0.045;
+                    const brightness = 1 - depthFactor * 0.35;
+                    card.style.transform = `scale(${scale.toFixed(3)})`;
+                    card.style.filter = `brightness(${brightness.toFixed(2)})`;
+                } else {
+                    card.style.transform = 'scale(1)';
+                    card.style.filter = 'brightness(1)';
+                }
+            });
+
+            /* --- D. DYNAMIC ISLAND SCROLL-SPY --- */
+            const sections = ['portal', 'vault', 'experience', 'recognition', 'contact'];
+            let currentSectionId = 'portal';
+            sections.forEach(id => {
+                const el = document.getElementById(id);
+                if (el && el.getBoundingClientRect().top <= vh * 0.45) {
+                    currentSectionId = id;
+                }
+            });
+            navLinks.forEach(link => {
+                const isActive = link.getAttribute('data-section') === currentSectionId;
+                link.classList.toggle('active', isActive);
+                if (isActive) moveIslandIndicator(link);
+            });
         }
 
-        let toastTimer;
+        window.addEventListener('scroll', () => {
+            requestAnimationFrame(updateScrollChoreography);
+        }, { passive: true });
+        updateScrollChoreography();
+
+        /* ===================================================
+           5. DRAGGABLE KINETIC HARDWARE RIBBON
+           =================================================== */
+        const ribbonWrapper = document.getElementById('ribbonWrapper');
+        const ribbonTrack = document.getElementById('ribbonTrack');
+        let ribbonX = 0;
+        let ribbonSpeed = -0.85;
+        let ribbonDragging = false;
+        let ribbonStartX = 0;
+
+        function tickRibbon() {
+            const half = ribbonTrack.scrollWidth / 2;
+            if (!ribbonDragging) {
+                ribbonX += ribbonSpeed;
+                ribbonSpeed += (-0.85 - ribbonSpeed) * 0.05;
+            }
+            if (ribbonX <= -half) ribbonX += half;
+            if (ribbonX > 0) ribbonX -= half;
+            ribbonTrack.style.transform = `translate3d(${ribbonX.toFixed(1)}px, 0, 0)`;
+            requestAnimationFrame(tickRibbon);
+        }
+        requestAnimationFrame(tickRibbon);
+
+        ribbonWrapper.addEventListener('mousedown', (e) => {
+            ribbonDragging = true;
+            ribbonStartX = e.pageX;
+        });
+        window.addEventListener('mousemove', (e) => {
+            if (!ribbonDragging) return;
+            const delta = e.pageX - ribbonStartX;
+            ribbonStartX = e.pageX;
+            ribbonX += delta;
+            ribbonSpeed = delta;
+        });
+        window.addEventListener('mouseup', () => { ribbonDragging = false; });
+
+        /* ===================================================
+           6. SUBTLE STUDIO CAUSTIC AURORA BACKGROUND CANVAS
+           =================================================== */
+        const ambCanvas = document.getElementById('ambient-canvas');
+        const ambCtx = ambCanvas.getContext('2d');
+        let ambTime = 0;
+
+        function resizeAmb() {
+            ambCanvas.width = window.innerWidth;
+            ambCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeAmb);
+        resizeAmb();
+
+        function renderAmbientStudio() {
+            ambTime += 0.004;
+            const w = ambCanvas.width;
+            const h = ambCanvas.height;
+            ambCtx.clearRect(0, 0, w, h);
+
+            // Warm titanium & subtle indigo studio light orbs
+            const x1 = w * (0.5 + Math.sin(ambTime) * 0.22);
+            const y1 = h * (0.35 + Math.cos(ambTime * 0.8) * 0.18);
+            const grad1 = ambCtx.createRadialGradient(x1, y1, 10, x1, y1, Math.max(w, h) * 0.48);
+            grad1.addColorStop(0, 'rgba(255, 255, 255, 0.06)');
+            grad1.addColorStop(0.5, 'rgba(255, 159, 10, 0.025)');
+            grad1.addColorStop(1, 'transparent');
+
+            ambCtx.fillStyle = grad1;
+            ambCtx.fillRect(0, 0, w, h);
+            requestAnimationFrame(renderAmbientStudio);
+        }
+        requestAnimationFrame(renderAmbientStudio);
+
+        /* ===================================================
+           7. CONTEXT MENU, MAGNETIC CTA & CLIPBOARD
+           =================================================== */
+        const ctxMenu = document.getElementById('glass-context-menu');
+        document.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            const x = Math.min(e.clientX, window.innerWidth - 260);
+            const y = Math.min(e.clientY, window.innerHeight - 280);
+            ctxMenu.style.left = `${x}px`;
+            ctxMenu.style.top = `${y}px`;
+            ctxMenu.style.display = 'flex';
+        });
+        document.addEventListener('click', (e) => {
+            if (!ctxMenu.contains(e.target)) hideCtx();
+        });
+        function hideCtx() { ctxMenu.style.display = 'none'; }
+
+        let toastTimeout;
         function showToast(msg) {
-            const toast = document.getElementById('toast');
-            toast.textContent = msg;
-            toast.classList.add('show');
-            clearTimeout(toastTimer);
-            toastTimer = setTimeout(() => toast.classList.remove('show'), 3200);
+            const t = document.getElementById('apple-toast');
+            t.textContent = msg;
+            t.classList.add('visible');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => t.classList.remove('visible'), 3000);
         }
 
         function copyEmail() {
-            navigator.clipboard.writeText("connectwithspandan@gmail.com").then(() => {
-                showToast("Copied connectwithspandan@gmail.com to clipboard 📋");
+            navigator.clipboard.writeText('connectwithspandan@gmail.com').then(() => {
+                showToast('Copied connectwithspandan@gmail.com to clipboard');
             });
         }
 
-        // Dynamic Tab Title
-        const baseTitle = document.title;
-        document.addEventListener('visibilitychange', () => {
-            document.title = document.hidden ? "Portal Open — Step Back In 👀" : baseTitle;
+        // Magnetic pull on the primary contact button
+        const magBtn = document.getElementById('magneticBtn');
+        magBtn.addEventListener('mousemove', (e) => {
+            const r = magBtn.getBoundingClientRect();
+            const dx = (e.clientX - (r.left + r.width / 2)) * 0.22;
+            const dy = (e.clientY - (r.top + r.height / 2)) * 0.22;
+            magBtn.style.transform = `translate(${dx}px, ${dy}px) scale(1.04)`;
+        });
+        magBtn.addEventListener('mouseleave', () => {
+            magBtn.style.transform = 'translate(0, 0) scale(1)';
         });
 
         /* ===================================================
-           8. THE DEBUGGER ARCADE GAME ENGINE
+           8. MACOS KERNEL DEBUGGER MINI-GAME
            =================================================== */
-        let secretClicks = 0;
-        const secretTrigger = document.getElementById('secretTrigger');
-        secretTrigger.addEventListener('click', () => {
-            secretClicks++;
-            const alerts = [
-                "Mainframe pinged (1/5)...",
-                "Bypassing firewall (2/5)...",
-                "Escalating privileges (3/5)...",
-                "Loading weaponized debugger (4/5)...",
-                "BREACH CONFIRMED. INITIALIZING..."
+        let secretTapCount = 0;
+        document.getElementById('secretKernelTrigger').addEventListener('click', () => {
+            secretTapCount++;
+            const msgs = [
+                "Kernel diagnostic ping (1/5)",
+                "Mounting /dev/spandan (2/5)",
+                "Disabling safety interlocks (3/5)",
+                "Spawning debugger daemon (4/5)",
+                "Launching Kernel Debugger..."
             ];
-            showToast(alerts[secretClicks - 1]);
-            if (secretClicks >= 5) {
-                secretClicks = 0;
-                setTimeout(launchGameEngine, 700);
+            showToast(msgs[secretTapCount - 1]);
+            if (secretTapCount >= 5) {
+                secretTapCount = 0;
+                setTimeout(openDebugger, 500);
             }
         });
 
-        const gameOverlay = document.getElementById('game-overlay');
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-        const startScreen = document.getElementById('startScreen');
-        const gameOverScreen = document.getElementById('gameOverScreen');
-        const hud = document.getElementById('gameHud');
-        const scoreVal = document.getElementById('scoreVal');
-        const bugVal = document.getElementById('bugVal');
-        const finalScoreMsg = document.getElementById('finalScoreMsg');
+        const dbgModal = document.getElementById('debugger-modal');
+        const dbgCanvas = document.getElementById('debugCanvas');
+        const dbgCtx = dbgCanvas.getContext('2d');
+        const dbgOverlayUi = document.getElementById('dbgOverlayUi');
+        const dbgScoreEl = document.getElementById('dbgScore');
+        const dbgTitle = document.getElementById('dbgTitle');
+        const dbgSub = document.getElementById('dbgSub');
 
-        let gameLoopId, score = 0, gameActive = false, frame = 0;
-        let player = { x: window.innerWidth / 2, y: window.innerHeight * 0.8 };
-        let bullets = [], enemies = [], particles = [];
+        let dbgRunning = false, dbgScore = 0, dbgFrame = 0, dbgRaf;
+        let paddleX = 300;
+        let bugs = [], shots = [];
 
-        function launchGameEngine() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            gameOverlay.classList.add('active');
-            startScreen.style.display = 'flex';
-            gameOverScreen.style.display = 'none';
-            hud.style.display = 'none';
-            window.addEventListener('mousemove', onGameMouseMove);
-            window.addEventListener('mousedown', shootBullet);
-            window.addEventListener('touchmove', onGameTouchMove, { passive: false });
-            window.addEventListener('touchstart', onGameTouchStart, { passive: false });
+        function openDebugger() {
+            dbgModal.classList.add('active');
+            dbgCanvas.width = dbgCanvas.clientWidth;
+            dbgCanvas.height = dbgCanvas.clientHeight;
+            paddleX = dbgCanvas.width / 2;
+            dbgOverlayUi.style.display = 'flex';
         }
 
-        function closeGame() {
-            gameActive = false;
-            cancelAnimationFrame(gameLoopId);
-            gameOverlay.classList.remove('active');
-            window.removeEventListener('mousemove', onGameMouseMove);
-            window.removeEventListener('mousedown', shootBullet);
-            window.removeEventListener('touchmove', onGameTouchMove);
-            window.removeEventListener('touchstart', onGameTouchStart);
+        function closeDebugger() {
+            dbgRunning = false;
+            cancelAnimationFrame(dbgRaf);
+            dbgModal.classList.remove('active');
         }
 
-        function onGameMouseMove(e) { player.x = e.clientX; player.y = e.clientY; }
-        function onGameTouchMove(e) {
+        dbgCanvas.addEventListener('mousemove', (e) => {
+            const r = dbgCanvas.getBoundingClientRect();
+            paddleX = e.clientX - r.left;
+        });
+        dbgCanvas.addEventListener('mousedown', () => {
+            if (dbgRunning) shots.push({ x: paddleX, y: dbgCanvas.height - 36 });
+        });
+        dbgCanvas.addEventListener('touchmove', (e) => {
             e.preventDefault();
-            player.x = e.touches[0].clientX;
-            player.y = e.touches[0].clientY;
-        }
-        function onGameTouchStart(e) {
-            if (e.target.tagName === 'BUTTON') return;
+            const r = dbgCanvas.getBoundingClientRect();
+            paddleX = e.touches[0].clientX - r.left;
+        }, { passive: false });
+        dbgCanvas.addEventListener('touchstart', (e) => {
             e.preventDefault();
-            player.x = e.touches[0].clientX;
-            player.y = e.touches[0].clientY;
-            shootBullet();
+            const r = dbgCanvas.getBoundingClientRect();
+            paddleX = e.touches[0].clientX - r.left;
+            if (dbgRunning) shots.push({ x: paddleX, y: dbgCanvas.height - 36 });
+        }, { passive: false });
+
+        function startDebuggerGame() {
+            dbgCanvas.width = dbgCanvas.clientWidth;
+            dbgCanvas.height = dbgCanvas.clientHeight;
+            dbgOverlayUi.style.display = 'none';
+            dbgScore = 0;
+            dbgFrame = 0;
+            bugs = [];
+            shots = [];
+            dbgRunning = true;
+            dbgLoop();
         }
 
-        function shootBullet() {
-            if (!gameActive) return;
-            bullets.push({ x: player.x, y: player.y - 20, w: 4, h: 18, speed: 18 });
-        }
+        function dbgLoop() {
+            if (!dbgRunning) return;
+            const w = dbgCanvas.width;
+            const h = dbgCanvas.height;
+            dbgCtx.clearRect(0, 0, w, h);
 
-        function startGame() {
-            startScreen.style.display = 'none';
-            gameOverScreen.style.display = 'none';
-            hud.style.display = 'flex';
-            score = 0; bullets = []; enemies = []; particles = [];
-            gameActive = true; frame = 0;
-            gameLoop();
-        }
-
-        function gameLoop() {
-            if (!gameActive) return;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Player Ship
-            ctx.fillStyle = '#00f0ff';
-            ctx.beginPath();
-            ctx.moveTo(player.x, player.y - 18);
-            ctx.lineTo(player.x - 14, player.y + 14);
-            ctx.lineTo(player.x + 14, player.y + 14);
-            ctx.closePath();
-            ctx.fill();
-
-            // Bullets
-            ctx.fillStyle = '#bfff00';
-            for (let i = bullets.length - 1; i >= 0; i--) {
-                const b = bullets[i];
-                b.y -= b.speed;
-                ctx.fillRect(b.x - 2, b.y, b.w, b.h);
-                if (b.y < 0) bullets.splice(i, 1);
+            // Auto-fire pulse every 16 frames + manual click
+            if (dbgFrame % 16 === 0) {
+                shots.push({ x: paddleX, y: h - 36 });
             }
 
-            // Spawn & Update Bugs
-            if (frame % Math.max(18, 55 - score) === 0) {
-                const size = 24 + Math.random() * 24;
-                enemies.push({
-                    x: Math.random() * (canvas.width - size),
-                    y: -40,
-                    w: size, h: size,
-                    speed: 2.8 + score * 0.12 + Math.random() * 1.8
+            // Draw Interceptor Node
+            dbgCtx.fillStyle = '#f5f5f7';
+            dbgCtx.beginPath();
+            dbgCtx.roundRect(paddleX - 28, h - 24, 56, 10, 5);
+            dbgCtx.fill();
+
+            // Update Shots
+            dbgCtx.fillStyle = '#30d158';
+            for (let i = shots.length - 1; i >= 0; i--) {
+                shots[i].y -= 12;
+                dbgCtx.fillRect(shots[i].x - 2, shots[i].y, 4, 14);
+                if (shots[i].y < 0) shots.splice(i, 1);
+            }
+
+            // Spawn Regression Bugs
+            if (dbgFrame % Math.max(22, 55 - dbgScore) === 0) {
+                bugs.push({
+                    x: 30 + Math.random() * (w - 60),
+                    y: -20,
+                    r: 14,
+                    speed: 2.2 + dbgScore * 0.08
                 });
             }
 
-            for (let i = enemies.length - 1; i >= 0; i--) {
-                const e = enemies[i];
-                e.y += e.speed;
-                ctx.fillStyle = '#ff0055';
-                ctx.fillRect(e.x, e.y, e.w, e.h);
+            for (let i = bugs.length - 1; i >= 0; i--) {
+                const b = bugs[i];
+                b.y += b.speed;
+                dbgCtx.fillStyle = '#ff453a';
+                dbgCtx.beginPath();
+                dbgCtx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+                dbgCtx.fill();
 
-                if (player.x > e.x && player.x < e.x + e.w && player.y > e.y && player.y < e.y + e.h) {
-                    gameActive = false;
-                    hud.style.display = 'none';
-                    gameOverScreen.style.display = 'flex';
-                    finalScoreMsg.textContent = `BUGS PATCHED: ${score}`;
+                if (b.y + b.r >= h - 18) {
+                    dbgRunning = false;
+                    dbgTitle.textContent = "Production Breached";
+                    dbgSub.textContent = `You patched ${dbgScore} regressions before a P0 incident hit main.`;
+                    dbgOverlayUi.style.display = 'flex';
                     return;
                 }
 
-                for (let j = bullets.length - 1; j >= 0; j--) {
-                    const b = bullets[j];
-                    if (b.x > e.x && b.x < e.x + e.w && b.y > e.y && b.y < e.y + e.h) {
-                        for (let p = 0; p < 12; p++) {
-                            particles.push({
-                                x: e.x + e.w / 2, y: e.y + e.h / 2,
-                                vx: (Math.random() - 0.5) * 12, vy: (Math.random() - 0.5) * 12,
-                                life: 1
-                            });
-                        }
-                        enemies.splice(i, 1);
-                        bullets.splice(j, 1);
-                        score++;
+                for (let j = shots.length - 1; j >= 0; j--) {
+                    const s = shots[j];
+                    if (Math.hypot(s.x - b.x, s.y - b.y) < b.r + 6) {
+                        bugs.splice(i, 1);
+                        shots.splice(j, 1);
+                        dbgScore++;
                         break;
                     }
                 }
-                if (e.y > canvas.height) enemies.splice(i, 1);
             }
 
-            // Explosion Particles
-            for (let i = particles.length - 1; i >= 0; i--) {
-                const p = particles[i];
-                p.x += p.vx; p.y += p.vy; p.life -= 0.06;
-                ctx.fillStyle = `rgba(255, 0, 85, ${Math.max(0, p.life)})`;
-                ctx.fillRect(p.x, p.y, 4, 4);
-                if (p.life <= 0) particles.splice(i, 1);
-            }
-
-            scoreVal.textContent = score;
-            bugVal.textContent = enemies.length;
-            frame++;
-            gameLoopId = requestAnimationFrame(gameLoop);
+            dbgScoreEl.textContent = dbgScore;
+            dbgFrame++;
+            dbgRaf = requestAnimationFrame(dbgLoop);
         }
     </script>
 </body>
