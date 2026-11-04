@@ -1815,6 +1815,184 @@
         }
         .m-safari-domain svg { flex-shrink: 0; opacity: 0.6; }
 
+        /* --- iPhone: the window behaves like a real Safari page ---
+           No scroll-jacking and no scroll-inside-a-scroll. The page scrolls the tab's
+           content, the glass bar sticks to the bottom of the screen, swipes change tabs. */
+        .about-scroll-track.is-flow { height: auto; padding-bottom: 60px; }
+        .about-scroll-track.is-flow .about-sticky-container { position: relative; top: auto; }
+        .about-scroll-track.is-flow .browser-scroll-dots { display: none; }
+        .chrome-window.skin-safari { overflow: clip; }
+        .about-scroll-track.is-flow .chrome-window.skin-safari .browser-viewport {
+            height: auto;
+            min-height: min(72svh, 620px);
+            overflow: visible;
+            padding: 26px 18px 30px;
+            touch-action: pan-y;
+        }
+        .about-scroll-track.is-flow .m-safari-bar {
+            position: sticky;
+            bottom: max(12px, env(safe-area-inset-bottom));
+            left: auto;
+            right: auto;
+            margin: -10px 10px 12px;
+        }
+        .m-glass-btn { position: relative; transition: opacity 0.2s ease, transform 0.15s ease; }
+        .m-glass-btn:active, .m-pill-btn:active { transform: scale(0.88); }
+        .m-glass-btn:disabled { opacity: 0.35; }
+        .m-tab-badge {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-36%, -60%);
+            font-size: 0.56rem;
+            font-weight: 700;
+        }
+        .m-safari-pill { position: relative; overflow: hidden; padding: 0 6px 4px; height: 54px; border-radius: 27px; }
+        .about-scroll-track.is-flow .m-glass-btn { width: 50px; height: 50px; }
+        .m-pill-btn.m-safari-aa { display: flex; align-items: baseline; justify-content: center; gap: 0; white-space: nowrap; letter-spacing: -0.02em; }
+        .about-scroll-track.is-flow .m-glass-btn,
+        .about-scroll-track.is-flow .m-safari-pill { background: rgba(250, 248, 245, 0.92); }
+        .about-scroll-track.is-flow .bio-polaroid { max-width: 230px; margin: 4px auto 6px; }
+        .about-scroll-track.is-flow .bio-polaroid img { height: 210px; }
+        .m-pill-btn {
+            flex-shrink: 0;
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: none;
+            border-radius: 50%;
+            color: inherit;
+            display: grid;
+            place-items: center;
+            font-family: inherit;
+            transition: transform 0.15s ease;
+        }
+        .m-pill-btn.spin svg { animation: pillSpin 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
+        @keyframes pillSpin { to { transform: rotate(360deg); } }
+        .m-safari-domain {
+            flex: 1;
+            flex-direction: column;
+            justify-content: center;
+            gap: 1px;
+            line-height: 1.15;
+            text-align: center;
+        }
+        .m-safari-title { font-size: 0.84rem; font-weight: 600; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+        .m-safari-url {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.64rem;
+            color: var(--ink-muted);
+        }
+        /* segmented "page x of 7" strip along the pill's bottom edge, where Safari draws its load bar */
+        .m-pill-progress {
+            position: absolute;
+            left: 46px;
+            right: 46px;
+            bottom: 6px;
+            display: flex;
+            gap: 3px;
+            pointer-events: none;
+            padding: 0 22px;
+        }
+        .m-pill-progress i {
+            flex: 1;
+            height: 2.5px;
+            border-radius: 2px;
+            background: rgba(22, 22, 21, 0.13);
+            transition: background 0.25s ease, flex 0.25s ease;
+        }
+        .m-pill-progress i.on { flex: 2.4; background: var(--terracotta); }
+
+        /* pane follows the finger, then the next one slides in from the side you swiped toward */
+        .browser-viewport .tab-pane.is-dragging { animation: none; transition: none; }
+        .browser-viewport .tab-pane.is-settling { transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.22s ease; }
+        .tab-pane.enter-right { animation: paneInRight 0.32s cubic-bezier(0.22, 1, 0.36, 1); }
+        .tab-pane.enter-left { animation: paneInLeft 0.32s cubic-bezier(0.22, 1, 0.36, 1); }
+        @keyframes paneInRight { from { opacity: 0; transform: translateX(48px); } to { opacity: 1; transform: none; } }
+        @keyframes paneInLeft { from { opacity: 0; transform: translateX(-48px); } to { opacity: 1; transform: none; } }
+
+        /* end-of-page card instead of a floating pill: there's no inner scroll to "keep scrolling" */
+        .about-scroll-track.is-flow .next-tab-floating-btn {
+            position: static;
+            float: none;
+            clear: both;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-top: 28px;
+            padding: 16px 18px;
+            border-radius: 18px;
+            background: #fff;
+            color: var(--ink-dark);
+            border: 1px solid rgba(22, 22, 21, 0.1);
+            box-shadow: 0 10px 24px rgba(22, 22, 21, 0.07);
+            font-size: 0.9rem;
+            text-align: left;
+        }
+        .next-tab-floating-btn small {
+            display: block;
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--ink-muted);
+            margin-bottom: 3px;
+        }
+        .next-tab-floating-btn .nt-arrow {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: var(--ink-dark);
+            color: #fff;
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+        }
+
+        .m-swipe-hint {
+            display: none;
+            position: absolute;
+            left: 50%;
+            bottom: 96px;
+            transform: translateX(-50%);
+            z-index: 5;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            border-radius: 100px;
+            background: rgba(22, 22, 21, 0.86);
+            color: #fff;
+            font-size: 0.78rem;
+            font-weight: 600;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+        .about-scroll-track.is-flow .m-swipe-hint { position: sticky; left: auto; bottom: 92px; margin: 0 auto -36px; width: fit-content; transform: none; }
+        .m-swipe-hint.show { display: flex; animation: tabFade 0.3s ease; }
+        .m-swipe-hand { display: inline-block; animation: swipeHand 1.4s ease-in-out infinite; }
+        @keyframes swipeHand {
+            0%, 100% { transform: translateX(10px); }
+            50% { transform: translateX(-10px) rotate(-12deg); }
+        }
+
+        /* Safari's tab overview takes the whole screen, it doesn't live inside the page */
+        .chrome-window.skin-safari .m-tab-grid.open {
+            position: fixed;
+            inset: 0;
+            z-index: 960;
+            border-radius: 0;
+            padding: max(18px, env(safe-area-inset-top)) 16px max(24px, env(safe-area-inset-bottom));
+            animation: sheetUp 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        @keyframes sheetUp { from { opacity: 0; transform: scale(1.04); } to { opacity: 1; transform: none; } }
+        .m-tab-card { transition: transform 0.15s ease; }
+        .m-tab-card:active { transform: scale(0.96); }
+        html.sheet-open { overflow: hidden; }
+
         /* --- tab overview, shared by both skins --- */
         .m-tab-grid {
             position: absolute;
@@ -2411,7 +2589,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button class="next-tab-floating-btn" onclick="manualTabSwitch('worklog')">keep scrolling · next: work log →</button>
+                        <button class="next-tab-floating-btn" data-next="worklog" onclick="manualTabSwitch('worklog')">keep scrolling · next: work log →</button>
                     </div>
 
                     <!-- TAB 2: WORK LOG -->
@@ -2444,7 +2622,7 @@
                                 <span style="font-family:var(--font-mono); font-size:0.72rem;">INTERNSHIP</span>
                             </div>
                         </div>
-                        <button class="next-tab-floating-btn" onclick="manualTabSwitch('travel')">keep scrolling · next: travel →</button>
+                        <button class="next-tab-floating-btn" data-next="travel" onclick="manualTabSwitch('travel')">keep scrolling · next: travel →</button>
                     </div>
 
                     <!-- TAB 3: TRAVEL & RESET -->
@@ -2477,7 +2655,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button class="next-tab-floating-btn" onclick="manualTabSwitch('honors')">keep scrolling · next: honors →</button>
+                        <button class="next-tab-floating-btn" data-next="honors" onclick="manualTabSwitch('honors')">keep scrolling · next: honors →</button>
                     </div>
 
                     <!-- TAB 4: HONORS & CERTS -->
@@ -2501,7 +2679,7 @@
                                 <p style="font-size:0.85rem; color:var(--ink-muted);">Microsoft Certified Azure Developer Associate &amp; IBM Certified watsonx Developer.</p>
                             </div>
                         </div>
-                        <button class="next-tab-floating-btn" onclick="manualTabSwitch('gallery')">keep scrolling · next: gallery →</button>
+                        <button class="next-tab-floating-btn" data-next="gallery" onclick="manualTabSwitch('gallery')">keep scrolling · next: gallery →</button>
                     </div>
 
                     <!-- TAB 5: GALLERY -->
@@ -2514,7 +2692,7 @@
                             <span style="font-family:var(--font-hand); font-size:1.35rem; color:var(--terracotta);">food, fog, lego &amp; late nights.</span>
                         </div>
                         <div class="everyday-masonry" id="everydayMasonry"></div>
-                        <button class="next-tab-floating-btn" onclick="manualTabSwitch('figma')">next: Figma canvas →</button>
+                        <button class="next-tab-floating-btn" data-next="figma" onclick="manualTabSwitch('figma')">next: Figma canvas →</button>
                     </div>
 
                     <!-- TAB 6: FIGMA -->
@@ -2588,17 +2766,29 @@
                     <button type="button" class="m-glass-btn" aria-label="Previous tab" data-tab-step="-1">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
                     </button>
-                    <div class="m-safari-pill" id="safariPill" title="Swipe to switch tabs">
-                        <span class="m-safari-aa">a<span>A</span></span>
-                        <span class="m-safari-domain">
-                            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10V7a5 5 0 0 1 10 0v3h1a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V11a1 1 0 0 1 1-1h1zm2 0h6V7a3 3 0 0 0-6 0v3z"/></svg>
-                            <span class="js-url-domain">spandan.dev</span>
+                    <div class="m-safari-pill" id="safariPill">
+                        <button type="button" class="m-pill-btn m-safari-aa" id="safariTextSize" aria-label="Text size">a<span>A</span></button>
+                        <span class="m-safari-domain" id="safariDomain">
+                            <span class="m-safari-title"><span class="js-tab-icon">👤</span> <span class="js-tab-title">about me</span></span>
+                            <span class="m-safari-url">
+                                <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10V7a5 5 0 0 1 10 0v3h1a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V11a1 1 0 0 1 1-1h1zm2 0h6V7a3 3 0 0 0-6 0v3z"/></svg>
+                                <span class="js-url-domain">spandan.dev</span>
+                            </span>
                         </span>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 5v6h-6"/></svg>
+                        <span class="m-pill-progress" id="pillProgress"></span>
+                        <button type="button" class="m-pill-btn" id="safariReload" aria-label="Reload tab">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 5v6h-6"/></svg>
+                        </button>
                     </div>
                     <button type="button" class="m-glass-btn js-tab-grid-open" aria-label="Show all tabs">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="7" y="3" width="14" height="14" rx="3"/><path d="M17 21H6a3 3 0 0 1-3-3V7"/></svg>
+                        <span class="m-tab-badge">7</span>
                     </button>
+                </div>
+
+                <div class="m-swipe-hint" id="swipeHint" aria-hidden="true">
+                    <span class="m-swipe-hand">👆</span>
+                    <span>swipe for more tabs</span>
                 </div>
 
                 <div class="m-tab-grid" id="mTabGrid">
@@ -2612,13 +2802,13 @@
 
             <!-- Segmented Tab Progress Dots -->
             <div class="browser-scroll-dots" id="browserDots">
-                <div class="b-dot active"></div>
-                <div class="b-dot"></div>
-                <div class="b-dot"></div>
-                <div class="b-dot"></div>
-                <div class="b-dot"></div>
-                <div class="b-dot"></div>
-                <div class="b-dot"></div>
+                <div class="b-dot active" data-i="0"></div>
+                <div class="b-dot" data-i="1"></div>
+                <div class="b-dot" data-i="2"></div>
+                <div class="b-dot" data-i="3"></div>
+                <div class="b-dot" data-i="4"></div>
+                <div class="b-dot" data-i="5"></div>
+                <div class="b-dot" data-i="6"></div>
             </div>
         </div>
     </section>
@@ -3171,7 +3361,9 @@
             /* --- B. SCROLL-DRIVEN AUTO-SWITCHING MACOS BROWSER TABS --- */
             const aRect = aboutTrack.getBoundingClientRect();
             const aScrollable = aboutTrack.offsetHeight - vh;
-            if (aRect.top <= 0 && aRect.bottom >= vh && Date.now() - manualOverrideTime > 1200) {
+            // on iPhone the page scroll reads the tab instead; only swipes and taps switch
+            if (!aboutTrack.classList.contains('is-flow')
+                && aRect.top <= 0 && aRect.bottom >= vh && Date.now() - manualOverrideTime > 1200) {
                 const aProg = Math.min(0.999, Math.max(0, -aRect.top / aScrollable));
                 const targetIdx = Math.floor(aProg * tabOrder.length);
                 if (targetIdx !== currentAutoTabIdx) {
@@ -3280,6 +3472,9 @@
            ========================================================= */
         function activateBrowserTab(tabId) {
             const idx = tabOrder.indexOf(tabId);
+            const prev = document.querySelector('.tab-pane.active');
+            const prevIdx = prev ? tabOrder.indexOf(prev.id.replace('tab-', '')) : idx;
+            const enterCls = idx > prevIdx ? 'enter-right' : idx < prevIdx ? 'enter-left' : '';
             document.querySelectorAll('.browser-tab').forEach(btn => {
                 const active = btn.dataset.tab === tabId;
                 btn.classList.toggle('active', active);
@@ -3295,11 +3490,24 @@
                 n.classList.toggle('active', n.dataset.tab === tabId);
             });
             document.querySelectorAll('.tab-pane').forEach(pane => {
-                pane.classList.toggle('active', pane.id === `tab-${tabId}`);
+                const on = pane.id === `tab-${tabId}`;
+                pane.classList.toggle('active', on);
+                pane.classList.remove('enter-right', 'enter-left', 'is-dragging', 'is-settling');
+                pane.style.transform = pane.style.opacity = '';
+                if (on && enterCls && document.querySelector('.chrome-window.skin-safari')) {
+                    void pane.offsetWidth;   // restart the animation
+                    pane.classList.add(enterCls);
+                }
             });
-            document.querySelectorAll('#browserDots .b-dot').forEach((dot, dIdx) => {
-                dot.classList.toggle('active', dIdx === idx);
+            document.querySelectorAll('#browserDots .b-dot, #pillProgress i').forEach(dot => {
+                dot.classList.toggle('active', +dot.dataset.i === idx);
+                dot.classList.toggle('on', +dot.dataset.i === idx);
             });
+            const btn = document.querySelector(`.browser-tab[data-tab="${tabId}"]`);
+            const [icon, ...rest] = btn.textContent.trim().split(/\s+/);
+            document.querySelectorAll('.js-tab-icon').forEach(n => n.textContent = icon);
+            document.querySelectorAll('.js-tab-title').forEach(n => n.textContent = rest.join(' '));
+            document.querySelectorAll('[data-tab-step="-1"]').forEach(b => b.disabled = idx === 0);
         }
 
         function manualTabSwitch(tabId) {
@@ -3307,8 +3515,14 @@
             currentAutoTabIdx = tabOrder.indexOf(tabId);
             activateBrowserTab(tabId);
 
-            // move the page to this tab's scroll slot, or the next scroll snaps back to the old tab
             const vh = window.innerHeight;
+            if (aboutTrack.classList.contains('is-flow')) {
+                // new tab starts at its top, like opening a page; only move if we're scrolled past it
+                const top = chromeWindow.getBoundingClientRect().top;
+                if (top < 0) window.scrollTo({ top: window.scrollY + top - 84, behavior: 'smooth' });
+                return;
+            }
+            // move the page to this tab's scroll slot, or the next scroll snaps back to the old tab
             const aRect = aboutTrack.getBoundingClientRect();
             if (aRect.top <= 0 && aRect.bottom >= vh) {
                 const span = aboutTrack.offsetHeight - vh;
@@ -3340,15 +3554,21 @@
         ).join('');
         document.getElementById('mTabGridTitle').textContent = `${phoneTabs.length} tabs · spandan`;
 
-        const closeTabGrid = () => tabGrid.classList.remove('open');
-        document.querySelectorAll('.m-fav, .m-tab-card').forEach(b => b.addEventListener('click', () => {
-            manualTabSwitch(b.dataset.tab);
-            closeTabGrid();
-        }));
-        document.querySelectorAll('.js-tab-grid-open').forEach(b => b.addEventListener('click', () => {
+        const fullScreenGrid = () => chromeWindow.classList.contains('skin-safari');
+        const closeTabGrid = () => {
+            tabGrid.classList.remove('open');
+            document.documentElement.classList.remove('sheet-open');
+        };
+        const openTabGrid = () => {
             manualOverrideTime = Date.now();
             tabGrid.classList.add('open');
+            if (fullScreenGrid()) document.documentElement.classList.add('sheet-open');
+        };
+        document.querySelectorAll('.m-fav, .m-tab-card').forEach(b => b.addEventListener('click', () => {
+            closeTabGrid();
+            manualTabSwitch(b.dataset.tab);
         }));
+        document.querySelectorAll('.js-tab-grid-open').forEach(b => b.addEventListener('click', openTabGrid));
         document.querySelector('.js-tab-grid-close').addEventListener('click', closeTabGrid);
         document.querySelectorAll('[data-tab-jump]').forEach(b => b.addEventListener('click', () => manualTabSwitch(b.dataset.tabJump)));
 
@@ -3358,17 +3578,114 @@
         }
         document.querySelectorAll('[data-tab-step]').forEach(b => b.addEventListener('click', () => stepTab(+b.dataset.tabStep)));
 
-        // Safari: swipe the address bar sideways to move between tabs
+        /* --- iPhone (Safari skin) interactions --- */
         const safariPill = document.getElementById('safariPill');
-        let _swipeX = null;
-        safariPill.addEventListener('pointerdown', e => { _swipeX = e.clientX; });
-        safariPill.addEventListener('pointerup', e => {
-            if (_swipeX === null) return;
-            const dx = e.clientX - _swipeX;
-            _swipeX = null;
-            if (Math.abs(dx) > 36) stepTab(dx < 0 ? 1 : -1);
+        const browserViewport = document.querySelector('.browser-viewport');
+        const swipeHint = document.getElementById('swipeHint');
+        document.getElementById('pillProgress').innerHTML = tabOrder.map((_, i) => `<i data-i="${i}"></i>`).join('');
+
+        let hintDone = localStorage.getItem('pf-swipe-hint') === '1';
+        function dismissHint() {
+            swipeHint.classList.remove('show');
+            if (!hintDone) localStorage.setItem('pf-swipe-hint', '1');
+            hintDone = true;
+        }
+
+        // horizontal swipe on the page or the address bar; the pane tracks the finger and
+        // rubber-bands at the first/last tab. Vertical drags are left to the browser.
+        function bindTabSwipe(surface, { tapOpensGrid = false } = {}) {
+            let g = null;
+            surface.addEventListener('pointerdown', e => {
+                if (!fullScreenGrid() || e.button > 0) return;
+                if (e.target.closest('.figma-draggable, .figma-sticky, .m-pill-btn, input, textarea')) return;
+                g = { x: e.clientX, y: e.clientY, t: performance.now(), axis: null, pane: document.querySelector('.tab-pane.active') };
+            });
+            surface.addEventListener('pointermove', e => {
+                if (!g) return;
+                const dx = e.clientX - g.x;
+                const dy = e.clientY - g.y;
+                if (!g.axis) {
+                    if (Math.hypot(dx, dy) < 9) return;
+                    g.axis = Math.abs(dx) > Math.abs(dy) * 1.2 ? 'x' : 'y';
+                    if (g.axis === 'x') {
+                        surface.setPointerCapture(e.pointerId);
+                        g.pane.classList.add('is-dragging');
+                    }
+                }
+                if (g.axis !== 'x') return;
+                const atEdge = (dx > 0 && currentAutoTabIdx === 0) || (dx < 0 && currentAutoTabIdx === tabOrder.length - 1);
+                const shown = atEdge ? dx * 0.25 : dx;
+                g.pane.style.transform = `translateX(${shown}px)`;
+                g.pane.style.opacity = String(1 - Math.min(0.5, Math.abs(shown) / 600));
+            });
+            const finish = (e, cancelled) => {
+                if (!g) return;
+                const s = g;
+                g = null;
+                const dx = e.clientX - s.x;
+                if (s.axis === null && !cancelled && tapOpensGrid) {
+                    openTabGrid();
+                    return;
+                }
+                if (s.axis !== 'x') return;
+                const fast = Math.abs(dx) / (performance.now() - s.t) > 0.45;
+                const dir = dx < 0 ? 1 : -1;
+                const next = currentAutoTabIdx + dir;
+                s.pane.classList.remove('is-dragging');
+                if (!cancelled && (Math.abs(dx) > 70 || fast) && next >= 0 && next < tabOrder.length) {
+                    dismissHint();
+                    manualTabSwitch(tabOrder[next]);
+                } else {
+                    s.pane.classList.add('is-settling');
+                    s.pane.style.transform = s.pane.style.opacity = '';
+                    setTimeout(() => s.pane.classList.remove('is-settling'), 240);
+                }
+            };
+            surface.addEventListener('pointerup', e => finish(e, false));
+            surface.addEventListener('pointercancel', e => finish(e, true));
+        }
+        bindTabSwipe(browserViewport);
+        bindTabSwipe(safariPill, { tapOpensGrid: true });
+        document.querySelectorAll('[data-tab-step]').forEach(b => b.addEventListener('click', dismissHint));
+
+        // aA cycles text size, reload replays the tab (and clears the Claude chat)
+        const TEXT_SIZES = [1, 1.12, 0.9];
+        let textSize = 0;
+        document.getElementById('safariTextSize').addEventListener('click', () => {
+            textSize = (textSize + 1) % TEXT_SIZES.length;
+            browserViewport.style.zoom = String(TEXT_SIZES[textSize]);
+            showToast(`text size ${Math.round(TEXT_SIZES[textSize] * 100)}%`);
         });
-        safariPill.addEventListener('pointercancel', () => { _swipeX = null; });
+        document.getElementById('safariReload').addEventListener('click', (e) => {
+            const btn = e.currentTarget;
+            btn.classList.remove('spin');
+            void btn.offsetWidth;
+            btn.classList.add('spin');
+            const pane = document.querySelector('.tab-pane.active');
+            if (pane.id === 'tab-claude' && !claudeBusy) document.getElementById('claudeChatLog').innerHTML = '';
+            pane.classList.remove('enter-right', 'enter-left');
+            void pane.offsetWidth;
+            pane.classList.add('enter-right');
+        });
+
+        // the "keep scrolling" pills become an "up next" card on iPhone
+        const nextBtns = document.querySelectorAll('.next-tab-floating-btn[data-next]');
+        nextBtns.forEach(b => b.dataset.desk = b.innerHTML);
+        function relabelNextButtons(flow) {
+            nextBtns.forEach(b => {
+                if (!flow) { b.innerHTML = b.dataset.desk; return; }
+                const t = phoneTabs.find(p => p.id === b.dataset.next);
+                b.innerHTML = `<span><small>up next · swipe or tap</small>${t.icon} ${t.title}</span><span class="nt-arrow">→</span>`;
+            });
+        }
+
+        // show the swipe coach mark once, the first time the window is properly on screen
+        new IntersectionObserver((entries, obs) => {
+            if (hintDone || !fullScreenGrid() || !entries[0].isIntersecting) return;
+            obs.disconnect();
+            swipeHint.classList.add('show');
+            setTimeout(dismissHint, 4200);
+        }, { threshold: 0.45 }).observe(chromeWindow);
 
         function pickBrowserSkin() {
             if (!window.matchMedia('(max-width: 760px)').matches) return '';
@@ -3383,7 +3700,11 @@
             const skin = pickBrowserSkin();
             chromeWindow.classList.toggle('skin-safari', skin === 'safari');
             chromeWindow.classList.toggle('skin-chrome-m', skin === 'chrome-m');
-            if (!skin) closeTabGrid();
+            const flow = skin === 'safari';
+            aboutTrack.classList.toggle('is-flow', flow);
+            relabelNextButtons(flow);
+            if (!flow) browserViewport.style.zoom = '';
+            closeTabGrid();
         }
         window.matchMedia('(max-width: 760px)').addEventListener('change', applyBrowserSkin);
         applyBrowserSkin();
@@ -3449,7 +3770,14 @@
             const viewport = log.closest('.browser-viewport');
             const stick = () => {
                 manualOverrideTime = Date.now();   // keep scroll-driven tab switching from yanking us away
-                viewport.scrollTop = viewport.scrollHeight;
+                if (!aboutTrack.classList.contains('is-flow')) {
+                    viewport.scrollTop = viewport.scrollHeight;
+                    return;
+                }
+                // iPhone: the page scrolls, keep the newest line just above the glass bar
+                const last = log.lastElementChild;
+                const overlap = last && last.getBoundingClientRect().bottom - (window.innerHeight - 96);
+                if (overlap > 0) window.scrollBy(0, overlap);
             };
             const item = claudeAnswers[key];
 
