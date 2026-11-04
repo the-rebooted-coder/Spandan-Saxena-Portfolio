@@ -487,6 +487,11 @@
             animation: tabNudge 1.5s ease-in-out infinite;
         }
         .ib-tab.held { animation: none; transform: translate(-28%, -50%) rotate(-8deg) scale(1.08); }
+        .ib-tab.slipping { animation: tabSlip 0.38s ease; }
+        @keyframes tabSlip {
+            30% { transform: translate(-28%, -30%) rotate(12deg); }
+            65% { transform: translate(-28%, -56%) rotate(-6deg); }
+        }
         @keyframes tabNudge {
             0%, 100% { transform: translate(-28%, -50%) rotate(-4deg); }
             50% { transform: translate(-10%, -50%) rotate(-2deg); }
@@ -861,13 +866,10 @@
         }
         .polaroid-1 { --pin: var(--brick-red); }
         .polaroid-2 { --pin: var(--brick-yellow); }
-        .polaroid-3 { --pin: var(--brick-blue); }
         .bio-polaroid { --pin: var(--brick-green); position: relative; }
 
-        .polaroid-1 { transform: translate(-130px, 14px) rotate(-8deg); z-index: 1; }
-        /* the real photo sits in the middle, so it stacks on top of both neighbours */
-        .polaroid-2 { transform: translate(0px, -12px) rotate(-1.5deg); z-index: 4; }
-        .polaroid-3 { transform: translate(135px, 16px) rotate(6deg); z-index: 3; }
+        .polaroid-1 { transform: translate(-78px, 6px) rotate(-6deg); z-index: 1; }
+        .polaroid-2 { transform: translate(82px, -14px) rotate(4deg); z-index: 2; }
 
         .polaroid-card:hover {
             z-index: 20 !important;
@@ -2595,8 +2597,8 @@
             .hover-note-top { position: static; margin-bottom: 6px; }
             .polaroid-card { width: 135px; }
             .polaroid-card img { height: 120px; }
-            .polaroid-1 { --tx: -95px !important; transform: translate(-95px, 14px) rotate(-8deg); }
-            .polaroid-3 { --tx: 95px !important; transform: translate(95px, 16px) rotate(6deg); }
+            .polaroid-1 { --tx: -62px !important; transform: translate(-62px, 6px) rotate(-6deg); }
+            .polaroid-2 { --tx: 64px !important; transform: translate(64px, -10px) rotate(4deg); }
             .work-log-row { grid-template-columns: 28px 1fr auto; }
             .work-log-row > :nth-child(3) { grid-column: 2 / 4; grid-row: 2; }
         }
@@ -3286,19 +3288,15 @@
                 </div>
             </div>
 
-            <!-- 3 Interactive Fanned Polaroids -->
+            <!-- two fanned polaroids -->
             <div class="polaroid-fan">
-                <div class="polaroid-card polaroid-1" style="--tx:-130px;">
-                    <img id="heroPol1" src="" alt="Late night coding">
-                    <div class="polaroid-caption">usually shipping code at 2am</div>
+                <div class="polaroid-card polaroid-1" style="--tx:-78px;">
+                    <img id="heroPol1" src="" alt="Spandan sitting on a hand-painted yellow scooter outside a cafe at night" style="object-position: 50% 62%;">
+                    <div class="polaroid-caption">off the clock</div>
                 </div>
-                <div class="polaroid-card polaroid-2" style="--tx:0px;">
+                <div class="polaroid-card polaroid-2" style="--tx:82px;">
                     <img id="heroPol2" src="" alt="Spandan at the Lakshmi Narasimha statue in Hampi" style="object-position: 62% 30%;">
                     <div class="polaroid-caption">hampi boulder trails</div>
-                </div>
-                <div class="polaroid-card polaroid-3" style="--tx:135px;">
-                    <img id="heroPol3" src="" alt="Spandan Portrait">
-                    <div class="polaroid-caption">happiest when the build passes</div>
                 </div>
 
                 <div class="thats-me-note">
@@ -3657,7 +3655,7 @@
                     <div class="tab-pane active" id="tab-bio">
                         <div class="bio-tab-grid">
                             <div class="bio-polaroid">
-                                <img id="bioPortraitImg" src="" alt="Spandan Saxena">
+                                <img id="bioPortraitImg" src="" alt="Spandan Saxena on a yellow scooter at night" style="object-position: 50% 62%;">
                                 <div class="polaroid-caption" style="text-align:center; margin-top:12px;">yep, that's me</div>
                             </div>
                             <div class="bio-copy">
@@ -4065,15 +4063,13 @@
         /* =========================================================
            0. ASSET CONFIGURATION (DROP YOUR PHOTOS & LOGOS HERE)
            ========================================================= */
-        // TODO(spandan): real photos pending. Hero polaroids 1 and 3, the bio portrait and the
-        // gallery still point at project posters, so their captions don't match yet.
+        // TODO(spandan): the gallery still points at project posters.
         const PORTFOLIO_ASSETS = {
             heroPolaroids: [
-                "https://i.ibb.co/1Vmw65c/poster-1-spandan.png",
-                "assets/hampi-web.jpg",
-                "https://i.ibb.co/NgN1cFTF/poster-12-spandan.png"
+                "assets/anshu-polaroid-web.jpg",
+                "assets/hampi-web.jpg"
             ],
-            bioPortrait: "https://i.ibb.co/1Vmw65c/poster-1-spandan.png",
+            bioPortrait: "assets/anshu-polaroid-web.jpg",
             travelPhotos: [
                 "assets/hampi25-web.jpg",
                 "assets/ellora-web.jpg"
@@ -4092,7 +4088,6 @@
 
         document.getElementById('heroPol1').src = PORTFOLIO_ASSETS.heroPolaroids[0];
         document.getElementById('heroPol2').src = PORTFOLIO_ASSETS.heroPolaroids[1];
-        document.getElementById('heroPol3').src = PORTFOLIO_ASSETS.heroPolaroids[2];
         document.getElementById('bioPortraitImg').src = PORTFOLIO_ASSETS.bioPortrait;
         document.getElementById('travelImg1').src = PORTFOLIO_ASSETS.travelPhotos[0];
         document.getElementById('travelImg2').src = PORTFOLIO_ASSETS.travelPhotos[1];
@@ -4272,6 +4267,7 @@
         let boxOpened = false;
         let _pull = null;
         let pulledFar = false;
+        let slipped = false;
 
 
         const buzz = (ms) => navigator.vibrate && navigator.vibrate(ms);
@@ -4370,6 +4366,8 @@
             const api = {
                 wake: unlock,
                 get muted() { return muted; },
+                // sound is wanted and possible, but the browser hasn't let it start yet
+                get locked() { return !muted && !!(window.AudioContext || window.webkitAudioContext) && !live(); },
                 toggle() {
                     muted = !muted;
                     localStorage.setItem('pf-sound', muted ? 'off' : 'on');
@@ -4545,7 +4543,34 @@
             if (v > tear + 0.02) pulledFar = true;
             setTear(v);
             ibBox.style.transform = `rotate(${((Math.random() - 0.5) * 0.9).toFixed(2)}deg)`;
+            // iOS won't start audio during a drag, only when a finger lifts. So the first pull
+            // "slips" early on purpose: the visitor lets go (unlocking sound) and grabs again.
+            if (!slipped && tear > 0.16 && sfx.locked) slipTab(e.pointerId);
         });
+
+        function slipTab(pointerId) {
+            slipped = true;
+            try { ibTab.releasePointerCapture(pointerId); } catch { /* already released */ }
+            letGo();
+            pulledFar = true;   // the click that follows this touch isn't a tap
+            ibBox.classList.remove('shake');
+            void ibBox.offsetWidth;
+            ibBox.classList.add('shake');
+            ibTab.classList.add('slipping');
+            buzz(18);
+            ibHint.textContent = 'whoops, it slipped. grab the tab again';
+            // the strip springs back most of the way, like tape that didn't quite let go
+            const from = tear, to = 0.035, t0 = performance.now();
+            const back = (now) => {
+                const k = Math.min(1, (now - t0) / 380);
+                const ease = 1 + 2.4 * Math.pow(k - 1, 3) + 1.4 * Math.pow(k - 1, 2);
+                tear = from + (to - from) * ease;
+                ibBox.style.setProperty('--tear', Math.max(0, tear).toFixed(3));
+                if (k < 1) requestAnimationFrame(back);
+                else { tear = to; ibTab.classList.remove('slipping'); }
+            };
+            requestAnimationFrame(back);
+        }
         const letGo = () => {
             _pull = null;
             ibTab.classList.remove('held');
