@@ -1,10 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="is-loading">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Spandan Saxena — Software Development Engineer & Design Engineer</title>
     <meta name="description" content="Explore Spandan Saxena’s software engineering, enterprise AI, native Android, and interactive web portfolio." />
+    <meta name="theme-color" content="#F2EFE9" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="apple-touch-icon" href="favicon.png" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Spandan Saxena — Software Development Engineer & Design Engineer" />
+    <meta property="og:description" content="Enterprise AI, native Android and interactive web work by Spandan Saxena." />
+    <meta property="og:image" content="og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="og-image.jpg" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -75,12 +87,16 @@
             pointer-events: none;
             z-index: 100000;
             transform: translate(-4px, -4px);
-            transition: transform 0.12s ease-out;
+            transition: transform 0.12s ease-out, opacity 0.15s ease;
             display: none;
+            opacity: 0;
         }
         @media (pointer: fine) {
             #custom-cursor { display: block; }
         }
+        #custom-cursor.cursor-on { opacity: 1; }
+
+        html.is-loading { overflow: hidden; }
         #custom-cursor.cursor-active {
             transform: translate(-4px, -4px) scale(1.22);
         }
@@ -315,7 +331,7 @@
         }
         .climber-fill {
             position: absolute;
-            top: 0;
+            bottom: 0;
             left: 0;
             width: 100%;
             height: 0%;
@@ -325,9 +341,11 @@
         .climber-avatar {
             position: absolute;
             left: -7px;
-            top: 0%;
+            bottom: 0%;
             font-size: 14px;
-            transition: top 0.08s linear;
+            line-height: 1;
+            transform: translateY(50%);
+            transition: bottom 0.08s linear;
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
         }
         .climber-pct {
@@ -747,6 +765,11 @@
             scrollbar-width: none;
         }
         .curved-carousel-track::-webkit-scrollbar { display: none; }
+        .curved-carousel-track.is-dragging {
+            scroll-snap-type: none;
+            user-select: none;
+        }
+        .curved-carousel-track.is-dragging img { pointer-events: none; }
 
         .case-study-slide {
             flex: 0 0 min(86vw, 960px);
@@ -814,6 +837,8 @@
             text-decoration: none;
             background: var(--ink-dark);
             color: #fff;
+            border: none;
+            font-family: inherit;
             transition: transform 0.25s ease;
         }
         .case-study-slide:not(.light-slide) .slide-cta-btn {
@@ -1050,6 +1075,8 @@
             flex-direction: column;
             transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
                         box-shadow 0.45s ease;
+            color: inherit;
+            text-decoration: none;
         }
         .iphone-frame:hover {
             transform: translateY(-14px) scale(1.02);
@@ -1222,7 +1249,7 @@
         }
 
         .browser-viewport {
-            height: 490px;
+            height: clamp(300px, calc(100vh - 380px), 490px);
             overflow-y: auto;
             padding: 40px 44px;
             position: relative;
@@ -1370,6 +1397,7 @@
             border-radius: 6px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.08);
             user-select: none;
+            touch-action: none;
         }
         .figma-sticky {
             position: absolute;
@@ -1380,6 +1408,8 @@
             font-size: 1.15rem;
             box-shadow: 0 8px 20px rgba(0,0,0,0.12);
             transform: rotate(-2deg);
+            user-select: none;
+            touch-action: none;
         }
 
         .claude-container {
@@ -1541,6 +1571,10 @@
         }
 
         .email-serif-link {
+            background: none;
+            border: none;
+            padding: 0;
+            text-align: left;
             font-family: var(--font-serif);
             font-size: clamp(1.8rem, 3.2vw, 2.5rem);
             color: var(--ink-dark);
@@ -1606,15 +1640,31 @@
             .everyday-masonry { grid-template-columns: repeat(2, 1fr); }
             .figma-workspace { grid-template-columns: 1fr; }
             .figma-sidebar, .figma-sidebar-right { display: none; }
-            .browser-viewport { padding: 24px; height: 520px; }
+            .browser-viewport { padding: 24px; height: clamp(320px, calc(100vh - 300px), 520px); }
+            .figma-workspace { margin: -24px; }
             .say-hey-pill, .climber-hud { display: none; }
+        }
+
+        @media (max-width: 560px) {
+            .hover-note-top { position: static; margin-bottom: 6px; }
+            .polaroid-card { width: 135px; }
+            .polaroid-card img { height: 120px; }
+            .polaroid-1 { --tx: -95px !important; transform: translate(-95px, 14px) rotate(-8deg); }
+            .polaroid-3 { --tx: 95px !important; transform: translate(95px, 16px) rotate(6deg); }
+            .work-log-row { grid-template-columns: 28px 1fr auto; }
+            .work-log-row > :nth-child(3) { grid-column: 2 / 4; grid-row: 2; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            .sound-eq-btn.playing .eq-bar { animation: none; }
         }
     </style>
 </head>
 <body>
 
     <!-- Custom Mountain-Peak Cursor with Red Dot -->
-    <div id="custom-cursor">
+    <div id="custom-cursor" aria-hidden="true">
         <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
             <rect x="2" y="6" width="22" height="17" rx="3" fill="#FAF8F5" stroke="#161615" stroke-width="1.6"/>
             <path d="M4 20 L10 12 L15 17 L18 14 L22 20 Z" fill="#DCD7CD" stroke="#161615" stroke-width="1.2" stroke-linejoin="round"/>
@@ -1623,7 +1673,7 @@
     </div>
 
     <!-- Bottom-Left Ambient Equalizer Pill -->
-    <button class="sound-eq-btn playing" id="soundEqBtn" onclick="toggleAmbientVisualizer()" title="Toggle ambient pulse">
+    <button class="sound-eq-btn playing" id="soundEqBtn" onclick="toggleAmbientVisualizer()" title="Toggle ambient pulse" aria-label="Toggle ambient pulse" aria-pressed="true">
         <span class="eq-bar"></span>
         <span class="eq-bar"></span>
         <span class="eq-bar"></span>
@@ -1748,7 +1798,7 @@
 
                 <!-- Interactive Letter Spans for Cat Jumping -->
                 <div class="giant-name-wrap" id="giantNameWrap">
-                    <h1 class="giant-name" id="giantName">
+                    <h1 class="giant-name" id="giantName" aria-label="spandan">
                         <span class="name-char" data-idx="0">s</span>
                         <span class="name-char" data-idx="1">p</span>
                         <span class="name-char" data-idx="2">a</span>
@@ -1800,7 +1850,7 @@
                 <div style="display:flex; align-items:center; gap:14px;">
                     <div class="lang-pill-switch">
                         <button class="lang-btn active" id="btnEn" onclick="setHeroLang('en')">ENGLISH</button>
-                        <button class="lang-btn" id="btnHi" onclick="setHeroLang('hi')">हिन्दी</button>
+                        <button class="lang-btn" id="btnHi" onclick="setHeroLang('hi')" lang="hi">हिन्दी</button>
                     </div>
                     <span style="font-family:var(--font-mono); font-size:0.7rem; letter-spacing:0.12em; color:var(--ink-muted);">EXPERIENCES</span>
                 </div>
@@ -1808,23 +1858,23 @@
                 <!-- Company Strip with Ready-to-Use Logo Image Slots -->
                 <div class="company-logos-strip">
                     <div class="company-badge-item">
-                        <img class="company-logo-slot" src="logos/ibm-software-labs.svg" alt="IBM" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><rect width=%2240%22 height=%2240%22 rx=%228%22 fill=%22%23054ADA%22/><text x=%2250%25%22 y=%2258%25%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22monospace%22 font-weight=%22bold%22 font-size=%2214%22>IBM</text></svg>'">
+                        <img class="company-logo-slot" src="logos/ibm-software-labs.svg" alt="IBM" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><rect width=%2240%22 height=%2240%22 rx=%228%22 fill=%22%23054ADA%22/><text x=%2250%25%22 y=%2258%25%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22monospace%22 font-weight=%22bold%22 font-size=%2214%22>IBM</text></svg>'">
                         <span>IBM Software Labs</span>
                         <span class="currently-here-pill">CURRENTLY HERE</span>
                     </div>
 
                     <div class="company-badge-item">
-                        <img class="company-logo-slot" src="logos/ibm-consulting.svg" alt="IBM Consulting" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><rect width=%2240%22 height=%2240%22 rx=%228%22 fill=%22%23161615%22/><text x=%2250%25%22 y=%2258%25%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22monospace%22 font-weight=%22bold%22 font-size=%2213%22>IBM</text></svg>'">
+                        <img class="company-logo-slot" src="logos/ibm-consulting.svg" alt="IBM Consulting" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><rect width=%2240%22 height=%2240%22 rx=%228%22 fill=%22%23161615%22/><text x=%2250%25%22 y=%2258%25%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22monospace%22 font-weight=%22bold%22 font-size=%2213%22>IBM</text></svg>'">
                         <span>IBM Consulting</span>
                     </div>
 
                     <div class="company-badge-item">
-                        <img class="company-logo-slot" src="logos/mnit-jaipur.png" alt="MNIT Jaipur" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><rect width=%2240%22 height=%2240%22 rx=%228%22 fill=%22%23D34532%22/><text x=%2250%25%22 y=%2258%25%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22sans-serif%22 font-weight=%22bold%22 font-size=%2211%22>NIT</text></svg>'">
+                        <img class="company-logo-slot" src="logos/mnit-jaipur.png" alt="MNIT Jaipur" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><rect width=%2240%22 height=%2240%22 rx=%228%22 fill=%22%23D34532%22/><text x=%2250%25%22 y=%2258%25%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22sans-serif%22 font-weight=%22bold%22 font-size=%2211%22>NIT</text></svg>'">
                         <span>MNIT Jaipur</span>
                     </div>
 
                     <div class="company-badge-item">
-                        <img class="company-logo-slot" src="logos/unacademy.svg" alt="Unacademy" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><rect width=%2240%22 height=%2240%22 rx=%228%22 fill=%22%2308BD80%22/><text x=%2250%25%22 y=%2258%25%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22sans-serif%22 font-weight=%22bold%22 font-size=%2214%22>U</text></svg>'">
+                        <img class="company-logo-slot" src="logos/unacademy.svg" alt="Unacademy" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><rect width=%2240%22 height=%2240%22 rx=%228%22 fill=%22%2308BD80%22/><text x=%2250%25%22 y=%2258%25%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22sans-serif%22 font-weight=%22bold%22 font-size=%2214%22>U</text></svg>'">
                         <span>Unacademy</span>
                     </div>
                 </div>
@@ -1895,13 +1945,13 @@
                                 Automated static code analysis and Retrieval-Augmented Generation pipelines engineered to modernize mission-critical enterprise systems.
                             </p>
                         </div>
-                        <a href="javascript:void(0)" onclick="showToast('Strictly IBM Confidential — NDA protected architecture.')" class="slide-cta-btn">
+                        <button type="button" onclick="showToast('Strictly IBM Confidential — NDA protected architecture.')" class="slide-cta-btn">
                             <span>IBM Confidential Case</span>
                             <span>🔒</span>
-                        </a>
+                        </button>
                     </div>
                     <div class="slide-visual-pane">
-                        <img src="https://i.ibb.co/1fKX3zQD/poster-4-spandan.png" alt="Legacy to Modern Rebase">
+                        <img loading="lazy" decoding="async" src="https://i.ibb.co/1fKX3zQD/poster-4-spandan.png" alt="Legacy to Modern Rebase">
                     </div>
                 </article>
 
@@ -1918,13 +1968,13 @@
                                 Native Android battery guardian monitoring real-time voltage, thermal thresholds, and charging cycles with zero background bloat.
                             </p>
                         </div>
-                        <a href="https://play.google.com/store/apps/details?id=com.onesilicondiode.batterywise&pcampaignid=web_share" target="_blank" class="slide-cta-btn">
+                        <a href="https://play.google.com/store/apps/details?id=com.onesilicondiode.batterywise&pcampaignid=web_share" target="_blank" rel="noopener" class="slide-cta-btn">
                             <span>View on Play Store</span>
                             <span>↗</span>
                         </a>
                     </div>
                     <div class="slide-visual-pane">
-                        <img src="https://i.ibb.co/7xxg2HwS/poster-2-spandan.png" alt="Safe Charge">
+                        <img loading="lazy" decoding="async" src="https://i.ibb.co/7xxg2HwS/poster-2-spandan.png" alt="Safe Charge">
                     </div>
                 </article>
 
@@ -1941,13 +1991,13 @@
                                 Dynamic life-calendar wallpaper engine that turns your lock screen into a tactile visual progress tracker.
                             </p>
                         </div>
-                        <a href="https://the-day-grid.vercel.app" target="_blank" class="slide-cta-btn">
+                        <a href="https://the-day-grid.vercel.app" target="_blank" rel="noopener" class="slide-cta-btn">
                             <span>Launch Live App</span>
                             <span>↗</span>
                         </a>
                     </div>
                     <div class="slide-visual-pane">
-                        <img src="https://i.ibb.co/1Vmw65c/poster-1-spandan.png" alt="The Day Grid">
+                        <img loading="lazy" decoding="async" src="https://i.ibb.co/1Vmw65c/poster-1-spandan.png" alt="The Day Grid">
                     </div>
                 </article>
 
@@ -1964,13 +2014,13 @@
                                 Built for Apple Watch Series 10 and Windows so checking the daily hostel/PG dining menu takes 1.5 seconds.
                             </p>
                         </div>
-                        <a href="https://github.com/the-rebooted-coder/What-s-In" target="_blank" class="slide-cta-btn">
+                        <a href="https://github.com/the-rebooted-coder/What-s-In" target="_blank" rel="noopener" class="slide-cta-btn">
                             <span>Explore Repository</span>
                             <span>↗</span>
                         </a>
                     </div>
                     <div class="slide-visual-pane">
-                        <img src="https://i.ibb.co/qFW4Wjnw/poster-6-spandan.png" alt="What's In">
+                        <img loading="lazy" decoding="async" src="https://i.ibb.co/qFW4Wjnw/poster-6-spandan.png" alt="What's In">
                     </div>
                 </article>
             </div>
@@ -1986,28 +2036,28 @@
         <!-- Minimalist Archive Table -->
         <div class="dark-container">
             <div class="archive-list">
-                <a href="https://github.com/the-rebooted-coder/Mail-Canon" target="_blank" class="archive-row">
+                <a href="https://github.com/the-rebooted-coder/Mail-Canon" target="_blank" rel="noopener" class="archive-row">
                     <div>
                         <h4>Mail Canon</h4>
                         <span>Python · High-throughput CSV automated email dispatch engine</span>
                     </div>
                     <span>↗</span>
                 </a>
-                <a href="https://github.com/the-rebooted-coder/Forecasted" target="_blank" class="archive-row">
+                <a href="https://github.com/the-rebooted-coder/Forecasted" target="_blank" rel="noopener" class="archive-row">
                     <div>
                         <h4>Forecasted</h4>
                         <span>Machine Learning · Quantitative stock trajectory prediction suite</span>
                     </div>
                     <span>↗</span>
                 </a>
-                <a href="https://www.snapchat.com/unlock/?type=SNAPCODE&uuid=58a604a1379140089d56a02ec0917f05&metadata=01" target="_blank" class="archive-row">
+                <a href="https://www.snapchat.com/unlock/?type=SNAPCODE&uuid=58a604a1379140089d56a02ec0917f05&metadata=01" target="_blank" rel="noopener" class="archive-row">
                     <div>
                         <h4>Bow Film &amp; Sandhya AR Lenses</h4>
                         <span>Snap Lens Studio · Custom LUT shaders &amp; gesture-controlled AR optics</span>
                     </div>
                     <span>↗</span>
                 </a>
-                <a href="https://github.com/the-rebooted-coder/Kaagaz-Dynamic-Desktop" target="_blank" class="archive-row">
+                <a href="https://github.com/the-rebooted-coder/Kaagaz-Dynamic-Desktop" target="_blank" rel="noopener" class="archive-row">
                     <div>
                         <h4>Kaagaz Dynamic Desktop &amp; Digital Desk</h4>
                         <span>Desktop Environment · Minimalist reactive workspace utilities</span>
@@ -2295,8 +2345,8 @@
                         <div class="claude-container">
                             <div class="claude-greeting">
                                 <div style="color:var(--terracotta); font-size:1.5rem; margin-bottom:2px;">✴️</div>
-                                <h3>Evening, curious visitor</h3>
-                                <p style="font-size:0.84rem; color:var(--ink-muted);">I only know one topic tonight: Spandan Saxena. Pick a question below.</p>
+                                <h3 id="claudeGreeting">Evening, curious visitor</h3>
+                                <p style="font-size:0.84rem; color:var(--ink-muted);">I only know one topic today: Spandan Saxena. Pick a question below.</p>
                             </div>
                             <div class="claude-chat-log" id="claudeChatLog"></div>
                             <div class="claude-prompt-pills">
@@ -2373,13 +2423,13 @@
                                 <span>resume</span>
                                 <span>↗</span>
                             </a>
-                            <div class="email-serif-link" onclick="copyEmail()" title="Click to copy email">
+                            <button type="button" class="email-serif-link" onclick="copyEmail()" title="Click to copy email">
                                 connectwithspandan@gmail.com
-                            </div>
+                            </button>
                             <div class="footer-socials">
-                                <a href="https://www.linkedin.com/in/spandn/" target="_blank">in LinkedIn</a>
-                                <a href="https://github.com/the-rebooted-coder" target="_blank">⌘ GitHub</a>
-                                <a href="https://www.instagram.com/simply.spandan/" target="_blank">◎ Instagram</a>
+                                <a href="https://www.linkedin.com/in/spandn/" target="_blank" rel="noopener">in LinkedIn</a>
+                                <a href="https://github.com/the-rebooted-coder" target="_blank" rel="noopener">⌘ GitHub</a>
+                                <a href="https://www.instagram.com/simply.spandan/" target="_blank" rel="noopener">◎ Instagram</a>
                             </div>
                         </div>
                     </div>
@@ -2439,19 +2489,24 @@
            1. CUSTOM MOUNTAIN-PEAK CURSOR
            ========================================================= */
         const customCursor = document.getElementById('custom-cursor');
+        const HOVERABLE = 'a, button, .polaroid-card, .iphone-frame, .name-char, .figma-draggable, .figma-sticky';
+
         window.addEventListener('mousemove', (e) => {
             customCursor.style.left = `${e.clientX}px`;
             customCursor.style.top = `${e.clientY}px`;
+            customCursor.classList.add('cursor-on');
         }, { passive: true });
 
-        document.querySelectorAll('a, button, .polaroid-card, .iphone-frame, .name-char').forEach(el => {
-            el.addEventListener('mouseenter', () => customCursor.classList.add('cursor-active'));
-            el.addEventListener('mouseleave', () => customCursor.classList.remove('cursor-active'));
+        // delegated, so cards rendered later (snippets, hindi name) also get it
+        document.addEventListener('mouseover', (e) => {
+            customCursor.classList.toggle('cursor-active', !!e.target.closest(HOVERABLE));
         });
+        document.documentElement.addEventListener('mouseleave', () => customCursor.classList.remove('cursor-on'));
 
         function toggleAmbientVisualizer() {
             const btn = document.getElementById('soundEqBtn');
-            btn.classList.toggle('playing');
+            const on = btn.classList.toggle('playing');
+            btn.setAttribute('aria-pressed', String(on));
         }
 
         /* =========================================================
@@ -2461,18 +2516,30 @@
         const loaderPctEl = document.getElementById('loaderPct');
         const stencilClipRect = document.getElementById('stencilClipRect');
         const stencilDot = document.getElementById('stencilDot');
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         let pct = 0;
+        let fontsReady = false;
+
+        // don't reveal the page on fallback fonts; give up waiting after 2.5s
+        Promise.race([
+            document.fonts ? document.fonts.ready : Promise.resolve(),
+            new Promise(r => setTimeout(r, 2500))
+        ]).then(() => { fontsReady = true; });
 
         const loaderInterval = setInterval(() => {
-            pct += Math.floor(Math.random() * 5) + 2;
+            pct += reducedMotion ? 100 : Math.floor(Math.random() * 5) + 2;
+            if (!fontsReady) pct = Math.min(pct, 96);
             if (pct >= 100) {
                 pct = 100;
                 clearInterval(loaderInterval);
                 stencilDot.classList.add('dot-complete');
-                setTimeout(() => loaderEl.classList.add('loaded'), 420);
+                setTimeout(() => {
+                    loaderEl.classList.add('loaded');
+                    document.documentElement.classList.remove('is-loading');
+                }, reducedMotion ? 0 : 420);
             }
             loaderPctEl.textContent = `${String(pct).padStart(3, '0')}%`;
-            // Reveal solid white text left-to-right across the 560px word width
+            // reveal the solid word left-to-right, ending at the dot
             stencilClipRect.setAttribute('width', String((pct / 100) * 570));
         }, 28);
 
@@ -2481,15 +2548,22 @@
            ========================================================= */
         const timeNoteText = document.getElementById('timeNoteText');
         const currentHour = new Date().getHours();
+        const verb = window.matchMedia('(hover: none)').matches ? 'tap me' : 'hover me';
+        let partOfDay;
         if (currentHour >= 22 || currentHour < 5) {
-            timeNoteText.textContent = "up late too? hover me";
+            timeNoteText.textContent = `up late too? ${verb}`;
+            partOfDay = 'Late night';
         } else if (currentHour < 12) {
-            timeNoteText.textContent = "early riser? hover me";
+            timeNoteText.textContent = `early riser? ${verb}`;
+            partOfDay = 'Morning';
         } else if (currentHour < 18) {
-            timeNoteText.textContent = "afternoon! hover me";
+            timeNoteText.textContent = `afternoon! ${verb}`;
+            partOfDay = 'Afternoon';
         } else {
-            timeNoteText.textContent = "evening! hover me";
+            timeNoteText.textContent = `evening! ${verb}`;
+            partOfDay = 'Evening';
         }
+        document.getElementById('claudeGreeting').textContent = `${partOfDay}, curious visitor`;
 
         const gingerCat = document.getElementById('gingerCat');
         const whiteCat = document.getElementById('whiteCat');
@@ -2522,14 +2596,14 @@
                     }
                 });
             });
-
-            nameArena.addEventListener('mouseleave', () => {
-                document.querySelectorAll('.name-char').forEach(c => c.classList.remove('char-squish'));
-                gingerCat.classList.remove('cat-visible');
-                whiteCat.classList.remove('cat-visible');
-            });
         }
         bindCatLetterListeners();
+
+        nameArena.addEventListener('mouseleave', () => {
+            document.querySelectorAll('.name-char').forEach(c => c.classList.remove('char-squish'));
+            gingerCat.classList.remove('cat-visible');
+            whiteCat.classList.remove('cat-visible');
+        });
 
         // English / Hindi Language Toggle
         const giantName = document.getElementById('giantName');
@@ -2537,6 +2611,10 @@
         function setHeroLang(lang) {
             document.getElementById('btnEn').classList.toggle('active', lang === 'en');
             document.getElementById('btnHi').classList.toggle('active', lang === 'hi');
+            gingerCat.classList.remove('cat-visible');
+            whiteCat.classList.remove('cat-visible');
+            giantName.setAttribute('aria-label', lang === 'hi' ? 'स्पंदन' : 'spandan');
+            giantName.lang = heroGreeting.lang = lang;
             if (lang === 'hi') {
                 heroGreeting.textContent = 'नमस्ते, मैं';
                 giantName.innerHTML = `
@@ -2649,7 +2727,13 @@
             mCtx.arc(peakX, peakY - 4, 4, 0, Math.PI * 2);
             mCtx.fill();
         }
-        window.addEventListener('resize', drawStippledMountains);
+        let lastMountainW = 0;
+        window.addEventListener('resize', () => {
+            if (mCanvas.clientWidth === lastMountainW) return;
+            lastMountainW = mCanvas.clientWidth;
+            drawStippledMountains();
+        });
+        lastMountainW = mCanvas.clientWidth;
         drawStippledMountains();
 
         /* =========================================================
@@ -2682,7 +2766,7 @@
             const maxScroll = Math.max(1, document.documentElement.scrollHeight - vh);
             const totalPct = Math.min(100, Math.round((scrollY / maxScroll) * 100));
 
-            climberAvatar.style.top = `${totalPct}%`;
+            climberAvatar.style.bottom = `${totalPct}%`;
             climberFill.style.height = `${totalPct}%`;
             climberPct.textContent = `${totalPct}%`;
 
@@ -2749,15 +2833,28 @@
                 const yOffset = 42 * (1 - kProg);
                 k2RisingLayer.style.transform = `translateY(${yOffset.toFixed(2)}%)`;
 
-                if (kProg < 0.2) {
-                    outroPhrase.innerHTML = `that's all from<br>my <em>side.</em>`;
-                } else {
-                    outroPhrase.innerHTML = `now i'm going<br>to the <em>mountains.</em>`;
+                const early = kProg < 0.2;
+                if (early !== outroEarly) {
+                    outroEarly = early;
+                    outroPhrase.innerHTML = early
+                        ? `that's all from<br>my <em>side.</em>`
+                        : `now i'm going<br>to the <em>mountains.</em>`;
                 }
             }
         }
 
-        window.addEventListener('scroll', onScrollTick, { passive: true });
+        let outroEarly = null;
+        let tickQueued = false;
+        function queueScrollTick() {
+            if (tickQueued) return;
+            tickQueued = true;
+            requestAnimationFrame(() => {
+                tickQueued = false;
+                onScrollTick();
+            });
+        }
+        window.addEventListener('scroll', queueScrollTick, { passive: true });
+        window.addEventListener('resize', queueScrollTick);
         onScrollTick();
 
         // Sketch Underline Scroll Observer
@@ -2781,12 +2878,45 @@
                 const norm = (slideCenter - center) / (window.innerWidth * 0.7);
                 const rotY = Math.max(-18, Math.min(18, norm * -14));
                 const scale = Math.max(0.9, 1 - Math.abs(norm) * 0.08);
-                slide.style.transform = `rotateY(${rotY.toFixed(2)}deg) scale(${scale.toFixed(3)})`;
+                // perspective lives in the transform: the scrolling track flattens 3D for its children
+                slide.style.transform = `perspective(1400px) rotateY(${rotY.toFixed(2)}deg) scale(${scale.toFixed(3)})`;
             });
         }
         carousel.addEventListener('scroll', updateCarouselCurve, { passive: true });
         window.addEventListener('resize', updateCarouselCurve);
         setTimeout(updateCarouselCurve, 200);
+
+        // mouse drag-to-scroll; touch already scrolls natively
+        let _grab = null;
+        let dragMoved = false;
+        carousel.addEventListener('pointerdown', (e) => {
+            if (e.pointerType !== 'mouse' || e.button !== 0) return;
+            _grab = { x: e.clientX, left: carousel.scrollLeft };
+            dragMoved = false;
+        });
+        window.addEventListener('pointermove', (e) => {
+            if (!_grab) return;
+            const dx = e.clientX - _grab.x;
+            if (!dragMoved && Math.abs(dx) < 5) return;
+            dragMoved = true;
+            carousel.classList.add('is-dragging');
+            carousel.scrollLeft = _grab.left - dx;
+        });
+        window.addEventListener('pointerup', () => {
+            if (!_grab) return;
+            _grab = null;
+            // snapping back on lets the browser settle on the nearest slide
+            carousel.classList.remove('is-dragging');
+        });
+        // a drag shouldn't also count as a click on the CTA links
+        carousel.addEventListener('click', (e) => {
+            if (dragMoved) {
+                e.preventDefault();
+                e.stopPropagation();
+                dragMoved = false;
+            }
+        }, true);
+        carousel.addEventListener('dragstart', (e) => e.preventDefault());
 
         /* =========================================================
            7. UI SNIPPETS IPHONE GRID
@@ -2807,8 +2937,13 @@
             phoneGrid.innerHTML = '';
             const items = cat === 'all' ? snippetsData : snippetsData.filter(s => s.cat === cat);
             items.forEach(item => {
-                const frame = document.createElement('div');
+                const frame = document.createElement('a');
                 frame.className = 'iphone-frame';
+                frame.href = item.link;
+                if (item.link !== '#confidential') {
+                    frame.target = '_blank';
+                    frame.rel = 'noopener';
+                }
                 frame.innerHTML = `
                     <div class="iphone-notch"></div>
                     <div class="iphone-screen">
@@ -2819,10 +2954,12 @@
                         </div>
                     </div>
                 `;
-                frame.onclick = () => {
-                    if (item.link === '#confidential') showToast('IBM Confidential Architecture 🔒');
-                    else window.open(item.link, '_blank');
-                };
+                if (item.link === '#confidential') {
+                    frame.onclick = (e) => {
+                        e.preventDefault();
+                        showToast('IBM Confidential Architecture 🔒');
+                    };
+                }
                 phoneGrid.appendChild(frame);
             });
         }
@@ -2855,6 +2992,15 @@
             manualOverrideTime = Date.now();
             currentAutoTabIdx = tabOrder.indexOf(tabId);
             activateBrowserTab(tabId);
+
+            // move the page to this tab's scroll slot, or the next scroll snaps back to the old tab
+            const vh = window.innerHeight;
+            const aRect = aboutTrack.getBoundingClientRect();
+            if (aRect.top <= 0 && aRect.bottom >= vh) {
+                const span = aboutTrack.offsetHeight - vh;
+                const slot = (currentAutoTabIdx + 0.5) / tabOrder.length;
+                window.scrollTo({ top: window.scrollY + aRect.top + span * slot, behavior: 'instant' });
+            }
         }
 
         document.querySelectorAll('.browser-tab').forEach(btn => {
@@ -2864,17 +3010,23 @@
         // Interactive Figma Dragging
         document.querySelectorAll('.figma-draggable, .figma-sticky').forEach(el => {
             let dragging = false, ox = 0, oy = 0;
-            el.addEventListener('mousedown', e => {
+            el.addEventListener('pointerdown', e => {
                 dragging = true;
                 ox = e.clientX - el.offsetLeft;
                 oy = e.clientY - el.offsetTop;
+                // the sticky note is anchored with `right`; pin it by `left` before dragging
+                el.style.left = `${el.offsetLeft}px`;
+                el.style.right = 'auto';
+                el.setPointerCapture(e.pointerId);
             });
-            window.addEventListener('mousemove', e => {
+            el.addEventListener('pointermove', e => {
                 if (!dragging) return;
+                manualOverrideTime = Date.now();
                 el.style.left = `${e.clientX - ox}px`;
                 el.style.top = `${e.clientY - oy}px`;
             });
-            window.addEventListener('mouseup', () => dragging = false);
+            el.addEventListener('pointerup', () => dragging = false);
+            el.addEventListener('pointercancel', () => dragging = false);
         });
 
         // Claude AI Interactive Q&A
@@ -2915,8 +3067,12 @@
             bMsg.textContent = '✴️ Thinking...';
             log.appendChild(bMsg);
 
+            const viewport = log.closest('.browser-viewport');
+            viewport.scrollTop = viewport.scrollHeight;
+
             setTimeout(() => {
                 bMsg.textContent = item.a;
+                viewport.scrollTop = viewport.scrollHeight;
             }, 320);
         }
 
@@ -2933,9 +3089,15 @@
         }
 
         function copyEmail() {
-            navigator.clipboard.writeText('connectwithspandan@gmail.com').then(() => {
-                showToast('Copied connectwithspandan@gmail.com to clipboard! 📋');
-            });
+            const email = 'connectwithspandan@gmail.com';
+            // clipboard API is missing on http:// and file://, fall back to the mail app
+            if (!navigator.clipboard) {
+                window.location.href = `mailto:${email}`;
+                return;
+            }
+            navigator.clipboard.writeText(email)
+                .then(() => showToast(`Copied ${email} to clipboard! 📋`))
+                .catch(() => { window.location.href = `mailto:${email}`; });
         }
     </script>
 </body>
