@@ -76,65 +76,139 @@
         }
 
         /* =========================================================
-           CUSTOM MOUNTAIN-PEAK CURSOR WITH RED DOT
+           CONTEXT-AWARE CURSOR
+           One element at the exact pointer position; data-mode decides the
+           shape and .tone-dark flips it to cream over dark surfaces.
            ========================================================= */
         #custom-cursor {
+            --cur-ink: #161615;
+            --cur-paper: #FAF8F5;
+            --cur-accent: #D34532;
             position: fixed;
             top: 0;
             left: 0;
-            width: 32px;
-            height: 32px;
+            width: 0;
+            height: 0;
             pointer-events: none;
             z-index: 100000;
-            transform: translate(-4px, -4px);
-            transition: transform 0.12s ease-out, opacity 0.15s ease;
             display: none;
             opacity: 0;
+            transition: opacity 0.15s ease;
         }
         @media (pointer: fine) {
             #custom-cursor { display: block; }
         }
         #custom-cursor.cursor-on { opacity: 1; }
+        #custom-cursor.tone-dark {
+            --cur-ink: #F2EFE9;
+            --cur-paper: #161615;
+            --cur-accent: #FF7A66;
+        }
+
+        #custom-cursor .cur-dot,
+        #custom-cursor .cur-ring,
+        #custom-cursor .cur-photo,
+        #custom-cursor .cur-label {
+            position: absolute;
+            left: 0;
+            top: 0;
+            transform: translate(-50%, -50%) scale(var(--press, 1));
+        }
+        #custom-cursor.is-pressed { --press: 0.82; }
+
+        #custom-cursor .cur-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--cur-ink);
+            box-shadow: 0 0 0 1.5px var(--cur-paper);
+            transition: width 0.18s ease, height 0.18s ease, border-radius 0.18s ease,
+                        background 0.2s ease, opacity 0.15s ease, transform 0.12s ease;
+        }
+        #custom-cursor .cur-ring {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 1.5px solid var(--cur-accent);
+            background: transparent;
+            opacity: 0;
+            transition: width 0.22s cubic-bezier(0.22, 1, 0.36, 1), height 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+                        opacity 0.18s ease, background 0.2s ease, border-color 0.2s ease, transform 0.12s ease;
+        }
+        #custom-cursor .cur-photo {
+            width: 30px;
+            height: 30px;
+            opacity: 0;
+            transition: opacity 0.15s ease, transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform: translate(-50%, -50%) scale(0.6);
+        }
+        #custom-cursor .cur-label {
+            /* sits below-right of the pointer so it never covers what you're aiming at */
+            left: 22px;
+            top: 22px;
+            transform: translate(0, 0) scale(0.85);
+            transform-origin: top left;
+            padding: 4px 9px;
+            border-radius: 100px;
+            background: var(--cur-ink);
+            color: var(--cur-paper);
+            font-family: var(--font-mono);
+            font-size: 0.62rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.15s ease, transform 0.18s ease;
+        }
+        #custom-cursor.has-label .cur-label { opacity: 1; transform: translate(0, 0) scale(var(--press, 1)); }
+
+        /* links: hollow accent ring around a tiny dot, target stays visible inside */
+        #custom-cursor[data-mode="link"] .cur-dot,
+        #custom-cursor[data-mode="button"] .cur-dot { width: 5px; height: 5px; background: var(--cur-accent); box-shadow: none; }
+        #custom-cursor[data-mode="link"] .cur-ring,
+        #custom-cursor[data-mode="button"] .cur-ring {
+            width: 40px;
+            height: 40px;
+            opacity: 1;
+            background: color-mix(in srgb, var(--cur-accent) 10%, transparent);
+        }
+        #custom-cursor[data-mode="button"] .cur-ring { width: 34px; height: 34px; }
+
+        /* text: thin caret */
+        #custom-cursor[data-mode="text"] .cur-dot {
+            width: 2px;
+            height: 22px;
+            border-radius: 2px;
+            box-shadow: 0 0 0 1px var(--cur-paper);
+        }
+
+        /* images: the little photo icon */
+        #custom-cursor[data-mode="image"] .cur-dot { opacity: 0; }
+        #custom-cursor[data-mode="image"] .cur-photo { opacity: 1; transform: translate(-50%, -50%) scale(var(--press, 1)); }
+
+        /* drag / move: solid disc with the verb inside */
+        #custom-cursor[data-mode="drag"] .cur-dot,
+        #custom-cursor[data-mode="move"] .cur-dot { opacity: 0; }
+        #custom-cursor[data-mode="drag"] .cur-ring,
+        #custom-cursor[data-mode="move"] .cur-ring {
+            width: 62px;
+            height: 62px;
+            opacity: 1;
+            border-color: var(--cur-ink);
+            background: var(--cur-ink);
+        }
+        #custom-cursor[data-mode="drag"] .cur-label,
+        #custom-cursor[data-mode="move"] .cur-label {
+            left: 0;
+            top: 0;
+            padding: 0;
+            background: none;
+            transform: translate(-50%, -50%) scale(var(--press, 1));
+            transform-origin: center;
+        }
 
         html.is-loading { overflow: hidden; }
-        #custom-cursor.cursor-active {
-            transform: translate(-4px, -4px) scale(1.22);
-        }
-
-        /* Bottom-Left Audio Equalizer Button */
-        .sound-eq-btn {
-            position: fixed;
-            bottom: 22px;
-            left: 22px;
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            background: rgba(250, 248, 245, 0.9);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(22, 22, 21, 0.12);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 2.5px;
-            z-index: 880;
-            transition: transform 0.2s ease;
-        }
-        .sound-eq-btn:hover { transform: scale(1.08); }
-        .eq-bar {
-            width: 2.5px;
-            background: var(--terracotta);
-            border-radius: 2px;
-            height: 8px;
-            transition: height 0.2s ease;
-        }
-        .sound-eq-btn.playing .eq-bar:nth-child(1) { animation: eqBounce 0.6s infinite ease-in-out; }
-        .sound-eq-btn.playing .eq-bar:nth-child(2) { animation: eqBounce 0.6s 0.15s infinite ease-in-out; }
-        .sound-eq-btn.playing .eq-bar:nth-child(3) { animation: eqBounce 0.6s 0.3s infinite ease-in-out; }
-        @keyframes eqBounce {
-            0%, 100% { height: 5px; }
-            50% { height: 15px; }
-        }
 
         /* =========================================================
            1. TERRACOTTA STENCIL BLUEPRINT LOADER
@@ -509,7 +583,8 @@
         }
 
         .polaroid-1 { transform: translate(-130px, 14px) rotate(-8deg); z-index: 1; }
-        .polaroid-2 { transform: translate(0px, -12px) rotate(-1.5deg); z-index: 2; }
+        /* the real photo sits in the middle, so it stacks on top of both neighbours */
+        .polaroid-2 { transform: translate(0px, -12px) rotate(-1.5deg); z-index: 4; }
         .polaroid-3 { transform: translate(135px, 16px) rotate(6deg); z-index: 3; }
 
         .polaroid-card:hover {
@@ -617,12 +692,12 @@
         }
 
         .company-logo-slot {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
             object-fit: contain;
             background: #fff;
-            padding: 4px;
+            padding: 2px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.06);
             border: 1px solid rgba(22, 22, 21, 0.08);
         }
@@ -911,31 +986,6 @@
             color: rgba(242, 239, 233, 0.55);
         }
 
-        .work-between-header {
-            text-align: center;
-            padding: 40px 20px 10px;
-            position: relative;
-            z-index: 5;
-        }
-        .work-between-title {
-            font-size: clamp(2.8rem, 6.2vw, 5.4rem);
-            font-weight: 800;
-            letter-spacing: -0.04em;
-            line-height: 1.04;
-            color: #F2EFE9;
-        }
-        .work-between-title em {
-            font-family: var(--font-serif);
-            font-style: italic;
-            font-weight: 400;
-            color: var(--terracotta);
-        }
-        .work-between-sub {
-            font-size: 1rem;
-            color: rgba(242, 239, 233, 0.55);
-            margin-top: 12px;
-        }
-
         /* =========================================================
            6. STIPPLED 3D PARALLAX HIMALAYAN RANGE
            ========================================================= */
@@ -954,7 +1004,6 @@
             width: 100%;
             height: 100%;
             display: block;
-            will-change: transform;
         }
 
         .mountain-category-strip {
@@ -979,14 +1028,8 @@
         }
 
         /* =========================================================
-           7. UI SNIPPETS SECTION WITH SCROLL REVEAL UNDERLINE
+           7. SHARED SECTION KICKER, HEADING & SKETCH UNDERLINE
            ========================================================= */
-        .snippets-section {
-            max-width: 1360px;
-            margin: 0 auto;
-            padding: 70px 4vw 120px;
-        }
-
         .editorial-sec-kicker {
             font-family: var(--font-mono);
             font-size: 0.72rem;
@@ -1028,101 +1071,6 @@
         .scroll-sketch-underline.drawn path {
             stroke-dashoffset: 0;
         }
-
-        .snippet-filters {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 48px;
-        }
-
-        .snip-pill {
-            padding: 8px 18px;
-            border-radius: 100px;
-            border: 1px solid rgba(22, 22, 21, 0.15);
-            background: #FAF8F5;
-            font-family: var(--font-sans);
-            font-size: 0.84rem;
-            font-weight: 600;
-            color: var(--ink-dark);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
-            transition: all 0.2s ease;
-        }
-        .snip-pill.active {
-            background: var(--ink-dark);
-            color: #fff;
-            border-color: var(--ink-dark);
-        }
-
-        .phone-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(225px, 1fr));
-            gap: 32px;
-        }
-
-        .iphone-frame {
-            background: #1d1d1f;
-            border-radius: 40px;
-            padding: 10px;
-            box-shadow:
-                0 28px 55px -12px rgba(22, 22, 21, 0.22),
-                0 12px 24px -8px rgba(22, 22, 21, 0.12),
-                inset 0 0 0 2px rgba(255,255,255,0.18);
-            aspect-ratio: 9 / 18.5;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-                        box-shadow 0.45s ease;
-            color: inherit;
-            text-decoration: none;
-        }
-        .iphone-frame:hover {
-            transform: translateY(-14px) scale(1.02);
-            box-shadow:
-                0 40px 80px -12px rgba(22, 22, 21, 0.3),
-                0 18px 32px -8px rgba(22, 22, 21, 0.18);
-        }
-
-        .iphone-notch {
-            position: absolute;
-            top: 16px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 68px;
-            height: 18px;
-            background: #000;
-            border-radius: 20px;
-            z-index: 4;
-        }
-
-        .iphone-screen {
-            flex: 1;
-            border-radius: 30px;
-            overflow: hidden;
-            background: #fff;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .iphone-screen img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .iphone-caption-overlay {
-            position: absolute;
-            inset: auto 0 0 0;
-            padding: 16px 14px 14px;
-            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%);
-            color: #fff;
-        }
-        .iphone-caption-overlay h5 { font-size: 0.9rem; font-weight: 700; }
-        .iphone-caption-overlay span { font-family: var(--font-mono); font-size: 0.65rem; opacity: 0.8; }
 
         /* =========================================================
            8. SCROLL-DRIVEN AUTO-SWITCHING MACOS BROWSER
@@ -1435,6 +1383,40 @@
             font-size: 0.78rem;
         }
         .prompt-chip:hover { border-color: var(--terracotta); color: var(--terracotta); }
+        .prompt-chip:disabled { opacity: 0.45; border-color: rgba(22, 22, 21, 0.14); color: inherit; }
+
+        .claude-thinking { display: inline-flex; align-items: center; gap: 8px; color: var(--ink-muted); }
+        .claude-spark {
+            color: var(--terracotta);
+            font-size: 1.05rem;
+            display: inline-block;
+            animation: claudeSpin 1.6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+        }
+        .claude-shimmer {
+            background: linear-gradient(90deg, var(--ink-faint) 0%, var(--ink-dark) 50%, var(--ink-faint) 100%);
+            background-size: 200% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: claudeShimmer 1.4s linear infinite;
+        }
+        .claude-caret {
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            margin-left: 4px;
+            border-radius: 50%;
+            background: var(--terracotta);
+            vertical-align: middle;
+            animation: claudePulse 0.9s ease-in-out infinite;
+        }
+        @keyframes claudeSpin {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(0.8); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+        @keyframes claudeShimmer { to { background-position: -200% 0; } }
+        @keyframes claudePulse { 50% { opacity: 0.3; transform: scale(0.7); } }
 
         .next-tab-floating-btn {
             position: sticky;
@@ -1655,29 +1637,291 @@
             .work-log-row > :nth-child(3) { grid-column: 2 / 4; grid-row: 2; }
         }
 
+        /* =========================================================
+           PHONE BROWSER SKINS (set by JS on narrow screens)
+           skin-safari: iPhone Safari, floating glass bar at the bottom
+           skin-chrome-m: Chrome on Android, dark toolbar + tab-group strip
+           ========================================================= */
+        .chrome-window { position: relative; }
+        .m-chrome-top, .m-chrome-group, .m-safari-bar, .m-tab-grid { display: none; }
+
+        @media (max-width: 760px) {
+            /* clear the floating nav pill */
+            .about-sticky-container { top: 0; padding-top: 76px; }
+        }
+
+        .chrome-window.skin-safari .chrome-tabbar,
+        .chrome-window.skin-safari .chrome-omnibox-bar,
+        .chrome-window.skin-chrome-m .chrome-tabbar,
+        .chrome-window.skin-chrome-m .chrome-omnibox-bar { display: none; }
+        .chrome-window.skin-chrome-m .m-chrome-top,
+        .chrome-window.skin-chrome-m .m-chrome-group,
+        .chrome-window.skin-safari .m-safari-bar { display: flex; }
+        .m-tab-grid.open { display: flex !important; }
+
+        .m-ico {
+            flex-shrink: 0;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: none;
+            background: none;
+            color: inherit;
+            display: grid;
+            place-items: center;
+        }
+        .m-ico:active { background: rgba(255, 255, 255, 0.1); }
+
+        /* --- Chrome on Android (Material dark) --- */
+        .chrome-window.skin-chrome-m {
+            background: #1F1F1F;
+            color: #E3E3E3;
+            border-radius: 22px;
+            border-color: #2A2A2A;
+        }
+        .m-chrome-top {
+            align-items: center;
+            gap: 2px;
+            padding: 8px 4px 8px 6px;
+        }
+        .m-omnibox {
+            flex: 1;
+            min-width: 0;
+            height: 42px;
+            margin: 0 4px;
+            padding: 0 14px;
+            border-radius: 21px;
+            background: #303030;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.86rem;
+        }
+        .m-omnibox svg { flex-shrink: 0; opacity: 0.8; }
+        .m-omnibox span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+        .m-tabcount span {
+            width: 21px;
+            height: 21px;
+            border: 2px solid currentColor;
+            border-radius: 6px;
+            display: grid;
+            place-items: center;
+            font-size: 0.66rem;
+            font-weight: 700;
+        }
+        .m-chrome-group {
+            align-items: center;
+            gap: 8px;
+            padding: 8px 6px 10px 14px;
+            border-top: 1px solid #2E2E2E;
+        }
+        .m-group-dot {
+            flex-shrink: 0;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--terracotta);
+        }
+        .m-group-favs {
+            flex: 1;
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .m-group-favs::-webkit-scrollbar { display: none; }
+        .m-fav {
+            flex: 0 0 36px;
+            height: 36px;
+            border-radius: 12px;
+            border: none;
+            background: #2B2B2B;
+            font-size: 1.05rem;
+            display: grid;
+            place-items: center;
+            transition: background 0.15s ease, box-shadow 0.15s ease;
+        }
+        .m-fav.active {
+            background: #3A3A3A;
+            box-shadow: 0 0 0 2px var(--terracotta);
+        }
+        .chrome-window.skin-chrome-m .browser-viewport {
+            padding: 22px 18px;
+            height: clamp(300px, calc(100svh - 442px), 500px);
+            color: var(--ink-dark);   /* page content, not the dark toolbar's text colour */
+        }
+
+        /* --- Safari on iPhone (floating glass bar) --- */
+        .chrome-window.skin-safari {
+            border-radius: 30px;
+            background: #FAF8F5;
+        }
+        .chrome-window.skin-safari .browser-viewport {
+            padding: 24px 18px 84px;
+            height: clamp(340px, calc(100svh - 352px), 560px);
+        }
+        .chrome-window.skin-safari .next-tab-floating-btn { margin-bottom: 4px; }
+        .m-safari-bar {
+            position: absolute;
+            left: 10px;
+            right: 10px;
+            bottom: 12px;
+            z-index: 4;
+            align-items: center;
+            gap: 8px;
+        }
+        .m-glass-btn,
+        .m-safari-pill {
+            background: rgba(250, 248, 245, 0.62);
+            -webkit-backdrop-filter: blur(18px) saturate(1.8);
+            backdrop-filter: blur(18px) saturate(1.8);
+            border: 1px solid rgba(255, 255, 255, 0.75);
+            box-shadow: 0 8px 24px rgba(22, 22, 21, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            color: var(--ink-dark);
+        }
+        .m-glass-btn {
+            flex-shrink: 0;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+        }
+        .m-safari-pill {
+            flex: 1;
+            min-width: 0;
+            height: 46px;
+            border-radius: 23px;
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            touch-action: pan-y;
+            user-select: none;
+        }
+        .m-safari-aa { font-weight: 600; font-size: 0.8rem; }
+        .m-safari-aa span { font-size: 1.05rem; }
+        .m-safari-domain {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            min-width: 0;
+            overflow: hidden;
+            white-space: nowrap;
+            transition: transform 0.25s ease, opacity 0.25s ease;
+        }
+        .m-safari-domain svg { flex-shrink: 0; opacity: 0.6; }
+
+        /* --- tab overview, shared by both skins --- */
+        .m-tab-grid {
+            position: absolute;
+            inset: 0;
+            z-index: 6;
+            flex-direction: column;
+            gap: 14px;
+            padding: 16px 14px;
+            overflow-y: auto;
+            border-radius: inherit;
+            animation: tabFade 0.22s ease;
+        }
+        .chrome-window.skin-safari .m-tab-grid {
+            background: rgba(229, 225, 217, 0.9);
+            -webkit-backdrop-filter: blur(24px);
+            backdrop-filter: blur(24px);
+        }
+        .chrome-window.skin-chrome-m .m-tab-grid { background: #1F1F1F; }
+        .m-tab-grid-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        .m-tab-grid-head button {
+            border: none;
+            background: none;
+            color: var(--terracotta);
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+        .m-tab-grid-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        .m-tab-card {
+            display: flex;
+            flex-direction: column;
+            border: none;
+            padding: 0;
+            border-radius: 16px;
+            overflow: hidden;
+            background: #fff;
+            color: var(--ink-dark);
+            font-family: inherit;
+            text-align: left;
+            box-shadow: 0 8px 20px rgba(22, 22, 21, 0.1);
+        }
+        .m-tab-card.active { box-shadow: 0 0 0 2.5px var(--terracotta), 0 8px 20px rgba(22, 22, 21, 0.12); }
+        .m-tab-thumb {
+            height: 96px;
+            display: grid;
+            place-items: center;
+            font-size: 2rem;
+            background-color: #FAF8F5;
+            background-image:
+                linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+            background-size: 14px 14px;
+        }
+        .m-tab-meta {
+            padding: 8px 10px 9px;
+            font-size: 0.76rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .m-tab-meta small {
+            display: block;
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            font-weight: 400;
+            opacity: 0.6;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        /* Chrome puts the title strip above the preview */
+        .chrome-window.skin-chrome-m .m-tab-card { background: #2E2E2E; color: #E3E3E3; }
+        .chrome-window.skin-chrome-m .m-tab-meta { order: -1; }
+
+        /* the Figma tab bleeds to the viewport edges, so it has to cancel each skin's padding */
+        .chrome-window.skin-chrome-m .figma-workspace { margin: -22px -18px; }
+        .chrome-window.skin-safari .figma-workspace { margin: -24px -18px 0; }
+
         @media (prefers-reduced-motion: reduce) {
             html { scroll-behavior: auto; }
-            .sound-eq-btn.playing .eq-bar { animation: none; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Custom Mountain-Peak Cursor with Red Dot -->
-    <div id="custom-cursor" aria-hidden="true">
-        <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
+    <!-- Context-aware cursor: dot, link ring, text caret, photo icon, drag disc -->
+    <div id="custom-cursor" aria-hidden="true" data-mode="default">
+        <div class="cur-ring"></div>
+        <div class="cur-dot"></div>
+        <svg class="cur-photo" viewBox="0 0 32 32" fill="none">
             <rect x="2" y="6" width="22" height="17" rx="3" fill="#FAF8F5" stroke="#161615" stroke-width="1.6"/>
             <path d="M4 20 L10 12 L15 17 L18 14 L22 20 Z" fill="#DCD7CD" stroke="#161615" stroke-width="1.2" stroke-linejoin="round"/>
             <circle cx="24" cy="6" r="4.2" fill="#D34532" stroke="#FAF8F5" stroke-width="1.2"/>
         </svg>
+        <div class="cur-label"></div>
     </div>
 
-    <!-- Bottom-Left Ambient Equalizer Pill -->
-    <button class="sound-eq-btn playing" id="soundEqBtn" onclick="toggleAmbientVisualizer()" title="Toggle ambient pulse" aria-label="Toggle ambient pulse" aria-pressed="true">
-        <span class="eq-bar"></span>
-        <span class="eq-bar"></span>
-        <span class="eq-bar"></span>
-    </button>
 
     <!-- =========================================================
          1. TERRACOTTA STENCIL BLUEPRINT LOADER
@@ -1745,7 +1989,7 @@
         <nav class="nav-center-pill">
             <a href="#work-portal">work</a>
             <a href="#about-browser">about me</a>
-            <a href="mailto:connectwithspandan@gmail.com">resume ↗</a>
+            <a href="https://drive.google.com/file/d/1mkz6fynekj4momgF9Z4SUzkUyQi4FhEH/view?usp=sharing" target="_blank" rel="noopener">resume ↗</a>
         </nav>
         <a href="#contact-outro" class="say-hey-pill">say hey ↗</a>
     </header>
@@ -1818,7 +2062,7 @@
                     <div class="polaroid-caption">usually shipping code at 2am</div>
                 </div>
                 <div class="polaroid-card polaroid-2" style="--tx:0px;">
-                    <img id="heroPol2" src="" alt="Hampi Ruins">
+                    <img id="heroPol2" src="" alt="Spandan at the Lakshmi Narasimha statue in Hampi" style="object-position: 62% 30%;">
                     <div class="polaroid-caption">hampi boulder trails</div>
                 </div>
                 <div class="polaroid-card polaroid-3" style="--tx:135px;">
@@ -1852,30 +2096,14 @@
                         <button class="lang-btn active" id="btnEn" onclick="setHeroLang('en')">ENGLISH</button>
                         <button class="lang-btn" id="btnHi" onclick="setHeroLang('hi')" lang="hi">हिन्दी</button>
                     </div>
-                    <span style="font-family:var(--font-mono); font-size:0.7rem; letter-spacing:0.12em; color:var(--ink-muted);">EXPERIENCES</span>
+                    <span style="font-family:var(--font-mono); font-size:0.7rem; letter-spacing:0.12em; color:var(--ink-muted);">EXPERIENCE</span>
                 </div>
 
-                <!-- Company Strip with Ready-to-Use Logo Image Slots -->
                 <div class="company-logos-strip">
                     <div class="company-badge-item">
-                        <img class="company-logo-slot" src="logos/ibm-software-labs.svg" alt="IBM" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><rect width=%2240%22 height=%2240%22 rx=%228%22 fill=%22%23054ADA%22/><text x=%2250%25%22 y=%2258%25%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22monospace%22 font-weight=%22bold%22 font-size=%2214%22>IBM</text></svg>'">
+                        <img class="company-logo-slot" src="logos/905dd25934b7a05516389863f7cb9417-ibm-logo.webp" alt="IBM logo" width="40" height="40">
                         <span>IBM Software Labs</span>
                         <span class="currently-here-pill">CURRENTLY HERE</span>
-                    </div>
-
-                    <div class="company-badge-item">
-                        <img class="company-logo-slot" src="logos/ibm-consulting.svg" alt="IBM Consulting" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><rect width=%2240%22 height=%2240%22 rx=%228%22 fill=%22%23161615%22/><text x=%2250%25%22 y=%2258%25%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22monospace%22 font-weight=%22bold%22 font-size=%2213%22>IBM</text></svg>'">
-                        <span>IBM Consulting</span>
-                    </div>
-
-                    <div class="company-badge-item">
-                        <img class="company-logo-slot" src="logos/mnit-jaipur.png" alt="MNIT Jaipur" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><rect width=%2240%22 height=%2240%22 rx=%228%22 fill=%22%23D34532%22/><text x=%2250%25%22 y=%2258%25%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22sans-serif%22 font-weight=%22bold%22 font-size=%2211%22>NIT</text></svg>'">
-                        <span>MNIT Jaipur</span>
-                    </div>
-
-                    <div class="company-badge-item">
-                        <img class="company-logo-slot" src="logos/unacademy.svg" alt="Unacademy" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><rect width=%2240%22 height=%2240%22 rx=%228%22 fill=%22%2308BD80%22/><text x=%2250%25%22 y=%2258%25%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22sans-serif%22 font-weight=%22bold%22 font-size=%2214%22>U</text></svg>'">
-                        <span>Unacademy</span>
                     </div>
                 </div>
             </div>
@@ -1945,7 +2173,7 @@
                                 Automated static code analysis and Retrieval-Augmented Generation pipelines engineered to modernize mission-critical enterprise systems.
                             </p>
                         </div>
-                        <button type="button" onclick="showToast('Strictly IBM Confidential — NDA protected architecture.')" class="slide-cta-btn">
+                        <button type="button" onclick="showToast('Strictly IBM Confidential — NDA protected architecture.')" class="slide-cta-btn" data-cursor="link" data-cursor-label="under nda">
                             <span>IBM Confidential Case</span>
                             <span>🔒</span>
                         </button>
@@ -2066,13 +2294,6 @@
                 </a>
             </div>
 
-            <div class="work-between-header">
-                <h2 class="work-between-title">
-                    the work between<br>
-                    the <em>case studies.</em>
-                </h2>
-                <p class="work-between-sub">screens, interactions &amp; little experiments.</p>
-            </div>
         </div>
     </section>
 
@@ -2089,33 +2310,12 @@
         </div>
     </div>
 
-    <section id="snippets" class="snippets-section">
-        <div class="editorial-sec-kicker">02 / UI SNIPPETS</div>
-        <h2 class="editorial-sec-heading">
-            little pieces of UI,<br>
-            <em>across web, mobile &amp; AR/VR.
-                <svg class="scroll-sketch-underline" viewBox="0 0 380 14">
-                    <path d="M4 9 C110 3, 260 13, 376 7" />
-                </svg>
-            </em>
-        </h2>
-
-        <div class="snippet-filters">
-            <button class="snip-pill active" onclick="filterSnippets('all', this)">All Screens · 8</button>
-            <button class="snip-pill" onclick="filterSnippets('mobile', this)">Mobile · 2</button>
-            <button class="snip-pill" onclick="filterSnippets('web', this)">Web · 3</button>
-            <button class="snip-pill" onclick="filterSnippets('ai', this)">AI &amp; AR · 3</button>
-        </div>
-
-        <div class="phone-grid" id="phoneGrid"></div>
-    </section>
-
     <!-- =========================================================
          6. SCROLL-DRIVEN AUTO-SWITCHING MACOS BROWSER
          ========================================================= -->
     <section id="about-browser" class="about-scroll-track">
         <div class="about-sticky-container">
-            <div class="editorial-sec-kicker">03 / ABOUT ME</div>
+            <div class="editorial-sec-kicker">02 / ABOUT ME</div>
             <div class="about-header-row">
                 <h2 class="editorial-sec-heading" style="margin-bottom:0;">
                     a little more<br>
@@ -2172,6 +2372,21 @@
                         <span style="opacity:0.5;">🔒</span>
                         <span id="omniboxText">spandan.dev/about</span>
                     </div>
+                </div>
+
+                <!-- Chrome on Android: top toolbar -->
+                <div class="m-chrome-top">
+                    <button type="button" class="m-ico" aria-label="Home" data-tab-jump="bio">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></svg>
+                    </button>
+                    <div class="m-omnibox">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>
+                        <span class="js-url-full">spandan.dev/about</span>
+                    </div>
+                    <button type="button" class="m-ico m-tabcount js-tab-grid-open" aria-label="Show all tabs"><span>7</span></button>
+                    <button type="button" class="m-ico" aria-label="Menu">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></svg>
+                    </button>
                 </div>
 
                 <div class="browser-viewport">
@@ -2359,6 +2574,40 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Phone skins: Chrome on Android (bottom tab-group strip) and Safari on iPhone (floating bar) -->
+                <div class="m-chrome-group">
+                    <span class="m-group-dot" title="spandan tab group"></span>
+                    <div class="m-group-favs" id="mGroupFavs"></div>
+                    <button type="button" class="m-ico js-tab-grid-open" aria-label="Show all tabs">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 15l6-6 6 6"/></svg>
+                    </button>
+                </div>
+
+                <div class="m-safari-bar">
+                    <button type="button" class="m-glass-btn" aria-label="Previous tab" data-tab-step="-1">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+                    </button>
+                    <div class="m-safari-pill" id="safariPill" title="Swipe to switch tabs">
+                        <span class="m-safari-aa">a<span>A</span></span>
+                        <span class="m-safari-domain">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10V7a5 5 0 0 1 10 0v3h1a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V11a1 1 0 0 1 1-1h1zm2 0h6V7a3 3 0 0 0-6 0v3z"/></svg>
+                            <span class="js-url-domain">spandan.dev</span>
+                        </span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 5v6h-6"/></svg>
+                    </div>
+                    <button type="button" class="m-glass-btn js-tab-grid-open" aria-label="Show all tabs">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="7" y="3" width="14" height="14" rx="3"/><path d="M17 21H6a3 3 0 0 1-3-3V7"/></svg>
+                    </button>
+                </div>
+
+                <div class="m-tab-grid" id="mTabGrid">
+                    <div class="m-tab-grid-head">
+                        <span id="mTabGridTitle">7 tabs · spandan</span>
+                        <button type="button" class="js-tab-grid-close">Done</button>
+                    </div>
+                    <div class="m-tab-grid-cards" id="mTabGridCards"></div>
+                </div>
             </div>
 
             <!-- Segmented Tab Progress Dots -->
@@ -2419,11 +2668,11 @@
                         </div>
 
                         <div class="footer-contact-right">
-                            <a href="mailto:connectwithspandan@gmail.com" class="resume-black-btn">
+                            <a href="https://drive.google.com/file/d/1mkz6fynekj4momgF9Z4SUzkUyQi4FhEH/view?usp=sharing" target="_blank" rel="noopener" class="resume-black-btn">
                                 <span>resume</span>
                                 <span>↗</span>
                             </a>
-                            <button type="button" class="email-serif-link" onclick="copyEmail()" title="Click to copy email">
+                            <button type="button" class="email-serif-link" onclick="copyEmail()" title="Click to copy email" data-cursor="link" data-cursor-label="copy">
                                 connectwithspandan@gmail.com
                             </button>
                             <div class="footer-socials">
@@ -2447,10 +2696,12 @@
         /* =========================================================
            0. ASSET CONFIGURATION (DROP YOUR PHOTOS & LOGOS HERE)
            ========================================================= */
+        // TODO(spandan): real photos pending. Hero polaroids 1 and 3, bio portrait, travel and
+        // gallery still point at project posters, so their captions don't match yet.
         const PORTFOLIO_ASSETS = {
             heroPolaroids: [
                 "https://i.ibb.co/1Vmw65c/poster-1-spandan.png",
-                "https://i.ibb.co/qFW4Wjnw/poster-6-spandan.png",
+                "assets/hampi-web.jpg",
                 "https://i.ibb.co/NgN1cFTF/poster-12-spandan.png"
             ],
             bioPortrait: "https://i.ibb.co/1Vmw65c/poster-1-spandan.png",
@@ -2489,25 +2740,97 @@
            1. CUSTOM MOUNTAIN-PEAK CURSOR
            ========================================================= */
         const customCursor = document.getElementById('custom-cursor');
-        const HOVERABLE = 'a, button, .polaroid-card, .iphone-frame, .name-char, .figma-draggable, .figma-sticky';
+        const cursorLabel = customCursor.querySelector('.cur-label');
+        const TEXTY = 'p, h1, h2, h3, h4, h5, h6, li, blockquote, strong, em, .chat-msg, .tagline-main, .tagline-sub, .slide-subcopy, .hero-kicker, .editorial-sec-kicker, .polaroid-caption';
+        const IMAGEY = 'img, .polaroid-card, .bio-polaroid, .masonry-item';
+        const _pt = { x: -100, y: -100, seen: false };
+        let cursorQueued = false;
+        let portalDisc = null;   // set by the scroll loop while the black portal circle is growing
+
+        // what the pointer is over -> [mode, label]
+        function cursorModeFor(el) {
+            const hint = el.closest('[data-cursor]');
+            if (hint) return [hint.dataset.cursor, hint.dataset.cursorLabel || ''];
+
+            const link = el.closest('a[href]');
+            if (link) {
+                const href = link.getAttribute('href');
+                if (href.startsWith('mailto:')) return ['link', 'email'];
+                if (href.startsWith('#')) return ['link', 'jump'];
+                return ['link', link.target === '_blank' ? 'open ↗' : ''];
+            }
+            if (el.closest('button, [role="button"]')) return ['button', ''];
+            if (el.closest('.figma-draggable, .figma-sticky')) return ['move', 'move'];
+            if (el.closest('.curved-carousel-track')) return ['drag', '← drag →'];
+            if (el.closest('.name-char')) return ['button', ''];
+            if (el.closest(IMAGEY)) return ['image', ''];
+
+            const texty = el.closest(TEXTY);
+            const ownText = [...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim());
+            if (texty || ownText) return ['text', ''];
+            return ['default', ''];
+        }
+
+        function luminance(rgb) {
+            const [r, g, b] = rgb.map(v => {
+                v /= 255;
+                return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+            });
+            return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        }
+
+        // first solid background up the tree decides; a couple of gradient areas need a hand
+        function isDarkUnder(el, x, y) {
+            if (portalDisc && el.closest('.portal-sticky-stage')
+                && Math.hypot(x - portalDisc.cx, y - portalDisc.cy) < portalDisc.r) return true;
+
+            const stage = el.closest('#mountainStage');
+            if (stage) {
+                const r = stage.getBoundingClientRect();
+                return (y - r.top) / r.height < 0.22;
+            }
+            for (let n = el; n && n.nodeType === 1; n = n.parentElement) {
+                const m = getComputedStyle(n).backgroundColor.match(/[\d.]+/g);
+                if (!m) continue;
+                const alpha = m[3] === undefined ? 1 : +m[3];
+                if (alpha < 0.5) continue;
+                return luminance(m.slice(0, 3).map(Number)) < 0.3;
+            }
+            return false;
+        }
+
+        function refreshCursor() {
+            cursorQueued = false;
+            customCursor.style.transform = `translate3d(${_pt.x}px, ${_pt.y}px, 0)`;
+            if (!_pt.seen) return;
+            const el = document.elementFromPoint(_pt.x, _pt.y);
+            if (!el) return;
+            const [mode, label] = cursorModeFor(el);
+            customCursor.dataset.mode = mode;
+            if (cursorLabel.textContent !== label) cursorLabel.textContent = label;
+            customCursor.classList.toggle('has-label', !!label);
+            customCursor.classList.toggle('tone-dark', isDarkUnder(el, _pt.x, _pt.y));
+        }
+        function queueCursor() {
+            if (cursorQueued) return;
+            cursorQueued = true;
+            requestAnimationFrame(refreshCursor);
+        }
 
         window.addEventListener('mousemove', (e) => {
-            customCursor.style.left = `${e.clientX}px`;
-            customCursor.style.top = `${e.clientY}px`;
+            _pt.x = e.clientX;
+            _pt.y = e.clientY;
+            _pt.seen = true;
             customCursor.classList.add('cursor-on');
+            queueCursor();
         }, { passive: true });
-
-        // delegated, so cards rendered later (snippets, hindi name) also get it
-        document.addEventListener('mouseover', (e) => {
-            customCursor.classList.toggle('cursor-active', !!e.target.closest(HOVERABLE));
-        });
+        // content slides under a still pointer while scrolling, so re-read what's beneath it
+        window.addEventListener('scroll', queueCursor, { passive: true });
+        document.addEventListener('scroll', queueCursor, { passive: true, capture: true });
+        window.addEventListener('mousedown', () => customCursor.classList.add('is-pressed'));
+        window.addEventListener('mouseup', () => customCursor.classList.remove('is-pressed'));
         document.documentElement.addEventListener('mouseleave', () => customCursor.classList.remove('cursor-on'));
 
-        function toggleAmbientVisualizer() {
-            const btn = document.getElementById('soundEqBtn');
-            const on = btn.classList.toggle('playing');
-            btn.setAttribute('aria-pressed', String(on));
-        }
 
         /* =========================================================
            2. PROGRESSIVE STENCIL CLIP-PATH LOADER (000% -> 100%)
@@ -2645,33 +2968,37 @@
         const mCanvas = document.getElementById('stippledMountainCanvas');
         const mCtx = mCanvas.getContext('2d');
 
-        function drawStippledMountains() {
+        const mountainStage = document.getElementById('mountainStage');
+        const MOUNTAIN_H = 460;
+        const LAYER_PAD = 110;          // spare canvas above/below each ridge so drifting never shows an edge
+        const DRIFT = [170, 95, 28];    // px each ridge travels across the scroll, back to front
+        let mountainLayers = [];
+        let mountainW = 0;
+
+        // stipple each ridge once into its own offscreen canvas; scrolling only re-composites them
+        function buildMountainLayers() {
             const dpr = window.devicePixelRatio || 1;
             const w = mCanvas.clientWidth || window.innerWidth;
-            const h = 460;
+            const h = MOUNTAIN_H;
+            mountainW = w;
             mCanvas.width = w * dpr;
             mCanvas.height = h * dpr;
-            mCtx.scale(dpr, dpr);
-            mCtx.clearRect(0, 0, w, h);
 
-            // 3 Ridges of Himalayan Peaks
             const ridges = [
                 {
                     pts: [[0, 290], [w*0.12, 195], [w*0.24, 240], [w*0.38, 125], [w*0.52, 220], [w*0.67, 105], [w*0.82, 210], [w*0.92, 150], [w, 235]],
                     fill: '#E6E2DA',
-                    shade: '#161615',
                     dots: 4500
                 },
                 {
                     pts: [[0, 330], [w*0.18, 160], [w*0.33, 255], [w*0.49, 95], [w*0.64, 230], [w*0.78, 130], [w*0.9, 225], [w, 185]],
                     fill: '#EDEAE3',
-                    shade: '#161615',
-                    dots: 6500
+                    dots: 6500,
+                    flag: [w * 0.49, 95]
                 },
                 {
                     pts: [[0, 370], [w*0.09, 280], [w*0.27, 185], [w*0.44, 275], [w*0.61, 145], [w*0.75, 255], [w*0.88, 175], [w, 280]],
                     fill: '#F2EFE9',
-                    shade: '#161615',
                     dots: 5500
                 }
             ];
@@ -2686,55 +3013,80 @@
                 return h;
             }
 
-            ridges.forEach((ridge, rIdx) => {
-                // Base silhouette fill
-                mCtx.beginPath();
-                mCtx.moveTo(0, h);
-                ridge.pts.forEach(p => mCtx.lineTo(p[0], p[1]));
-                mCtx.lineTo(w, h);
-                mCtx.closePath();
-                mCtx.fillStyle = ridge.fill;
-                mCtx.fill();
+            mountainLayers = ridges.map((ridge) => {
+                const layer = document.createElement('canvas');
+                layer.width = w * dpr;
+                layer.height = (h + LAYER_PAD * 2) * dpr;
+                const ctx = layer.getContext('2d');
+                ctx.scale(dpr, dpr);
+                ctx.translate(0, LAYER_PAD);
 
-                // Crisp ridge outline
-                mCtx.beginPath();
-                ridge.pts.forEach((p, idx) => idx === 0 ? mCtx.moveTo(p[0], p[1]) : mCtx.lineTo(p[0], p[1]));
-                mCtx.strokeStyle = 'rgba(22, 22, 21, 0.75)';
-                mCtx.lineWidth = 1.3;
-                mCtx.stroke();
+                // silhouette runs past the stage bottom so a raised ridge still covers the one behind
+                ctx.beginPath();
+                ctx.moveTo(0, h + LAYER_PAD);
+                ridge.pts.forEach(p => ctx.lineTo(p[0], p[1]));
+                ctx.lineTo(w, h + LAYER_PAD);
+                ctx.closePath();
+                ctx.fillStyle = ridge.fill;
+                ctx.fill();
 
-                // Stippled charcoal shading dots clustered near the ridge line & left slopes
-                mCtx.fillStyle = ridge.shade;
+                ctx.beginPath();
+                ridge.pts.forEach((p, idx) => idx === 0 ? ctx.moveTo(p[0], p[1]) : ctx.lineTo(p[0], p[1]));
+                ctx.strokeStyle = 'rgba(22, 22, 21, 0.75)';
+                ctx.lineWidth = 1.3;
+                ctx.stroke();
+
+                // charcoal stipple, dense at the ridge line and fading down the slope
+                ctx.fillStyle = '#161615';
                 for (let i = 0; i < ridge.dots; i++) {
                     const rx = Math.random() * w;
-                    const topY = getRidgeY(ridge.pts, rx);
                     const depth = Math.pow(Math.random(), 2.1) * 145;
-                    const ry = topY + depth;
+                    const ry = getRidgeY(ridge.pts, rx) + depth;
                     if (ry < h - 30) {
-                        const alpha = Math.max(0.05, (1 - depth / 145) * 0.52);
-                        mCtx.globalAlpha = alpha;
-                        mCtx.fillRect(rx, ry, 1.3, 1.3);
+                        ctx.globalAlpha = Math.max(0.05, (1 - depth / 145) * 0.52);
+                        ctx.fillRect(rx, ry, 1.3, 1.3);
                     }
                 }
-                mCtx.globalAlpha = 1;
-            });
+                ctx.globalAlpha = 1;
 
-            // Red Summit Climber Flag on Highest Peak
-            const peakX = w * 0.49;
-            const peakY = 95;
-            mCtx.fillStyle = '#D34532';
-            mCtx.beginPath();
-            mCtx.arc(peakX, peakY - 4, 4, 0, Math.PI * 2);
-            mCtx.fill();
+                if (ridge.flag) {
+                    ctx.fillStyle = '#D34532';
+                    ctx.beginPath();
+                    ctx.arc(ridge.flag[0], ridge.flag[1] - 4, 4, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                return layer;
+            });
         }
-        let lastMountainW = 0;
+
+        let lastMountainP = null;
+        function renderMountains(force) {
+            const vh = window.innerHeight;
+            const r = mountainStage.getBoundingClientRect();
+            if (!force && (r.bottom < 0 || r.top > vh)) return;
+
+            // 0 when the stage peeks in at the bottom, 1 when it leaves at the top
+            const p = reducedMotion ? 0.5 : Math.min(1, Math.max(0, (vh - r.top) / (vh + r.height)));
+            if (!force && p === lastMountainP) return;
+            lastMountainP = p;
+
+            const dpr = window.devicePixelRatio || 1;
+            mCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            mCtx.clearRect(0, 0, mountainW, MOUNTAIN_H);
+            // back ridges sink as you scroll, so they look farther away than the page
+            mountainLayers.forEach((layer, i) => {
+                const y = -LAYER_PAD + (p - 0.5) * DRIFT[i];
+                mCtx.drawImage(layer, 0, y, mountainW, MOUNTAIN_H + LAYER_PAD * 2);
+            });
+        }
+
         window.addEventListener('resize', () => {
-            if (mCanvas.clientWidth === lastMountainW) return;
-            lastMountainW = mCanvas.clientWidth;
-            drawStippledMountains();
+            if (mCanvas.clientWidth === mountainW) return;
+            buildMountainLayers();
+            renderMountains(true);
         });
-        lastMountainW = mCanvas.clientWidth;
-        drawStippledMountains();
+        buildMountainLayers();
+        renderMountains(true);
 
         /* =========================================================
            5. MASTER SCROLL LOOP (PORTAL + BROWSER TABS + K2 OUTRO)
@@ -2767,6 +3119,7 @@
             const totalPct = Math.min(100, Math.round((scrollY / maxScroll) * 100));
 
             climberAvatar.style.bottom = `${totalPct}%`;
+            renderMountains();
             climberFill.style.height = `${totalPct}%`;
             climberPct.textContent = `${totalPct}%`;
 
@@ -2810,7 +3163,10 @@
 
                 const maxScale = Math.hypot(window.innerWidth, vh) / 9;
                 blackCircle.style.transform = `scale(${(Math.pow(zoomP, 1.7) * maxScale).toFixed(2)})`;
+                const disc = blackCircle.getBoundingClientRect();
+                portalDisc = { cx: disc.left + disc.width / 2, cy: disc.top + disc.height / 2, r: disc.width / 2 };
             }
+            if (p < 0.72) portalDisc = null;
 
             /* --- B. SCROLL-DRIVEN AUTO-SWITCHING MACOS BROWSER TABS --- */
             const aRect = aboutTrack.getBoundingClientRect();
@@ -2918,57 +3274,6 @@
         }, true);
         carousel.addEventListener('dragstart', (e) => e.preventDefault());
 
-        /* =========================================================
-           7. UI SNIPPETS IPHONE GRID
-           ========================================================= */
-        const snippetsData = [
-            { title: "The Day Grid", tag: "PWA · Lock Screen", cat: "web", img: "https://i.ibb.co/1Vmw65c/poster-1-spandan.png", link: "https://the-day-grid.vercel.app" },
-            { title: "Safe Charge", tag: "Android · Kotlin", cat: "mobile", img: "https://i.ibb.co/7xxg2HwS/poster-2-spandan.png", link: "https://play.google.com/store/apps/details?id=com.onesilicondiode.batterywise&pcampaignid=web_share" },
-            { title: "What's In", tag: "watchOS & Windows", cat: "mobile", img: "https://i.ibb.co/qFW4Wjnw/poster-6-spandan.png", link: "https://github.com/the-rebooted-coder/What-s-In" },
-            { title: "Legacy Rebase", tag: "IBM watsonx · RAG", cat: "ai", img: "https://i.ibb.co/1fKX3zQD/poster-4-spandan.png", link: "#confidential" },
-            { title: "Forecasted", tag: "FinTech · AI", cat: "ai", img: "https://i.ibb.co/yc96f8P3/poster-5-spandan.png", link: "https://github.com/the-rebooted-coder/Forecasted" },
-            { title: "Mail Canon", tag: "Python · Automation", cat: "web", img: "https://i.ibb.co/NgrK3wx9/poster-3-spandan.png", link: "https://github.com/the-rebooted-coder/Mail-Canon" },
-            { title: "Bow Film AR", tag: "Snap Lens Studio", cat: "ai", img: "https://i.ibb.co/NgN1cFTF/poster-12-spandan.png", link: "https://www.snapchat.com/unlock/?type=SNAPCODE&uuid=58a604a1379140089d56a02ec0917f05&metadata=01" },
-            { title: "Kaagaz Desktop", tag: "Workspace Engine", cat: "web", img: "https://i.ibb.co/hFxCyx4W/poster-10-spandan.png", link: "https://github.com/the-rebooted-coder/Kaagaz-Dynamic-Desktop" }
-        ];
-
-        const phoneGrid = document.getElementById('phoneGrid');
-        function renderSnippets(cat) {
-            phoneGrid.innerHTML = '';
-            const items = cat === 'all' ? snippetsData : snippetsData.filter(s => s.cat === cat);
-            items.forEach(item => {
-                const frame = document.createElement('a');
-                frame.className = 'iphone-frame';
-                frame.href = item.link;
-                if (item.link !== '#confidential') {
-                    frame.target = '_blank';
-                    frame.rel = 'noopener';
-                }
-                frame.innerHTML = `
-                    <div class="iphone-notch"></div>
-                    <div class="iphone-screen">
-                        <img src="${item.img}" alt="${item.title}" loading="lazy">
-                        <div class="iphone-caption-overlay">
-                            <h5>${item.title}</h5>
-                            <span>${item.tag}</span>
-                        </div>
-                    </div>
-                `;
-                if (item.link === '#confidential') {
-                    frame.onclick = (e) => {
-                        e.preventDefault();
-                        showToast('IBM Confidential Architecture 🔒');
-                    };
-                }
-                phoneGrid.appendChild(frame);
-            });
-        }
-        function filterSnippets(cat, btn) {
-            document.querySelectorAll('.snip-pill').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            renderSnippets(cat);
-        }
-        renderSnippets('all');
 
         /* =========================================================
            8. BROWSER TAB CONTROLLER + DRAGGABLE FIGMA + CLAUDE AI
@@ -2978,7 +3283,16 @@
             document.querySelectorAll('.browser-tab').forEach(btn => {
                 const active = btn.dataset.tab === tabId;
                 btn.classList.toggle('active', active);
-                if (active) document.getElementById('omniboxText').textContent = btn.dataset.url;
+                if (!active) return;
+                const url = btn.dataset.url;
+                document.getElementById('omniboxText').textContent = url;
+                // phone skins: Chrome shows the full url, Safari only the domain
+                document.querySelectorAll('.js-url-full').forEach(n => n.textContent = url);
+                document.querySelectorAll('.js-url-domain').forEach(n => n.textContent = url.split('/')[0]);
+            });
+            // queried here rather than cached: the scroll loop can call this before section 8 runs
+            document.querySelectorAll('.m-fav, .m-tab-card').forEach(n => {
+                n.classList.toggle('active', n.dataset.tab === tabId);
             });
             document.querySelectorAll('.tab-pane').forEach(pane => {
                 pane.classList.toggle('active', pane.id === `tab-${tabId}`);
@@ -3006,6 +3320,74 @@
         document.querySelectorAll('.browser-tab').forEach(btn => {
             btn.addEventListener('click', () => manualTabSwitch(btn.dataset.tab));
         });
+
+        /* --- phone browser skins --- */
+        const chromeWindow = document.querySelector('.chrome-window');
+        const tabGrid = document.getElementById('mTabGrid');
+        const phoneTabs = [...document.querySelectorAll('.browser-tab')].map(btn => {
+            const [icon, ...rest] = btn.textContent.trim().split(/\s+/);
+            return { id: btn.dataset.tab, url: btn.dataset.url, icon, title: rest.join(' ') };
+        });
+
+        document.getElementById('mGroupFavs').innerHTML = phoneTabs.map(t =>
+            `<button type="button" class="m-fav" data-tab="${t.id}" aria-label="${t.title}">${t.icon}</button>`
+        ).join('');
+        document.getElementById('mTabGridCards').innerHTML = phoneTabs.map(t => `
+            <button type="button" class="m-tab-card" data-tab="${t.id}">
+                <span class="m-tab-thumb">${t.icon}</span>
+                <span class="m-tab-meta">${t.title}<small>${t.url}</small></span>
+            </button>`
+        ).join('');
+        document.getElementById('mTabGridTitle').textContent = `${phoneTabs.length} tabs · spandan`;
+
+        const closeTabGrid = () => tabGrid.classList.remove('open');
+        document.querySelectorAll('.m-fav, .m-tab-card').forEach(b => b.addEventListener('click', () => {
+            manualTabSwitch(b.dataset.tab);
+            closeTabGrid();
+        }));
+        document.querySelectorAll('.js-tab-grid-open').forEach(b => b.addEventListener('click', () => {
+            manualOverrideTime = Date.now();
+            tabGrid.classList.add('open');
+        }));
+        document.querySelector('.js-tab-grid-close').addEventListener('click', closeTabGrid);
+        document.querySelectorAll('[data-tab-jump]').forEach(b => b.addEventListener('click', () => manualTabSwitch(b.dataset.tabJump)));
+
+        function stepTab(dir) {
+            const next = Math.min(tabOrder.length - 1, Math.max(0, currentAutoTabIdx + dir));
+            if (next !== currentAutoTabIdx) manualTabSwitch(tabOrder[next]);
+        }
+        document.querySelectorAll('[data-tab-step]').forEach(b => b.addEventListener('click', () => stepTab(+b.dataset.tabStep)));
+
+        // Safari: swipe the address bar sideways to move between tabs
+        const safariPill = document.getElementById('safariPill');
+        let _swipeX = null;
+        safariPill.addEventListener('pointerdown', e => { _swipeX = e.clientX; });
+        safariPill.addEventListener('pointerup', e => {
+            if (_swipeX === null) return;
+            const dx = e.clientX - _swipeX;
+            _swipeX = null;
+            if (Math.abs(dx) > 36) stepTab(dx < 0 ? 1 : -1);
+        });
+        safariPill.addEventListener('pointercancel', () => { _swipeX = null; });
+
+        function pickBrowserSkin() {
+            if (!window.matchMedia('(max-width: 760px)').matches) return '';
+            const ua = navigator.userAgent;
+            const apple = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+            if (apple) return 'safari';
+            if (/Android/.test(ua)) return 'chrome-m';
+            // narrow desktop window: match the visitor's platform as best we can
+            return /Mac/.test(navigator.platform || ua) ? 'safari' : 'chrome-m';
+        }
+        function applyBrowserSkin() {
+            const skin = pickBrowserSkin();
+            chromeWindow.classList.toggle('skin-safari', skin === 'safari');
+            chromeWindow.classList.toggle('skin-chrome-m', skin === 'chrome-m');
+            if (!skin) closeTabGrid();
+        }
+        window.matchMedia('(max-width: 760px)').addEventListener('change', applyBrowserSkin);
+        applyBrowserSkin();
+        activateBrowserTab(tabOrder[currentAutoTabIdx]);
 
         // Interactive Figma Dragging
         document.querySelectorAll('.figma-draggable, .figma-sticky').forEach(el => {
@@ -3053,27 +3435,60 @@
             }
         };
 
-        function askClaude(key) {
-            manualOverrideTime = Date.now();
+        const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+        let claudeBusy = false;
+
+        // think for a beat, then stream the answer in small word chunks like the real thing
+        async function askClaude(key) {
+            if (claudeBusy) return;
+            claudeBusy = true;
+            const chips = document.querySelectorAll('.prompt-chip');
+            chips.forEach(c => c.disabled = true);
+
             const log = document.getElementById('claudeChatLog');
+            const viewport = log.closest('.browser-viewport');
+            const stick = () => {
+                manualOverrideTime = Date.now();   // keep scroll-driven tab switching from yanking us away
+                viewport.scrollTop = viewport.scrollHeight;
+            };
             const item = claudeAnswers[key];
+
             const uMsg = document.createElement('div');
             uMsg.className = 'chat-msg user';
             uMsg.textContent = item.q;
             log.appendChild(uMsg);
+            stick();
+            await sleep(350);
 
             const bMsg = document.createElement('div');
             bMsg.className = 'chat-msg bot';
-            bMsg.textContent = '✴️ Thinking...';
+            bMsg.innerHTML = '<span class="claude-thinking"><span class="claude-spark">✴</span><span class="claude-shimmer">Thinking</span></span>';
             log.appendChild(bMsg);
+            stick();
 
-            const viewport = log.closest('.browser-viewport');
-            viewport.scrollTop = viewport.scrollHeight;
+            // longer answers "think" a bit longer, capped so it never drags
+            await sleep(Math.min(2600, 1100 + Math.random() * 600 + item.a.length * 2.5));
 
-            setTimeout(() => {
-                bMsg.textContent = item.a;
-                viewport.scrollTop = viewport.scrollHeight;
-            }, 320);
+            bMsg.textContent = '';
+            const textNode = document.createTextNode('');
+            const caret = document.createElement('span');
+            caret.className = 'claude-caret';
+            bMsg.append(textNode, caret);
+
+            const words = item.a.split(/(\s+)/);
+            for (let i = 0; i < words.length; ) {
+                const chunk = 1 + Math.floor(Math.random() * 3);
+                textNode.data += words.slice(i, i + chunk * 2).join('');
+                i += chunk * 2;
+                stick();
+                // the odd longer pause after punctuation reads as natural
+                await sleep(/[.,:;]$/.test(textNode.data.trim()) ? 140 : 35 + Math.random() * 45);
+            }
+            caret.remove();
+            stick();
+
+            chips.forEach(c => c.disabled = false);
+            claudeBusy = false;
         }
 
         /* =========================================================
