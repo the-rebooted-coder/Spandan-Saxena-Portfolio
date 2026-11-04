@@ -1670,7 +1670,258 @@
             padding-bottom: 8px;
             flex-shrink: 0;
         }
-        .mac-dot { width: 11px; height: 11px; border-radius: 50%; }
+        .mac-dot {
+            width: 12px;
+            height: 12px;
+            padding: 0;
+            border: none;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            color: rgba(0, 0, 0, 0.6);
+            font-size: 10px;
+            font-weight: 800;
+            line-height: 1;
+        }
+        .mac-dot span { opacity: 0; transition: opacity 0.12s ease; transform: translateY(-0.5px); }
+        .mac-dots:hover .mac-dot span, .mac-dot:focus-visible span { opacity: 1; }
+        .dot-close { background: #FF5F56; }
+        .dot-min { background: #FFBD2E; }
+        .dot-max { background: #27C93F; }
+
+        /* tab close, reopen and restore */
+        .browser-tab { max-width: 260px; min-width: 48px; overflow: hidden; flex: 0 1 auto !important; }
+        .browser-tab > span:first-child { overflow: hidden; text-overflow: ellipsis; }
+        .tab-x { flex-shrink: 0; }
+        .tab-x {
+            display: grid;
+            place-items: center;
+            width: 17px;
+            height: 17px;
+            margin: 0 -6px 0 2px;
+            border-radius: 50%;
+            font-size: 0.85rem;
+            line-height: 1;
+            opacity: 0.5;
+            transition: background 0.12s ease, opacity 0.12s ease;
+        }
+        .browser-tab:hover .tab-x, .browser-tab.active .tab-x { opacity: 0.85; }
+        .tab-x:hover { background: rgba(255, 255, 255, 0.16); opacity: 1 !important; }
+        .browser-tab.closing { animation: tabClose 0.2s ease forwards; pointer-events: none; }
+        .browser-tab.reopening { animation: tabOpen 0.25s cubic-bezier(0.3, 1.4, 0.5, 1); }
+        @keyframes tabClose { to { max-width: 0; padding-left: 0; padding-right: 0; opacity: 0; } }
+        @keyframes tabOpen { from { max-width: 0; padding-left: 0; padding-right: 0; opacity: 0; } }
+        .tab-new {
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            margin: 0 0 4px 2px;
+            border: none;
+            border-radius: 50%;
+            background: none;
+            color: rgba(255, 255, 255, 0.65);
+            font-size: 1.15rem;
+            line-height: 1;
+        }
+        .tab-new:hover:not(:disabled) { background: rgba(255, 255, 255, 0.12); color: #fff; }
+        .tab-new:disabled { opacity: 0.25; }
+        .tab-restore {
+            flex-shrink: 0;
+            margin: 0;
+            padding: 5px 10px 6px;
+            border: none;
+            border-radius: 5px;
+            background: var(--brick-yellow);
+            color: #161615;
+            font-family: inherit;
+            font-size: 0.7rem;
+            font-weight: 700;
+            box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.18);
+            animation: tabOpen 0.25s ease;
+        }
+
+        /* window states: minimised, breaking apart, coming back */
+        .browser-shell { position: relative; }
+        .chrome-window { transform-origin: 50% 100%; transition: transform 0.45s cubic-bezier(0.55, 0, 0.2, 1), opacity 0.35s ease; }
+        .chrome-window.is-min { transform: translateY(32%) scale(0.06); opacity: 0; pointer-events: none; }
+        .chrome-window.is-breaking { animation: winBreak 0.55s cubic-bezier(0.5, 0, 0.75, 0) forwards; pointer-events: none; }
+        .chrome-window.is-gone { visibility: hidden; pointer-events: none; }
+        .chrome-window.is-back { animation: winBack 0.6s cubic-bezier(0.3, 1.4, 0.5, 1); }
+        @keyframes winBreak {
+            15% { transform: rotate(-0.8deg) translateX(-6px); }
+            30% { transform: rotate(0.8deg) translateX(6px); }
+            100% { transform: translateY(90px) scale(0.9) rotate(2deg); opacity: 0; }
+        }
+        @keyframes winBack { from { opacity: 0; transform: translateY(40px) scale(0.94); } }
+
+        .about-sticky-container.is-max .about-header-row,
+        .about-sticky-container.is-max > .editorial-sec-kicker { display: none; }
+        .about-sticky-container.is-max .browser-viewport { height: calc(100vh - 190px); }
+
+        .browser-dock {
+            position: absolute;
+            left: 50%;
+            bottom: 26px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            transform: translateX(-50%);
+            font-family: var(--font-hand);
+            font-size: 1.3rem;
+            color: var(--ink-muted);
+            white-space: nowrap;
+        }
+        .browser-dock.show { display: flex; animation: dockIn 0.45s cubic-bezier(0.3, 1.5, 0.5, 1) 0.25s both; }
+        @keyframes dockIn { from { opacity: 0; transform: translate(-50%, 30px) scale(0.7); } }
+        .dock-brick {
+            --stud: var(--brick-yellow);
+            --stud-inset: 12px;
+            --stud-pitch: 26px;
+            --stud-h: 8px;
+            padding: 14px 24px 17px;
+            border: none;
+            border-radius: 7px;
+            background: var(--brick-yellow);
+            color: #161615;
+            font-family: var(--font-sans);
+            font-size: 0.92rem;
+            font-weight: 700;
+            box-shadow: inset 0 -5px 0 rgba(0, 0, 0, 0.16), inset 0 2px 0 rgba(255, 255, 255, 0.35), 0 14px 26px -10px rgba(22, 22, 21, 0.4);
+            animation: dockBob 1.8s ease-in-out infinite;
+        }
+        .dock-brick:hover { animation-play-state: paused; transform: translateY(-4px); }
+        @keyframes dockBob { 50% { transform: translateY(-6px); } }
+
+        .browser-rebuild {
+            position: absolute;
+            inset: 0;
+            display: none;
+            grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+            align-items: center;
+            gap: 36px;
+            padding: 30px 46px;
+            border: 2px dashed var(--ink-faint);
+            border-radius: 18px;
+            background: var(--cream-card);
+            overflow: hidden;
+        }
+        .browser-rebuild.show { display: grid; animation: tabFade 0.35s ease 0.35s both; }
+        .rb-step {
+            display: inline-block;
+            margin-bottom: 14px;
+            padding: 4px 9px 5px;
+            border-radius: 4px;
+            background: var(--brick-red);
+            color: #fff;
+            font-family: var(--font-mono);
+            font-size: 0.66rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.2);
+        }
+        .rb-manual h3 {
+            font-family: var(--font-serif);
+            font-size: clamp(2rem, 3.4vw, 2.8rem);
+            font-weight: 400;
+            line-height: 1;
+            margin-bottom: 14px;
+            color: var(--ink-dark);
+        }
+        .rb-manual h3 em { color: var(--brick-red); }
+        .rb-manual p { max-width: 330px; font-size: 0.95rem; line-height: 1.55; color: var(--ink-muted); margin-bottom: 18px; }
+        .rb-skip {
+            border: none;
+            background: none;
+            padding: 0;
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--ink-muted);
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+        .rb-stage { display: flex; flex-direction: column; align-items: center; gap: 26px; }
+        .rb-build { width: min(380px, 100%); display: flex; flex-direction: column-reverse; }
+        .rb-slot {
+            --stud: var(--c);
+            --stud-inset: 10px;
+            --stud-pitch: 24px;
+            --stud-h: 6px;
+            position: relative;
+            margin-top: 6px;
+            border: 1.5px dashed var(--ink-faint);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .rb-slot > * { opacity: 0; }
+        .rb-slot.is-next { border-color: var(--brick-red); animation: slotPulse 1.1s ease-in-out infinite; }
+        @keyframes slotPulse { 50% { background: rgba(208, 16, 18, 0.07); } }
+        .rb-slot.placed {
+            border-style: solid;
+            border-color: transparent;
+            background: var(--c);
+            box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+            animation: slotDrop 0.38s cubic-bezier(0.3, 1.5, 0.5, 1);
+        }
+        .rb-slot.placed > * { opacity: 1; transition: opacity 0.2s ease 0.15s; }
+        @keyframes slotDrop { from { transform: translateY(-46px); opacity: 0.3; } }
+        .rb-dots { display: flex; gap: 5px; margin-right: auto; margin-left: 12px; }
+        .rb-dots b { width: 8px; height: 8px; border-radius: 50%; background: #FF5F56; }
+        .rb-dots b:nth-child(2) { background: #FFBD2E; }
+        .rb-dots b:nth-child(3) { background: #27C93F; }
+        .rb-pill { width: 70%; height: 10px; border-radius: 6px; background: #1C1C1B; }
+        .rb-url { font-family: var(--font-mono); font-size: 0.66rem; color: #8B887F; letter-spacing: 0.08em; }
+
+        .rb-pile { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-end; gap: 16px 18px; min-height: 52px; }
+        .rb-piece {
+            --stud: var(--c);
+            --stud-inset: 5px;
+            --stud-pitch: 14px;
+            --stud-h: 5px;
+            height: 22px;
+            border: none;
+            border-radius: 3px;
+            background: var(--c);
+            box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(22, 22, 21, 0.15), 0 6px 10px rgba(0, 0, 0, 0.12);
+            transform: rotate(var(--r));
+            opacity: 0.4;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            animation: pileDrop 0.5s cubic-bezier(0.3, 1.4, 0.5, 1) var(--d) both;
+        }
+        .rb-piece.next { opacity: 1; }
+        .rb-piece.landed { animation: none; }
+        .rb-piece.landed.next { animation: piecePulse 0.9s ease-in-out infinite; }
+        .rb-piece.used { visibility: hidden; }
+        @keyframes pileDrop { from { opacity: 0; transform: translateY(-120px) rotate(calc(var(--r) * 3)); } }
+        @keyframes piecePulse {
+            0%, 100% { transform: rotate(var(--r)); }
+            30% { transform: rotate(calc(var(--r) - 8deg)) translateY(-4px); }
+            60% { transform: rotate(calc(var(--r) + 6deg)) translateY(-2px); }
+        }
+
+        /* the bricks that tumble out when the window breaks */
+        .rb-shards { position: absolute; inset: 0; pointer-events: none; }
+        .rb-shards i {
+            --stud: var(--c);
+            --stud-inset: 4px;
+            --stud-pitch: 12px;
+            --stud-h: 4px;
+            position: absolute;
+            height: 16px;
+            border-radius: 2px;
+            background: var(--c);
+            box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.2);
+            animation: shardFall 0.9s cubic-bezier(0.45, 0, 0.9, 0.6) var(--d) forwards;
+        }
+        @keyframes shardFall {
+            0% { opacity: 1; transform: translate(0, 0) rotate(0); }
+            100% { opacity: 0; transform: translate(var(--dx), 420px) rotate(var(--r)); }
+        }
 
         .spandan-tab-group-badge {
             background: var(--brick-red);
@@ -2363,6 +2614,8 @@
             .about-sticky-container { top: 0; padding-top: 76px; }
         }
 
+        .chrome-window.skin-safari ~ .browser-dock,
+        .chrome-window.skin-chrome-m ~ .browser-dock { display: none !important; }
         .chrome-window.skin-safari .chrome-tabbar,
         .chrome-window.skin-safari .chrome-omnibox-bar,
         .chrome-window.skin-chrome-m .chrome-tabbar,
@@ -2856,6 +3109,8 @@
             .m-tab-thumb { background-color: #1A1A19; }
 
             .pg-btn { border-color: rgba(255, 255, 255, 0.12); box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.3); }
+            .rb-piece { box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.22); }
+            .rb-slot.placed { box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.14); }
             /* the black brick needs a rim or it vanishes into the page */
             .pg-swatch { box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.28); }
 
@@ -3338,37 +3593,39 @@
                 </div>
             </div>
 
+            <div class="browser-shell" id="browserShell">
             <div class="chrome-window">
                 <div class="chrome-tabbar">
                     <div class="mac-dots">
-                        <div class="mac-dot" style="background:#FF5F56;"></div>
-                        <div class="mac-dot" style="background:#FFBD2E;"></div>
-                        <div class="mac-dot" style="background:#27C93F;"></div>
+                        <button type="button" class="mac-dot dot-close" id="winClose" aria-label="Close the browser" title="close"><span>×</span></button>
+                        <button type="button" class="mac-dot dot-min" id="winMin" aria-label="Minimise the browser" title="minimise"><span>−</span></button>
+                        <button type="button" class="mac-dot dot-max" id="winMax" aria-label="Make the browser bigger" title="zoom"><span>+</span></button>
                     </div>
 
                     <span class="spandan-tab-group-badge">spandan</span>
 
                     <button class="browser-tab active" data-tab="bio" data-url="spandan.dev/about">
-                        <span>👤 about me</span>
+                        <span>👤 about me</span><span class="tab-x" role="button" aria-label="close tab" title="close tab">×</span>
                     </button>
                     <button class="browser-tab" data-tab="worklog" data-url="spandan.dev/work-log">
-                        <span>💼 work log</span>
+                        <span>💼 work log</span><span class="tab-x" role="button" aria-label="close tab" title="close tab">×</span>
                     </button>
                     <button class="browser-tab" data-tab="travel" data-url="spandan.dev/travel-journeys">
-                        <span>🏔️ travel &amp; reset</span>
+                        <span>🏔️ travel &amp; reset</span><span class="tab-x" role="button" aria-label="close tab" title="close tab">×</span>
                     </button>
                     <button class="browser-tab" data-tab="honors" data-url="spandan.dev/awards-certs">
-                        <span>🏆 not UX, code</span>
+                        <span>🏆 not UX, code</span><span class="tab-x" role="button" aria-label="close tab" title="close tab">×</span>
                     </button>
                     <button class="browser-tab" data-tab="gallery" data-url="spandan.dev/gallery">
-                        <span>📸 gallery</span>
+                        <span>📸 gallery</span><span class="tab-x" role="button" aria-label="close tab" title="close tab">×</span>
                     </button>
                     <button class="browser-tab" data-tab="figma" data-url="figma.com/design/Spandan-Portfolio-System">
-                        <span>🎨 Figma — portfolio.fig</span>
+                        <span>🎨 Figma — portfolio.fig</span><span class="tab-x" role="button" aria-label="close tab" title="close tab">×</span>
                     </button>
                     <button class="browser-tab" data-tab="claude" data-url="claude.ai/new">
-                        <span>✴️ Claude — Ask AI</span>
+                        <span>✴️ Claude — Ask AI</span><span class="tab-x" role="button" aria-label="close tab" title="close tab">×</span>
                     </button>
+                    <button type="button" class="tab-new" id="tabNew" aria-label="Reopen the last closed tab" title="reopen closed tab" disabled>+</button>
                 </div>
 
                 <div class="chrome-omnibox-bar">
@@ -3377,6 +3634,7 @@
                         <span style="opacity:0.5;">🔒</span>
                         <span id="omniboxText">spandan.dev/about</span>
                     </div>
+                    <button type="button" class="tab-restore" id="tabRestore" hidden>↺ restore all tabs</button>
                 </div>
 
                 <!-- Chrome on Android: top toolbar -->
@@ -3473,12 +3731,12 @@
                             </div>
                             <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
                                 <div class="bio-polaroid" style="transform:rotate(-2deg); padding:10px 10px 26px;">
-                                    <img id="travelImg1" src="" alt="Hampi" style="height:165px;">
+                                    <img id="travelImg1" src="" alt="A ₹50 note held up in front of the Hampi stone chariot it pictures" style="height:165px; object-position: 50% 55%;">
                                     <div class="polaroid-caption">Hampi '25</div>
                                 </div>
                                 <div class="bio-polaroid" style="transform:rotate(3deg); padding:10px 10px 26px;">
-                                    <img id="travelImg2" src="" alt="Builds" style="height:165px;">
-                                    <div class="polaroid-caption">Lego &amp; PS5 nights</div>
+                                    <img id="travelImg2" src="" alt="A ₹20 note held up in front of the Ellora caves it pictures" style="height:165px; object-position: 50% 72%;">
+                                    <div class="polaroid-caption">Ellora, in the rain</div>
                                 </div>
                             </div>
                         </div>
@@ -3627,6 +3885,28 @@
                 </div>
             </div>
 
+                <!-- minimised: the window shrinks into a brick you click to get back -->
+                <div class="browser-dock" id="browserDock">
+                    <button type="button" class="dock-brick studs" id="dockBrick">🧱 spandan's browser</button>
+                    <span>minimised, not gone. click the brick.</span>
+                </div>
+
+                <!-- closed: the window falls apart and you rebuild it, instruction-manual style -->
+                <div class="browser-rebuild" id="browserRebuild" aria-live="polite">
+                    <div class="rb-manual">
+                        <div class="rb-step" id="rbStep">STEP 1 / 5</div>
+                        <h3 id="rbTitle">oops. the browser <em>fell apart.</em></h3>
+                        <p id="rbText">put it back together, one brick at a time. tap the piece that's wiggling.</p>
+                        <button type="button" class="rb-skip" id="rbSkip">nah, just open it</button>
+                    </div>
+                    <div class="rb-stage">
+                        <div class="rb-build" id="rbBuild"></div>
+                        <div class="rb-pile" id="rbPile"></div>
+                    </div>
+                    <div class="rb-shards" id="rbShards" aria-hidden="true"></div>
+                </div>
+            </div>
+
             <!-- Segmented Tab Progress Dots -->
             <div class="browser-scroll-dots" id="browserDots">
                 <div class="b-dot active" data-i="0"></div>
@@ -3767,7 +4047,7 @@
                             <div class="footer-socials">
                                 <a href="https://www.linkedin.com/in/spandn/" target="_blank" rel="noopener">in LinkedIn</a>
                                 <a href="https://github.com/the-rebooted-coder" target="_blank" rel="noopener">⌘ GitHub</a>
-                                <a href="https://www.instagram.com/simply.spandan/" target="_blank" rel="noopener">◎ Instagram</a>
+                                <a href="https://www.instagram.com/spandanthisside/" target="_blank" rel="noopener">◎ Instagram</a>
                             </div>
                         </div>
                     </div>
@@ -3785,7 +4065,7 @@
         /* =========================================================
            0. ASSET CONFIGURATION (DROP YOUR PHOTOS & LOGOS HERE)
            ========================================================= */
-        // TODO(spandan): real photos pending. Hero polaroids 1 and 3, bio portrait, travel and
+        // TODO(spandan): real photos pending. Hero polaroids 1 and 3, the bio portrait and the
         // gallery still point at project posters, so their captions don't match yet.
         const PORTFOLIO_ASSETS = {
             heroPolaroids: [
@@ -3795,8 +4075,8 @@
             ],
             bioPortrait: "https://i.ibb.co/1Vmw65c/poster-1-spandan.png",
             travelPhotos: [
-                "https://i.ibb.co/XfDCNP7q/poster-8-spandan.png",
-                "https://i.ibb.co/hFxCyx4W/poster-10-spandan.png"
+                "assets/hampi25-web.jpg",
+                "assets/ellora-web.jpg"
             ],
             everydayGallery: [
                 "https://i.ibb.co/1Vmw65c/poster-1-spandan.png",
@@ -3997,29 +4277,64 @@
         const buzz = (ms) => navigator.vibrate && navigator.vibrate(ms);
 
         /* ---- unboxing sounds, synthesised with Web Audio (no files to load) ----
-           The context is only created inside a tap/drag, which is what browsers need
-           before they allow sound. */
+           iOS only lets a page start audio from a touchend / click / keydown, not from
+           touchstart or a drag. So every gesture tries to unlock, the big "opening"
+           sounds wait in a short queue until audio is actually running, and the
+           crackle while dragging simply plays once the context is live. */
         const sfx = (() => {
             let ctx = null, out = null, noise = null;
             let muted = localStorage.getItem('pf-sound') === 'off';
             let lastRip = 0;
+            let waiting = [];   // [fn, queuedAt] played on unlock if still fresh
 
-            function wake() {
-                if (muted) return null;
+            function build() {
                 const AC = window.AudioContext || window.webkitAudioContext;
-                if (!AC) return null;
-                if (!ctx) {
-                    ctx = new AC();
-                    out = ctx.createDynamicsCompressor();
-                    const vol = ctx.createGain();
-                    vol.gain.value = 0.7;
-                    out.connect(vol).connect(ctx.destination);
-                    noise = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
-                    const d = noise.getChannelData(0);
-                    for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
-                }
-                if (ctx.state === 'suspended') ctx.resume();
-                return ctx;
+                if (!AC) return false;
+                if (ctx) return true;
+                ctx = new AC();
+                out = ctx.createDynamicsCompressor();
+                const vol = ctx.createGain();
+                vol.gain.value = 0.7;
+                out.connect(vol).connect(ctx.destination);
+                noise = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
+                const d = noise.getChannelData(0);
+                for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+                ctx.onstatechange = () => { if (ctx.state === 'running') flush(); };
+                return true;
+            }
+            const live = () => !muted && ctx && ctx.state === 'running';
+
+            function flush() {
+                if (!live()) return;
+                const now = performance.now();
+                const fresh = waiting.filter(([, at]) => now - at < 1600);
+                waiting = [];
+                if (!fresh.length) return;
+                const first = fresh[0][1];
+                // keep the original spacing between peel, lid and rattle
+                fresh.forEach(([fn, at]) => setTimeout(fn, at - first));
+            }
+
+            function unlock() {
+                if (muted || !build()) return;
+                if (ctx.state === 'running') return;
+                ctx.resume().then(flush, () => {});
+                // older iOS also wants a sound started inside the gesture itself
+                const src = ctx.createBufferSource();
+                src.buffer = ctx.createBuffer(1, 1, 22050);
+                src.connect(ctx.destination);
+                src.start(0);
+            }
+            ['touchend', 'pointerup', 'click', 'keydown', 'touchstart', 'pointerdown'].forEach(type =>
+                document.addEventListener(type, unlock, { capture: true, passive: true }));
+            // coming back from the background can leave iOS audio "interrupted"
+            document.addEventListener('visibilitychange', () => { if (!document.hidden && ctx && ctx.state !== 'running') unlock(); });
+
+            // sounds that matter (opening the box) wait for the unlock instead of vanishing
+            function soon(fn) {
+                if (muted) return;
+                if (live()) fn();
+                else { waiting.push([fn, performance.now()]); unlock(); }
             }
 
             // a filtered burst of noise: the base of every paper / cardboard sound
@@ -4052,18 +4367,19 @@
                 o.stop(at + dur + 0.02);
             }
 
-            return {
-                wake,
+            const api = {
+                wake: unlock,
                 get muted() { return muted; },
                 toggle() {
                     muted = !muted;
                     localStorage.setItem('pf-sound', muted ? 'off' : 'on');
                     if (muted && ctx) ctx.suspend();
+                    else unlock();
                     return muted;
                 },
                 // tape tearing: a crackle of short grains, louder the faster you pull
                 rip(amount = 0.05) {
-                    if (!wake()) return;
+                    if (!live()) return;
                     const now = ctx.currentTime;
                     if (now - lastRip < 0.022) return;
                     lastRip = now;
@@ -4075,20 +4391,20 @@
                 },
                 // the strip coming free: a quick downward swish
                 peel() {
-                    if (!wake()) return;
-                    hiss(ctx.currentTime, 0.32, 4200, 0.8, 0.5, 'bandpass', 700);
+                    soon(() => hiss(ctx.currentTime, 0.32, 4200, 0.8, 0.5, 'bandpass', 700));
                 },
                 // lid lifting: the suction "fwump" of a snug box, then a small cardboard knock
                 lid() {
-                    if (!wake()) return;
-                    const t = ctx.currentTime;
-                    tone(t, 0.22, 160, 48, 0.9);
-                    hiss(t, 0.12, 900, 0.7, 0.6, 'lowpass');
-                    tone(t + 0.07, 0.07, 620, 210, 0.35, 'triangle');
+                    soon(() => {
+                        const t = ctx.currentTime;
+                        tone(t, 0.22, 160, 48, 0.9);
+                        hiss(t, 0.12, 900, 0.7, 0.6, 'lowpass');
+                        tone(t + 0.07, 0.07, 620, 210, 0.35, 'triangle');
+                    });
                 },
                 // one plastic brick hitting something: bright click + tiny body
                 clack(power = 1) {
-                    if (!wake()) return;
+                    if (!live()) return;
                     const t = ctx.currentTime + Math.random() * 0.01;
                     const v = Math.max(0.05, Math.min(1, power));
                     tone(t, 0.035, 2400 + Math.random() * 1600, 1300, 0.45 * v, 'triangle');
@@ -4096,15 +4412,17 @@
                 },
                 // bricks rattling around as the box opens
                 rattle() {
-                    if (!wake()) return;
-                    const t = ctx.currentTime;
-                    for (let i = 0; i < 9; i++) {
-                        const at = t + 0.05 + i * 0.035 + Math.random() * 0.03;
-                        tone(at, 0.03, 1800 + Math.random() * 2200, 1100, 0.22, 'triangle');
-                        hiss(at, 0.018, 4800, 2, 0.18, 'highpass');
-                    }
+                    soon(() => {
+                        const t = ctx.currentTime;
+                        for (let i = 0; i < 9; i++) {
+                            const at = t + 0.05 + i * 0.035 + Math.random() * 0.03;
+                            tone(at, 0.03, 1800 + Math.random() * 2200, 1100, 0.22, 'triangle');
+                            hiss(at, 0.018, 4800, 2, 0.18, 'highpass');
+                        }
+                    });
                 }
             };
+            return api;
         })();
 
         /* ---- the bricks that fly out: simple 2D physics, they bounce on the bottom edge ---- */
@@ -4593,6 +4911,9 @@
         const aboutTrack = document.getElementById('about-browser');
         const tabOrder = ['bio', 'worklog', 'travel', 'honors', 'gallery', 'figma', 'claude'];
         let currentAutoTabIdx = 0;
+        const closedTabs = new Set();          // desktop only: tabs the visitor has closed
+        let browserState = 'open';             // 'open' | 'min' | 'closed'
+        const liveTabs = () => tabOrder.filter(t => !closedTabs.has(t));
         let manualOverrideTime = 0;
 
         const outroTrack = document.getElementById('contact-outro');
@@ -4684,13 +5005,14 @@
             const aRect = aboutTrack.getBoundingClientRect();
             const aScrollable = aboutTrack.offsetHeight - vh;
             // on iPhone the page scroll reads the tab instead; only swipes and taps switch
-            if (!aboutTrack.classList.contains('is-flow')
+            if (!aboutTrack.classList.contains('is-flow') && browserState === 'open'
                 && aRect.top <= 0 && aRect.bottom >= vh && Date.now() - manualOverrideTime > 1200) {
                 const aProg = Math.min(0.999, Math.max(0, -aRect.top / aScrollable));
-                const targetIdx = Math.floor(aProg * tabOrder.length);
-                if (targetIdx !== currentAutoTabIdx) {
-                    currentAutoTabIdx = targetIdx;
-                    activateBrowserTab(tabOrder[targetIdx]);
+                const live = liveTabs();
+                const target = live[Math.floor(aProg * live.length)];
+                if (target !== tabOrder[currentAutoTabIdx]) {
+                    currentAutoTabIdx = tabOrder.indexOf(target);
+                    activateBrowserTab(target);
                 }
             }
 
@@ -4826,13 +5148,18 @@
                 dot.classList.toggle('on', +dot.dataset.i === idx);
             });
             const btn = document.querySelector(`.browser-tab[data-tab="${tabId}"]`);
-            const [icon, ...rest] = btn.textContent.trim().split(/\s+/);
+            const [icon, ...rest] = btn.querySelector('span').textContent.trim().split(/\s+/);
             document.querySelectorAll('.js-tab-icon').forEach(n => n.textContent = icon);
             document.querySelectorAll('.js-tab-title').forEach(n => n.textContent = rest.join(' '));
             document.querySelectorAll('[data-tab-step="-1"]').forEach(b => b.disabled = idx === 0);
         }
 
         function manualTabSwitch(tabId) {
+            // the "next" buttons may point at a tab that's been closed: go to the next open one
+            if (closedTabs.has(tabId)) {
+                const live = liveTabs();
+                tabId = live.find(t => tabOrder.indexOf(t) > tabOrder.indexOf(tabId)) || live[live.length - 1];
+            }
             manualOverrideTime = Date.now();
             currentAutoTabIdx = tabOrder.indexOf(tabId);
             activateBrowserTab(tabId);
@@ -4848,7 +5175,8 @@
             const aRect = aboutTrack.getBoundingClientRect();
             if (aRect.top <= 0 && aRect.bottom >= vh) {
                 const span = aboutTrack.offsetHeight - vh;
-                const slot = (currentAutoTabIdx + 0.5) / tabOrder.length;
+                const live = liveTabs();
+                const slot = (live.indexOf(tabId) + 0.5) / live.length;
                 window.scrollTo({ top: window.scrollY + aRect.top + span * slot, behavior: 'instant' });
             }
         }
@@ -4857,11 +5185,196 @@
             btn.addEventListener('click', () => manualTabSwitch(btn.dataset.tab));
         });
 
+        /* --- desktop window: close tabs, reopen, minimise, zoom, close + rebuild --- */
+        const tabNew = document.getElementById('tabNew');
+        const tabRestore = document.getElementById('tabRestore');
+        const closedStack = [];
+        const tabBtn = (id) => document.querySelector(`.browser-tab[data-tab="${id}"]`);
+
+        function paintTabControls() {
+            tabNew.disabled = closedStack.length === 0;
+            tabRestore.hidden = closedStack.length === 0;
+            document.querySelectorAll('#browserDots .b-dot').forEach(d => {
+                d.style.display = closedTabs.has(tabOrder[+d.dataset.i]) ? 'none' : '';
+            });
+        }
+
+        function closeTab(id) {
+            if (browserState !== 'open' || closedTabs.has(id)) return;
+            if (liveTabs().length === 1) { closeBrowser(); return; }   // last tab takes the window with it, like Chrome
+            const wasActive = tabOrder[currentAutoTabIdx] === id;
+            closedTabs.add(id);
+            closedStack.push(id);
+            const btn = tabBtn(id);
+            btn.classList.add('closing');
+            setTimeout(() => { if (closedTabs.has(id)) btn.hidden = true; btn.classList.remove('closing'); }, 200);
+            if (wasActive) {
+                const live = liveTabs();
+                manualTabSwitch(live.find(t => tabOrder.indexOf(t) > tabOrder.indexOf(id)) || live[live.length - 1]);
+            }
+            sfx.clack(0.35);
+            paintTabControls();
+        }
+
+        function reopenTab(id) {
+            closedTabs.delete(id);
+            const i = closedStack.indexOf(id);
+            if (i >= 0) closedStack.splice(i, 1);
+            const btn = tabBtn(id);
+            btn.hidden = false;
+            btn.classList.remove('reopening');
+            void btn.offsetWidth;
+            btn.classList.add('reopening');
+        }
+        function restoreAllTabs() {
+            [...closedTabs].forEach(reopenTab);
+            paintTabControls();
+        }
+
+        document.querySelectorAll('.browser-tab').forEach(btn => {
+            btn.querySelector('.tab-x').addEventListener('click', (e) => {
+                e.stopPropagation();
+                closeTab(btn.dataset.tab);
+            });
+            // middle-click closes, same as a real browser
+            btn.addEventListener('auxclick', (e) => { if (e.button === 1) { e.preventDefault(); closeTab(btn.dataset.tab); } });
+        });
+        tabNew.addEventListener('click', () => {
+            const id = closedStack[closedStack.length - 1];
+            if (!id) return;
+            reopenTab(id);
+            paintTabControls();
+            manualTabSwitch(id);
+            sfx.clack(0.5);
+        });
+        tabRestore.addEventListener('click', () => { restoreAllTabs(); sfx.rattle(); });
+
+        // zoom: the window takes the whole screen, the heading steps aside
+        const aboutSticky = document.querySelector('.about-sticky-container');
+        document.getElementById('winMax').addEventListener('click', () => {
+            aboutSticky.classList.toggle('is-max');
+            manualOverrideTime = Date.now();
+        });
+
+        // minimise: window shrinks into a brick on the "dock"
+        const browserDock = document.getElementById('browserDock');
+        const chromeWin = document.querySelector('.chrome-window');
+        document.getElementById('winMin').addEventListener('click', () => {
+            if (browserState !== 'open') return;
+            browserState = 'min';
+            chromeWin.classList.add('is-min');
+            browserDock.classList.add('show');
+            sfx.clack(0.4);
+        });
+        document.getElementById('dockBrick').addEventListener('click', () => {
+            browserState = 'open';
+            browserDock.classList.remove('show');
+            chromeWin.classList.remove('is-min');
+            sfx.clack(0.6);
+        });
+
+        // close: the window shakes, bricks tumble out, and you rebuild it to get back in
+        const LAYERS = [
+            { name: 'base plate', c: '#A0A5A9', h: 12, w: 96 },
+            { name: 'page, bottom half', c: '#FAF8F5', h: 54, w: 80 },
+            { name: 'page, top half', c: '#FAF8F5', h: 54, w: 80, inner: '<span class="rb-url">spandan.dev</span>' },
+            { name: 'address bar', c: '#2C2C2A', h: 24, w: 66, inner: '<i class="rb-pill"></i>' },
+            { name: 'tab bar', c: '#1C1C1B', h: 26, w: 56, inner: '<i class="rb-dots"><b></b><b></b><b></b></i>' }
+        ];
+        const rebuild = document.getElementById('browserRebuild');
+        const rbBuild = document.getElementById('rbBuild');
+        const rbPile = document.getElementById('rbPile');
+        const rbStep = document.getElementById('rbStep');
+        const rbTitle = document.getElementById('rbTitle');
+        const rbText = document.getElementById('rbText');
+        let rbPlaced = 0;
+
+        function setupRebuild() {
+            rbPlaced = 0;
+            rbBuild.innerHTML = LAYERS.map((l, i) =>
+                `<div class="rb-slot${i === 0 ? ' is-next' : ''}" style="--c:${l.c}; height:${l.h}px">${l.inner || ''}</div>`).join('');
+            // the pile is shuffled so it looks like a heap, but only the next piece in order is live
+            const order = LAYERS.map((_, i) => i).sort(() => Math.random() - 0.5);
+            rbPile.innerHTML = order.map((i, k) => {
+                const l = LAYERS[i];
+                return `<button type="button" class="rb-piece studs${i === 0 ? ' next' : ''}" data-layer="${i}" aria-label="${l.name}"
+                    style="--c:${l.c}; width:${l.w}px; --r:${Math.round(Math.random() * 24 - 12)}deg; --d:${k * 90 + 250}ms"></button>`;
+            }).join('');
+            rbStep.textContent = `STEP 1 / ${LAYERS.length} · ${LAYERS[0].name}`;
+            setTimeout(() => rbPile.querySelectorAll('.rb-piece').forEach(pc => pc.classList.add('landed')), 1300);
+            rbTitle.innerHTML = 'oops. the browser <em>fell apart.</em>';
+            rbText.textContent = "put it back together, one brick at a time. tap the piece that's wiggling.";
+        }
+
+        function spillShards() {
+            const box = rebuild.getBoundingClientRect();
+            const colors = ['#1C1C1B', '#2C2C2A', '#FAF8F5', '#D01012', '#FFBD2E', '#27C93F', '#A0A5A9'];
+            document.getElementById('rbShards').innerHTML = Array.from({ length: 22 }, (_, i) => {
+                const w = 24 + (i % 3) * 12;
+                return `<i class="studs" style="--c:${colors[i % colors.length]}; width:${w}px; left:${Math.random() * (box.width - w)}px;
+                    top:${Math.random() * box.height * 0.6}px; --dx:${Math.round(Math.random() * 160 - 80)}px;
+                    --r:${Math.round(Math.random() * 540 - 270)}deg; --d:${Math.round(Math.random() * 180)}ms"></i>`;
+            }).join('');
+        }
+
+        function closeBrowser() {
+            if (browserState === 'closed') return;
+            browserState = 'closed';
+            aboutSticky.classList.remove('is-max');
+            browserDock.classList.remove('show');
+            chromeWin.classList.remove('is-min', 'is-back');
+            chromeWin.classList.add('is-breaking');
+            setupRebuild();
+            rebuild.classList.add('show');
+            spillShards();
+            sfx.rattle();
+            setTimeout(() => { chromeWin.classList.remove('is-breaking'); chromeWin.classList.add('is-gone'); }, 550);
+        }
+
+        function reopenBrowser() {
+            restoreAllTabs();
+            rebuild.classList.remove('show');
+            document.getElementById('rbShards').innerHTML = '';
+            chromeWin.classList.remove('is-gone', 'is-breaking');
+            void chromeWin.offsetWidth;
+            chromeWin.classList.add('is-back');
+            browserState = 'open';
+            manualTabSwitch(tabOrder[0]);
+        }
+
+        rbPile.addEventListener('click', (e) => {
+            const piece = e.target.closest('.rb-piece.next');
+            if (!piece) return;
+            const i = +piece.dataset.layer;
+            piece.classList.remove('next');
+            piece.classList.add('used');
+            const slots = rbBuild.querySelectorAll('.rb-slot');
+            slots[i].classList.remove('is-next');
+            slots[i].classList.add('placed', 'studs');
+            sfx.clack(0.8);
+            rbPlaced++;
+            if (rbPlaced < LAYERS.length) {
+                slots[rbPlaced].classList.add('is-next');
+                rbPile.querySelector(`[data-layer="${rbPlaced}"]`).classList.add('next');
+                rbStep.textContent = `STEP ${rbPlaced + 1} / ${LAYERS.length} · ${LAYERS[rbPlaced].name}`;
+                if (rbPlaced === 3) rbText.textContent = 'nearly. two more and it boots.';
+                return;
+            }
+            rbStep.textContent = 'BUILD COMPLETE ✓';
+            rbTitle.innerHTML = 'there. <em>good as new.</em>';
+            rbText.textContent = 'booting it back up…';
+            sfx.rattle();
+            setTimeout(reopenBrowser, 900);
+        });
+        document.getElementById('rbSkip').addEventListener('click', reopenBrowser);
+        document.getElementById('winClose').addEventListener('click', closeBrowser);
+        paintTabControls();
+
         /* --- phone browser skins --- */
         const chromeWindow = document.querySelector('.chrome-window');
         const tabGrid = document.getElementById('mTabGrid');
         const phoneTabs = [...document.querySelectorAll('.browser-tab')].map(btn => {
-            const [icon, ...rest] = btn.textContent.trim().split(/\s+/);
+            const [icon, ...rest] = btn.querySelector('span').textContent.trim().split(/\s+/);
             return { id: btn.dataset.tab, url: btn.dataset.url, icon, title: rest.join(' ') };
         });
 
@@ -5023,6 +5536,11 @@
             chromeWindow.classList.toggle('skin-safari', skin === 'safari');
             chromeWindow.classList.toggle('skin-chrome-m', skin === 'chrome-m');
             const flow = skin === 'safari';
+            if (skin && browserState !== 'open') reopenBrowser();
+            if (skin) {
+                restoreAllTabs();
+                aboutSticky.classList.remove('is-max');
+            }
             aboutTrack.classList.toggle('is-flow', flow);
             relabelNextButtons(flow);
             if (!flow) browserViewport.style.zoom = '';
