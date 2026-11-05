@@ -3102,6 +3102,137 @@
         .chrome-window.skin-safari .figma-workspace { margin: -24px -18px 0; }
 
         /* =========================================================
+           PHONES: the about section as a deck of instruction-manual cards
+           (set by JS as .is-deck, at 760px and below)
+           ========================================================= */
+        .deck-chips { display: none; }
+        .about-scroll-track.is-deck { height: auto; padding-bottom: 56px; }
+        .about-scroll-track.is-deck .about-sticky-container { position: relative; top: auto; padding-top: 44px; }
+        .about-scroll-track.is-deck .tabs-joke-note,
+        .about-scroll-track.is-deck .chrome-tabbar,
+        .about-scroll-track.is-deck .chrome-omnibox-bar,
+        .about-scroll-track.is-deck .browser-dock,
+        .about-scroll-track.is-deck .browser-rebuild,
+        .about-scroll-track.is-deck #tab-figma,
+        .about-scroll-track.is-deck .next-tab-floating-btn,
+        .about-scroll-track.is-deck .b-dot[data-i="5"] { display: none !important; }
+
+        .about-scroll-track.is-deck .deck-chips {
+            position: sticky;
+            top: 68px;
+            z-index: 6;
+            display: flex;
+            gap: 10px;
+            margin: 2px -4vw 0;
+            padding: 16px 4vw 14px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            background: linear-gradient(to bottom, var(--cream-bg) 72%, transparent);
+        }
+        .deck-chips::-webkit-scrollbar { display: none; }
+        .deck-chip {
+            --stud: var(--c);
+            --stud-inset: 9px;
+            --stud-pitch: 17px;
+            --stud-h: 5px;
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 9px 14px 11px;
+            border: none;
+            border-radius: 7px;
+            background: var(--cream-card);
+            color: var(--ink-dark);
+            font-family: var(--font-sans);
+            font-size: 0.84rem;
+            font-weight: 600;
+            box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--c) 60%, transparent), inset 0 -3px 0 rgba(22, 22, 21, 0.07);
+            transition: background 0.2s ease, color 0.2s ease, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .deck-chip::before { opacity: 0; transition: opacity 0.2s ease; }
+        .deck-chip.on {
+            background: var(--c);
+            color: #fff;
+            transform: translateY(-3px);
+            box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 10px 18px -10px rgba(0, 0, 0, 0.5);
+        }
+        .deck-chip.on::before { opacity: 1; }
+        .deck-chip.light.on { color: #161615; }
+        .deck-chip:active { transform: translateY(1px) scale(0.97); }
+
+        .about-scroll-track.is-deck .chrome-window {
+            background: none;
+            border: 0;
+            border-radius: 0;
+            box-shadow: none;
+            overflow: visible;
+        }
+        .about-scroll-track.is-deck .browser-viewport {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            height: auto;
+            margin: 0 -4vw;
+            padding: 16px 4vw 18px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-snap-type: x mandatory;
+            scroll-padding-inline: 4vw;
+            overscroll-behavior-x: contain;
+            scrollbar-width: none;
+            background: none;
+            counter-reset: page;
+            transition: height 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .about-scroll-track.is-deck .browser-viewport::-webkit-scrollbar { display: none; }
+        .about-scroll-track.is-deck .tab-pane {
+            display: block !important;
+            position: relative;
+            flex: 0 0 86%;
+            min-width: 0;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            padding: 34px 18px 22px;
+            border-radius: 14px;
+            background: var(--cream-card);
+            border: 1px solid rgba(22, 22, 21, 0.1);
+            box-shadow: inset 0 -6px 0 rgba(22, 22, 21, 0.06), 0 18px 30px -18px rgba(22, 22, 21, 0.35);
+            counter-increment: page;
+            animation: none;
+        }
+        /* instruction-manual page number, top right of every card */
+        .about-scroll-track.is-deck .tab-pane::before {
+            content: 'PAGE ' counter(page) ' / 6';
+            position: absolute;
+            top: 12px;
+            right: 14px;
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            color: var(--ink-muted);
+        }
+        .about-scroll-track.is-deck .tab-pane .editorial-sec-heading { font-size: 1.85rem !important; margin-bottom: 18px; }
+        .about-scroll-track.is-deck .bio-tab-grid { grid-template-columns: 1fr; gap: 22px; }
+        .about-scroll-track.is-deck .bio-polaroid { width: min(210px, 78%); margin: 4px auto 0; }
+        .about-scroll-track.is-deck .bio-polaroid img { height: 210px; }
+        .about-scroll-track.is-deck .bio-copy h3 { font-size: 1.85rem; }
+        .about-scroll-track.is-deck .bio-copy h3 span { display: block; font-size: 1.05rem !important; margin-top: 4px; }
+        .about-scroll-track.is-deck .bio-copy p { font-size: 0.95rem; line-height: 1.65; }
+        .about-scroll-track.is-deck .travel-grid { grid-template-columns: 1fr; gap: 22px; }
+        .about-scroll-track.is-deck .everyday-masonry { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .about-scroll-track.is-deck .masonry-item { height: 120px; }
+        .about-scroll-track.is-deck #tab-gallery > div:first-child { flex-wrap: wrap; gap: 4px; }
+        .about-scroll-track.is-deck .claude-container { min-height: 0; }
+        .about-scroll-track.is-deck .claude-greeting h3 { font-size: 1.8rem; }
+        .about-scroll-track.is-deck .browser-scroll-dots { margin-top: 2px; }
+        @media (prefers-color-scheme: dark) {
+            .about-scroll-track.is-deck .tab-pane { border-color: rgba(255, 255, 255, 0.08); box-shadow: inset 0 -6px 0 rgba(0, 0, 0, 0.25), 0 18px 30px -18px rgba(0, 0, 0, 0.6); }
+        }
+
+        /* =========================================================
            NIGHT MODE: follows the device setting
            ========================================================= */
         @media (prefers-color-scheme: dark) {
@@ -3666,6 +3797,9 @@
                     <span>yes, I have too many tabs open</span>
                 </div>
             </div>
+
+            <!-- phones: brick chips to jump between the cards below -->
+            <nav class="deck-chips" id="deckChips" aria-label="About sections"></nav>
 
             <div class="browser-shell" id="browserShell">
             <div class="chrome-window">
@@ -5182,7 +5316,7 @@
         /* --- B. SCROLL-DRIVEN AUTO-SWITCHING MACOS BROWSER TABS --- */
         function tickAbout(aRect, aScrollable, vh) {
             // on iPhone the page scroll reads the tab instead; only swipes and taps switch
-            if (!aboutTrack.classList.contains('is-flow') && browserState === 'open'
+            if (!aboutTrack.classList.contains('is-flow') && !aboutTrack.classList.contains('is-deck') && browserState === 'open'
                 && aRect.top <= 0 && aRect.bottom >= vh && Date.now() - manualOverrideTime > 1200) {
                 const aProg = Math.min(0.999, Math.max(0, -aRect.top / aScrollable));
                 const live = liveTabs();
@@ -5348,6 +5482,7 @@
                 tabId = live.find(t => tabOrder.indexOf(t) > tabOrder.indexOf(tabId)) || live[live.length - 1];
             }
             manualOverrideTime = Date.now();
+            if (isDeck()) { deckGo(tabId); return; }
             currentAutoTabIdx = tabOrder.indexOf(tabId);
             activateBrowserTab(tabId);
 
@@ -5709,29 +5844,80 @@
             setTimeout(dismissHint, 4200);
         }, { threshold: 0.45 }).observe(chromeWindow);
 
-        function pickBrowserSkin() {
-            if (!window.matchMedia('(max-width: 760px)').matches) return '';
-            const ua = navigator.userAgent;
-            const apple = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
-            if (apple) return 'safari';
-            if (/Android/.test(ua)) return 'chrome-m';
-            // narrow desktop window: match the visitor's platform as best we can
-            return /Mac/.test(navigator.platform || ua) ? 'safari' : 'chrome-m';
+        /* --- phones: the about section is a swipeable deck of cards, one per tab --- */
+        const deckChips = document.getElementById('deckChips');
+        const DECK = tabOrder.filter(t => t !== 'figma');   // a drag-around canvas doesn't belong on a phone
+        const DECK_LABEL = { bio: 'about', worklog: 'work', travel: 'travel', honors: 'wins', gallery: 'gallery', claude: 'ask AI' };
+        const DECK_COLOR = { bio: '#D01012', worklog: '#0A5BC4', travel: '#00852B', honors: '#F6C51B', gallery: '#F57D20', claude: '#A0A5A9' };
+        const LIGHT_CHIPS = ['honors', 'claude'];
+        const isDeck = () => aboutTrack.classList.contains('is-deck');
+        const deckPane = (id) => document.getElementById(`tab-${id}`);
+        let deckActive = 'bio';
+
+        deckChips.innerHTML = DECK.map(id => {
+            const t = phoneTabs.find(x => x.id === id);
+            return `<button type="button" class="deck-chip studs${LIGHT_CHIPS.includes(id) ? ' light' : ''}" data-tab="${id}" style="--c:${DECK_COLOR[id]}"><span aria-hidden="true">${t.icon}</span>${DECK_LABEL[id]}</button>`;
+        }).join('');
+        const chips = deckChips.querySelectorAll('.deck-chip');
+
+        // the deck is only as tall as the card you're on, so short cards don't leave a gap below
+        function fitDeck() {
+            if (!isDeck()) return;
+            const cs = getComputedStyle(browserViewport);
+            browserViewport.style.height = `${deckPane(deckActive).offsetHeight + parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom)}px`;
         }
+
+        function deckFocus(id) {
+            deckActive = id;
+            currentAutoTabIdx = tabOrder.indexOf(id);
+            chips.forEach(c => {
+                const on = c.dataset.tab === id;
+                c.classList.toggle('on', on);
+                if (on) {
+                    c.setAttribute('aria-current', 'true');
+                    deckChips.scrollTo({ left: c.offsetLeft - (deckChips.clientWidth - c.offsetWidth) / 2, behavior: reducedMotion ? 'auto' : 'smooth' });
+                } else c.removeAttribute('aria-current');
+            });
+            document.querySelectorAll('#browserDots .b-dot').forEach(d => d.classList.toggle('active', +d.dataset.i === currentAutoTabIdx));
+            fitDeck();
+        }
+
+        function deckGo(id) {
+            if (!DECK.includes(id)) id = DECK[0];
+            const pad = parseFloat(getComputedStyle(browserViewport).paddingLeft);
+            browserViewport.scrollTo({ left: deckPane(id).offsetLeft - pad, behavior: reducedMotion ? 'auto' : 'smooth' });
+        }
+
+        chips.forEach(c => c.addEventListener('click', () => deckGo(c.dataset.tab)));
+        // the card that's mostly in view is the current one; swiping is fully native
+        const deckSeen = new IntersectionObserver((entries) => {
+            if (!isDeck()) return;
+            entries.forEach(en => { if (en.isIntersecting && en.intersectionRatio >= 0.6) deckFocus(en.target.id.slice(4)); });
+        }, { root: browserViewport, threshold: [0.6] });
+        // cards change height when Claude answers or images load
+        const deckSize = new ResizeObserver(() => fitDeck());
+        DECK.forEach(id => { deckSeen.observe(deckPane(id)); deckSize.observe(deckPane(id)); });
+
         function applyBrowserSkin() {
-            const skin = pickBrowserSkin();
-            chromeWindow.classList.toggle('skin-safari', skin === 'safari');
-            chromeWindow.classList.toggle('skin-chrome-m', skin === 'chrome-m');
-            const flow = skin === 'safari';
-            if (skin && browserState !== 'open') reopenBrowser();
-            if (skin) {
+            const deck = window.matchMedia('(max-width: 760px)').matches;
+            if (deck && browserState !== 'open') reopenBrowser();
+            if (deck) {
                 restoreAllTabs();
                 aboutSticky.classList.remove('is-max');
             }
-            aboutTrack.classList.toggle('is-flow', flow);
-            relabelNextButtons(flow);
-            if (!flow) browserViewport.style.zoom = '';
+            chromeWindow.classList.remove('skin-safari', 'skin-chrome-m');
+            aboutTrack.classList.remove('is-flow');
+            aboutTrack.classList.toggle('is-deck', deck);
+            relabelNextButtons(false);
+            browserViewport.style.zoom = '';
+            browserViewport.style.height = '';
             closeTabGrid();
+            if (deck) {
+                browserViewport.scrollLeft = 0;
+                deckFocus('bio');
+            } else {
+                activateBrowserTab(tabOrder[currentAutoTabIdx] === 'figma' ? 'figma' : tabOrder[currentAutoTabIdx]);
+            }
         }
         window.matchMedia('(max-width: 760px)').addEventListener('change', applyBrowserSkin);
         applyBrowserSkin();
@@ -5797,7 +5983,7 @@
             const viewport = log.closest('.browser-viewport');
             const stick = () => {
                 manualOverrideTime = Date.now();   // keep scroll-driven tab switching from yanking us away
-                if (!aboutTrack.classList.contains('is-flow')) {
+                if (!aboutTrack.classList.contains('is-flow') && !isDeck()) {
                     viewport.scrollTop = viewport.scrollHeight;
                     return;
                 }
