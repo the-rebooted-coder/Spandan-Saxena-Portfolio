@@ -1732,6 +1732,8 @@
 
         /* tab close, reopen and restore */
         .browser-tab { max-width: 260px; min-width: 48px; overflow: hidden; flex: 0 1 auto !important; }
+        /* the tab's own display: inline-flex would otherwise beat the [hidden] attribute */
+        .browser-tab[hidden], .tab-restore[hidden] { display: none !important; }
         .browser-tab > span:first-child { overflow: hidden; text-overflow: ellipsis; }
         .tab-x { flex-shrink: 0; }
         .tab-x {
