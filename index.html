@@ -71,7 +71,8 @@
             color: var(--ink-dark);
         }
 
-        /* the baseplate: hidden behind the hero, eases in once you scroll (--studs-on is set by the scroll loop) */
+        /* the baseplate. Static on purpose: the hero lays a cream sheet over it that fades out at
+           the bottom, so studs appear as you scroll without any per-frame work */
         body::before {
             content: '';
             position: absolute;
@@ -82,8 +83,6 @@
                 radial-gradient(circle at 50% 44%, var(--stud-hi) 0 4.2px, transparent 4.8px),
                 radial-gradient(circle at 50% 56%, var(--stud-lo) 0 5.2px, transparent 5.8px);
             background-size: 24px 24px;
-            opacity: var(--studs-on, 0);
-            transition: opacity 0.8s ease;
         }
 
         @media (pointer: fine) {
@@ -546,7 +545,6 @@
             background: var(--c);
             box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.2), inset 0 2px 0 rgba(255, 255, 255, 0.3), 0 6px 10px rgba(0, 0, 0, 0.18);
             will-change: transform, opacity;
-            transition: opacity 0.5s ease;
         }
 
         .ib-hint {
@@ -702,6 +700,18 @@
         /* =========================================================
            3. HERO SECTION + JUMPING CATS ON NAME
            ========================================================= */
+        .hero-editorial::before {
+            content: '';
+            position: absolute;
+            z-index: -1;
+            top: 0;
+            left: 50%;
+            width: 100vw;
+            height: calc(100% + 45vh);
+            margin-left: -50vw;
+            background: linear-gradient(to bottom, var(--cream-bg) 0%, var(--cream-bg) 68%, transparent 100%);
+            pointer-events: none;
+        }
         .hero-editorial {
             min-height: 100vh;
             max-width: 1360px;
@@ -1557,12 +1567,20 @@
             z-index: 25;
         }
 
-        #dioramaCanvas {
+        .diorama-layers { position: absolute; inset: 0; }
+        .diorama-layers canvas {
             position: absolute;
-            inset: 0;
+            left: 0;
+            top: -110px;
             width: 100%;
-            height: 100%;
-            display: block;
+            height: calc(100% + 220px);
+            will-change: transform;
+            transform: translate3d(0, 0, 0);
+        }
+        .diorama-layers canvas.d-car {
+            top: 0;
+            width: 110px;
+            height: 70px;
         }
 
         .diorama-labels {
@@ -3156,6 +3174,29 @@
             .copyright-bar { border-top-color: rgba(255, 255, 255, 0.08); }
         }
 
+        /* =========================================================
+           PHONES: same look, cheaper to draw
+           ========================================================= */
+        @media (pointer: coarse) {
+            .portal-word { transition: none; filter: none !important; }
+            .case-study-slide {
+                transform: scale(0.94);
+                transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+                box-shadow: inset 0 -10px 0 rgba(0, 0, 0, 0.16), inset 0 2px 0 rgba(255, 255, 255, 0.18), 0 18px 36px rgba(0, 0, 0, 0.5);
+            }
+            .case-study-slide.in-view { transform: none; }
+            .curved-carousel-track { -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; }
+            /* a filter on something this big re-rasterises every frame on iOS: use a plain shadow */
+            .ub-box { filter: none; }
+            .ub-front { box-shadow: inset 0 -6px 0 rgba(0, 0, 0, 0.14), 0 26px 40px -14px rgba(22, 22, 21, 0.4); }
+            .unbox-stage, .outro-rising-layer, .phrase-box, .portal-phrase-box { will-change: transform, opacity; }
+            .polaroid-card { box-shadow: 0 16px 30px -12px rgba(22, 22, 21, 0.22); }
+            .brick-word { filter: none; }
+        }
+
+        /* the playground and footer are far down: let the browser skip them until they're near */
+        .playground { content-visibility: auto; contain-intrinsic-size: auto 1100px; }
+
         @media (prefers-reduced-motion: reduce) {
             html { scroll-behavior: auto; }
         }
@@ -3594,7 +3635,7 @@
          5. BRICK DIORAMA (parallax canvas)
          ========================================================= -->
     <div class="brick-diorama" id="dioramaStage">
-        <canvas id="dioramaCanvas" aria-hidden="true"></canvas>
+        <div class="diorama-layers" id="dioramaLayers" aria-hidden="true"></div>
         <div class="diorama-labels">
             <span>MOBILE</span>
             <span>WEB</span>
@@ -4218,8 +4259,10 @@
             queueCursor();
         }, { passive: true });
         // content slides under a still pointer while scrolling, so re-read what's beneath it
-        window.addEventListener('scroll', queueCursor, { passive: true });
-        document.addEventListener('scroll', queueCursor, { passive: true, capture: true });
+        if (window.matchMedia('(pointer: fine)').matches) {
+            window.addEventListener('scroll', queueCursor, { passive: true });
+            document.addEventListener('scroll', queueCursor, { passive: true, capture: true });
+        }
         window.addEventListener('mousedown', () => customCursor.classList.add('is-pressed'));
         window.addEventListener('mouseup', () => customCursor.classList.remove('is-pressed'));
         document.documentElement.addEventListener('mouseleave', () => customCursor.classList.remove('cursor-on'));
@@ -4501,6 +4544,7 @@
                 el.className = 'fly-brick studs';
                 el.style.setProperty('--c', colors[i % colors.length]);
                 el.style.width = `${studs * 15 + 4}px`;
+                el.style.opacity = '0';   // invisible until its launch, or it waits at the top-left corner
                 layer.appendChild(el);
                 const apex = H * (0.22 + Math.random() * 0.3);   // how high above the box it gets
                 return {
@@ -4526,6 +4570,7 @@
                 age += dt;
                 for (const b of bits) {
                     if (age < b.delay) continue;
+                    if (!b.live) { b.live = true; b.el.style.opacity = '1'; }
                     b.vy += G * dt;
                     b.vx *= 1 - 0.35 * dt;                        // a little air drag
                     b.x += b.vx * dt;
@@ -4550,6 +4595,7 @@
                     b.el.style.transform = `translate3d(${b.x.toFixed(1)}px, ${b.y.toFixed(1)}px, 0) rotate(${b.a.toFixed(1)}deg)`;
                 }
                 if (age > 2.3 && !faded) {
+                    bits.forEach(b => { b.el.style.transition = 'opacity 0.5s ease'; });
                     faded = true;
                     bits.forEach((b, i) => setTimeout(() => { b.el.style.opacity = '0'; }, i * 30));
                 }
@@ -4809,8 +4855,10 @@
         /* =========================================================
            4. BRICK DIORAMA: three layers of stacked bricks + a car
            ========================================================= */
-        const dCanvas = document.getElementById('dioramaCanvas');
-        const dCtx = dCanvas.getContext('2d');
+        const dLayersEl = document.getElementById('dioramaLayers');
+        // phones are 3x; 2x is plenty for bricks and keeps the layers small enough for the GPU
+        const DPR = Math.min(2, window.devicePixelRatio || 1);
+        let dCar = null;
         const dioramaStage = document.getElementById('dioramaStage');
         const DIORAMA_H = 460;
         const LAYER_PAD = 110;          // spare canvas above/below each layer so drifting never shows an edge
@@ -4855,7 +4903,7 @@
 
         // columns of bricks: heights[c] is how many bricks tall column c is above `ground`
         function buildLayer(w, heights, ground, palette, rand, extras) {
-            const dpr = window.devicePixelRatio || 1;
+            const dpr = DPR;
             const layer = document.createElement('canvas');
             layer.width = w * dpr;
             layer.height = (DIORAMA_H + LAYER_PAD * 2) * dpr;
@@ -4892,11 +4940,8 @@
         }
 
         function buildDiorama() {
-            const w = dCanvas.clientWidth || window.innerWidth;
-            const dpr = window.devicePixelRatio || 1;
+            const w = dioramaStage.clientWidth || window.innerWidth;
             dioramaW = w;
-            dCanvas.width = w * dpr;
-            dCanvas.height = DIORAMA_H * dpr;
             const cols = Math.ceil(w / U) + 1;
             const rand = rng(2026);
 
@@ -4932,6 +4977,16 @@
                 buildLayer(w, hills, 360, ['#0A5BC4', '#0B4FA8', '#1767CF', '#F6C51B'], rand),
                 buildLayer(w, road, 420, ['#00852B', '#007325', '#0B9233'], rand, trees)
             ];
+
+            // the car is drawn once on its own little canvas and then just slid along
+            dCar = document.createElement('canvas');
+            dCar.className = 'd-car';
+            dCar.width = 110 * DPR;
+            dCar.height = 70 * DPR;
+            const cctx = dCar.getContext('2d');
+            cctx.scale(DPR, DPR);
+            drawCar(cctx, 6, 60);
+            dLayersEl.replaceChildren(...dioramaLayers, dCar);
         }
 
         // a 4-stud red racer, rebuilt every frame so it can roll along the road
@@ -4957,9 +5012,9 @@
         }
 
         let lastDioramaP = null;
-        function renderDiorama(force) {
+        function renderDiorama(force, rect) {
             const vh = window.innerHeight;
-            const r = dioramaStage.getBoundingClientRect();
+            const r = rect || dioramaStage.getBoundingClientRect();
             if (!force && (r.bottom < 0 || r.top > vh)) return;
 
             // 0 when the stage peeks in at the bottom, 1 when it leaves at the top
@@ -4967,20 +5022,19 @@
             if (!force && p === lastDioramaP) return;
             lastDioramaP = p;
 
-            const dpr = window.devicePixelRatio || 1;
-            dCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-            dCtx.clearRect(0, 0, dioramaW, DIORAMA_H);
-            // back layers sink as you scroll, so they look farther away than the page
+            // back layers sink as you scroll, so they look farther away than the page.
+            // Only transforms change here, which the phone's compositor handles on its own.
             dioramaLayers.forEach((layer, i) => {
-                const y = -LAYER_PAD + (p - 0.5) * DRIFT[i];
-                dCtx.drawImage(layer, 0, y, dioramaW, DIORAMA_H + LAYER_PAD * 2);
+                layer.style.transform = `translate3d(0, ${((p - 0.5) * DRIFT[i]).toFixed(1)}px, 0)`;
             });
             // the car crosses the whole width over one pass of the stage
-            drawCar(dCtx, -110 + p * (dioramaW + 140), 420 + (p - 0.5) * DRIFT[2]);
+            const carX = -110 + p * (dioramaW + 140) - 6;
+            const carY = 420 + (p - 0.5) * DRIFT[2] - 60;
+            dCar.style.transform = `translate3d(${carX.toFixed(1)}px, ${carY.toFixed(1)}px, 0)`;
         }
 
         window.addEventListener('resize', () => {
-            if (dCanvas.clientWidth === dioramaW) return;
+            if (dioramaStage.clientWidth === dioramaW) return;
             buildDiorama();
             renderDiorama(true);
         });
@@ -5025,12 +5079,24 @@
         const outroRisingLayer = document.getElementById('outroRisingLayer');
         const outroPhrase = document.getElementById('outroPhrase');
 
+        // phones: skip blur filters and per-frame 3D on cards, they're the expensive bits on mobile GPUs
+        const lightFx = window.matchMedia('(pointer: coarse)').matches;
+        let pageHeight = document.documentElement.scrollHeight;
+        new ResizeObserver(() => { pageHeight = document.documentElement.scrollHeight; }).observe(document.body);
+
         function onScrollTick() {
             const scrollY = window.scrollY;
             const vh = window.innerHeight;
-            const maxScroll = Math.max(1, document.documentElement.scrollHeight - vh);
+            // all layout reads up front, so the writes below never force a second layout
+            const pRect = portalTrack.getBoundingClientRect();
+            const aRect = aboutTrack.getBoundingClientRect();
+            const kRect = outroTrack.getBoundingClientRect();
+            const dRect = dioramaStage.getBoundingClientRect();
+            const pScrollable = portalTrack.offsetHeight - vh;
+            const aScrollable = aboutTrack.offsetHeight - vh;
+            const kScrollable = outroTrack.offsetHeight - vh;
+            const maxScroll = Math.max(1, pageHeight - vh);
             const totalPct = Math.min(100, Math.round((scrollY / maxScroll) * 100));
-            document.body.style.setProperty('--studs-on', Math.min(1, scrollY / (vh * 0.9)).toFixed(3));
 
             const built = Math.max(1, Math.ceil((totalPct / 100) * towerBricks.length));
             if (built !== towerHeight) {
@@ -5038,11 +5104,15 @@
                 towerBricks.forEach((b, i) => b.classList.toggle('on', i < built));
                 towerLabel.textContent = `STEP ${built}/${towerBricks.length}`;
             }
-            renderDiorama();
+            renderDiorama(false, dRect);
 
             /* --- A. WORD-BY-WORD UNBLUR + ZOOM PORTAL --- */
-            const pRect = portalTrack.getBoundingClientRect();
-            const pScrollable = portalTrack.offsetHeight - vh;
+            if (pRect.bottom > -50 && pRect.top < vh + 50) tickPortal(pRect, pScrollable, vh);
+            tickAbout(aRect, aScrollable, vh);
+            if (kRect.top < vh && kRect.bottom > 0) tickOutro(kRect, kScrollable);
+        }
+
+        function tickPortal(pRect, pScrollable, vh) {
             const p = Math.min(1, Math.max(0, -pRect.top / pScrollable));
 
             // 0-0.42 line one, 0.42-0.6 line two, 0.58-0.72 box rises,
@@ -5053,7 +5123,7 @@
                 words1.forEach((w, idx) => {
                     const wProgress = clamp01((phase1 - idx * 0.14) / 0.28);
                     w.style.opacity = (0.14 + wProgress * 0.86).toFixed(2);
-                    w.style.filter = `blur(${((1 - wProgress) * 8).toFixed(1)}px)`;
+                    if (!lightFx) w.style.filter = `blur(${((1 - wProgress) * 8).toFixed(1)}px)`;
                 });
                 underlinePath.style.transform = `scaleX(${clamp01((phase1 - 0.55) / 0.4).toFixed(3)})`;
             }
@@ -5068,7 +5138,7 @@
                 words2.forEach((w, idx) => {
                     const wProgress = clamp01((phase2 - idx * 0.12) / 0.26);
                     w.style.opacity = (0.14 + wProgress * 0.86).toFixed(2);
-                    w.style.filter = `blur(${((1 - wProgress) * 7).toFixed(1)}px)`;
+                    if (!lightFx) w.style.filter = `blur(${((1 - wProgress) * 7).toFixed(1)}px)`;
                 });
             }
             phrase2Box.style.opacity = p < 0.42 ? '0' : String(1 - clamp01((p - 0.66) / 0.08));
@@ -5105,10 +5175,10 @@
             // finish on the work section's own surface so the handoff has no seam
             unboxDark.style.opacity = String(clamp01((dive - 0.5) / 0.4));
             portalDark = dive > 0.45;
+        }
 
-            /* --- B. SCROLL-DRIVEN AUTO-SWITCHING MACOS BROWSER TABS --- */
-            const aRect = aboutTrack.getBoundingClientRect();
-            const aScrollable = aboutTrack.offsetHeight - vh;
+        /* --- B. SCROLL-DRIVEN AUTO-SWITCHING MACOS BROWSER TABS --- */
+        function tickAbout(aRect, aScrollable, vh) {
             // on iPhone the page scroll reads the tab instead; only swipes and taps switch
             if (!aboutTrack.classList.contains('is-flow') && browserState === 'open'
                 && aRect.top <= 0 && aRect.bottom >= vh && Date.now() - manualOverrideTime > 1200) {
@@ -5121,10 +5191,11 @@
                 }
             }
 
-            /* --- C. RISING BRICK STACK OUTRO --- */
-            const kRect = outroTrack.getBoundingClientRect();
-            const kScrollable = outroTrack.offsetHeight - vh;
-            if (kRect.top < vh) {
+        }
+
+        /* --- C. RISING BRICK STACK OUTRO --- */
+        function tickOutro(kRect, kScrollable) {
+            {
                 const kProg = Math.min(1, Math.max(0, -kRect.top / kScrollable));
                 // the stack rises from translateY(42%) to 0, covering the text behind it
                 const yOffset = 42 * (1 - kProg);
@@ -5179,9 +5250,18 @@
                 slide.style.transform = `perspective(1400px) rotateY(${rotY.toFixed(2)}deg) scale(${scale.toFixed(3)})`;
             });
         }
-        carousel.addEventListener('scroll', updateCarouselCurve, { passive: true });
-        window.addEventListener('resize', updateCarouselCurve);
-        setTimeout(updateCarouselCurve, 200);
+        if (!lightFx) {
+            carousel.addEventListener('scroll', updateCarouselCurve, { passive: true });
+            window.addEventListener('resize', updateCarouselCurve);
+            setTimeout(updateCarouselCurve, 200);
+        } else {
+            // phones: JS-driven transforms always trail the finger by a frame, so leave the swipe
+            // fully native and just ease the centred card up once it settles
+            const focus = new IntersectionObserver((entries) => {
+                entries.forEach(en => en.target.classList.toggle('in-view', en.intersectionRatio > 0.6));
+            }, { root: carousel, threshold: [0, 0.6, 1] });
+            carousel.querySelectorAll('.case-study-slide').forEach(sl => focus.observe(sl));
+        }
 
         // mouse drag-to-scroll; touch already scrolls natively
         let _grab = null;
