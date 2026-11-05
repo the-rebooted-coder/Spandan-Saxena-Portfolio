@@ -2407,6 +2407,27 @@
         }
 
         .pg-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+        .pg-letter { display: flex; align-items: center; gap: 14px; cursor: text; }
+        .pg-letter span { font-family: var(--font-hand); font-size: 1.2rem; line-height: 1.1; color: var(--ink-muted); }
+        .pg-letter-input {
+            --stud: var(--brick-yellow);
+            flex-shrink: 0;
+            width: 64px;
+            height: 64px;
+            padding: 0;
+            border: none;
+            border-radius: 9px;
+            background: var(--brick-yellow);
+            color: #161615;
+            font-family: var(--font-sans);
+            font-size: 2rem;
+            font-weight: 800;
+            text-align: center;
+            caret-color: var(--brick-red);
+            box-shadow: inset 0 -5px 0 rgba(0, 0, 0, 0.16), inset 0 2px 0 rgba(255, 255, 255, 0.35), 0 10px 18px -10px rgba(22, 22, 21, 0.45);
+        }
+        .pg-letter-input:focus { outline: 3px solid var(--brick-red); outline-offset: 3px; }
+        .pg-dl { background: var(--ink-dark); color: var(--cream-bg); border-color: transparent; }
         .pg-btn {
             padding: 8px 12px 10px;
             border: 1px solid rgba(22, 22, 21, 0.14);
@@ -3102,134 +3123,215 @@
         .chrome-window.skin-safari .figma-workspace { margin: -24px -18px 0; }
 
         /* =========================================================
-           PHONES: the about section as a deck of instruction-manual cards
-           (set by JS as .is-deck, at 760px and below)
+           PHONES: "Build Spandan" (set by JS as .is-build, at 760px and below)
            ========================================================= */
-        .deck-chips { display: none; }
-        .about-scroll-track.is-deck { height: auto; padding-bottom: 56px; }
-        .about-scroll-track.is-deck .about-sticky-container { position: relative; top: auto; padding-top: 44px; }
-        .about-scroll-track.is-deck .tabs-joke-note,
-        .about-scroll-track.is-deck .chrome-tabbar,
-        .about-scroll-track.is-deck .chrome-omnibox-bar,
-        .about-scroll-track.is-deck .browser-dock,
-        .about-scroll-track.is-deck .browser-rebuild,
-        .about-scroll-track.is-deck #tab-figma,
-        .about-scroll-track.is-deck .next-tab-floating-btn,
-        .about-scroll-track.is-deck .b-dot[data-i="5"] { display: none !important; }
+        .build-stage { display: none; }
+        .about-scroll-track.is-build { height: auto; padding-bottom: 60px; }
+        .about-scroll-track.is-build .about-sticky-container { position: relative; top: auto; padding-top: 44px; }
+        .about-scroll-track.is-build .tabs-joke-note,
+        .about-scroll-track.is-build .browser-shell,
+        .about-scroll-track.is-build .browser-scroll-dots { display: none !important; }
+        .about-scroll-track.is-build .build-stage { display: block; }
+        /* gradients inside a display:none SVG don't render, so the defs are just made zero-size */
+        .mf-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
 
-        .about-scroll-track.is-deck .deck-chips {
-            position: sticky;
-            top: 68px;
-            z-index: 6;
-            display: flex;
-            gap: 10px;
-            margin: 2px -4vw 0;
-            padding: 16px 4vw 14px;
-            overflow-x: auto;
-            scrollbar-width: none;
-            background: linear-gradient(to bottom, var(--cream-bg) 72%, transparent);
+        .bd-figure { position: relative; width: min(260px, 68vw); margin: 18px auto 0; }
+        .mf { display: block; width: 100%; height: auto; overflow: visible; }
+        .mf .mf-part {
+            opacity: 0;
+            transform: translateY(-12px) scale(0.6);
+            transform-box: fill-box;
+            transform-origin: 50% 60%;
+            transition: opacity 0.16s ease, transform 0.5s cubic-bezier(0.3, 1.7, 0.5, 1);
         }
-        .deck-chips::-webkit-scrollbar { display: none; }
-        .deck-chip {
-            --stud: var(--c);
-            --stud-inset: 9px;
-            --stud-pitch: 17px;
-            --stud-h: 5px;
-            flex-shrink: 0;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 9px 14px 11px;
-            border: none;
-            border-radius: 7px;
-            background: var(--cream-card);
-            color: var(--ink-dark);
-            font-family: var(--font-sans);
-            font-size: 0.84rem;
+        .mf .mf-part.on { opacity: 1; transform: none; cursor: pointer; }
+        .mf.snap { animation: mfSnap 0.36s cubic-bezier(0.3, 1.6, 0.5, 1); }
+        @keyframes mfSnap { 40% { transform: translateY(-7px) scale(1.015); } }
+        .bd-figure.aiming .mf { transform: scale(1.03); transition: transform 0.2s ease; }
+        #mfWave { transform-box: view-box; transform-origin: 155px 106px; }
+        #mfWave.waving { animation: mfWave 1.3s ease-in-out 2; }
+        @keyframes mfWave {
+            0%, 100% { transform: rotate(0); }
+            25%, 75% { transform: rotate(-42deg); }
+            50% { transform: rotate(-24deg); }
+        }
+
+        .bd-plate {
+            width: fit-content;
+            margin: 8px auto 0;
+            padding: 4px 10px 5px;
+            border-radius: 4px;
+            background: #0B4F1E;
+            color: #E9F5EC;
+            font-family: var(--font-mono);
+            font-size: 0.64rem;
             font-weight: 600;
-            box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--c) 60%, transparent), inset 0 -3px 0 rgba(22, 22, 21, 0.07);
-            transition: background 0.2s ease, color 0.2s ease, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
-            -webkit-tap-highlight-color: transparent;
+            letter-spacing: 0.14em;
         }
-        .deck-chip::before { opacity: 0; transition: opacity 0.2s ease; }
-        .deck-chip.on {
-            background: var(--c);
-            color: #fff;
-            transform: translateY(-3px);
-            box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 10px 18px -10px rgba(0, 0, 0, 0.5);
-        }
-        .deck-chip.on::before { opacity: 1; }
-        .deck-chip.light.on { color: #161615; }
-        .deck-chip:active { transform: translateY(1px) scale(0.97); }
-
-        .about-scroll-track.is-deck .chrome-window {
-            background: none;
-            border: 0;
-            border-radius: 0;
-            box-shadow: none;
-            overflow: visible;
-        }
-        .about-scroll-track.is-deck .browser-viewport {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            height: auto;
-            margin: 0 -4vw;
-            padding: 16px 4vw 18px;
-            overflow-x: auto;
-            overflow-y: hidden;
-            scroll-snap-type: x mandatory;
-            scroll-padding-inline: 4vw;
-            overscroll-behavior-x: contain;
-            scrollbar-width: none;
-            background: none;
-            counter-reset: page;
-            transition: height 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        .about-scroll-track.is-deck .browser-viewport::-webkit-scrollbar { display: none; }
-        .about-scroll-track.is-deck .tab-pane {
-            display: block !important;
-            position: relative;
-            flex: 0 0 86%;
-            min-width: 0;
-            scroll-snap-align: start;
-            scroll-snap-stop: always;
-            padding: 34px 18px 22px;
-            border-radius: 14px;
-            background: var(--cream-card);
-            border: 1px solid rgba(22, 22, 21, 0.1);
-            box-shadow: inset 0 -6px 0 rgba(22, 22, 21, 0.06), 0 18px 30px -18px rgba(22, 22, 21, 0.35);
-            counter-increment: page;
-            animation: none;
-        }
-        /* instruction-manual page number, top right of every card */
-        .about-scroll-track.is-deck .tab-pane::before {
-            content: 'PAGE ' counter(page) ' / 6';
+        .bd-stamp {
             position: absolute;
-            top: 12px;
-            right: 14px;
+            top: 34%;
+            right: -4%;
+            padding: 6px 10px;
+            border: 3px solid var(--brick-red);
+            border-radius: 6px;
+            color: var(--brick-red);
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            background: color-mix(in srgb, var(--cream-bg) 80%, transparent);
+            opacity: 0;
+            transform: rotate(-12deg) scale(2);
+            pointer-events: none;
+        }
+        .build-stage.complete .bd-stamp { animation: stampIn 0.45s cubic-bezier(0.3, 1.5, 0.5, 1) forwards; }
+        .build-stage.complete.quiet .bd-stamp { animation: none; opacity: 1; transform: rotate(-12deg); }
+        @keyframes stampIn { to { opacity: 1; transform: rotate(-12deg) scale(1); } }
+
+        .bd-hint {
+            margin: 14px 0 14px;
+            text-align: center;
+            font-family: var(--font-hand);
+            font-size: 1.4rem;
+            color: var(--ink-muted);
+            transition: opacity 0.25s ease;
+        }
+        .bd-tray {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            max-width: 380px;
+            margin: 0 auto;
+            transition: opacity 0.35s ease, transform 0.35s ease;
+        }
+        .build-stage.complete .bd-tray { display: none; }
+        .bd-tile {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            aspect-ratio: 1;
+            padding: 10px 6px 8px;
+            border: none;
+            border-radius: 12px;
+            background: var(--cream-card);
+            box-shadow: inset 0 0 0 1px rgba(22, 22, 21, 0.1), inset 0 -4px 0 rgba(22, 22, 21, 0.07), 0 8px 16px -10px rgba(22, 22, 21, 0.35);
+            color: var(--ink-muted);
             font-family: var(--font-mono);
             font-size: 0.6rem;
-            font-weight: 600;
-            letter-spacing: 0.12em;
-            color: var(--ink-muted);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            touch-action: none;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        .about-scroll-track.is-deck .tab-pane .editorial-sec-heading { font-size: 1.85rem !important; margin-bottom: 18px; }
-        .about-scroll-track.is-deck .bio-tab-grid { grid-template-columns: 1fr; gap: 22px; }
-        .about-scroll-track.is-deck .bio-polaroid { width: min(210px, 78%); margin: 4px auto 0; }
-        .about-scroll-track.is-deck .bio-polaroid img { height: 210px; }
-        .about-scroll-track.is-deck .bio-copy h3 { font-size: 1.85rem; }
-        .about-scroll-track.is-deck .bio-copy h3 span { display: block; font-size: 1.05rem !important; margin-top: 4px; }
-        .about-scroll-track.is-deck .bio-copy p { font-size: 0.95rem; line-height: 1.65; }
-        .about-scroll-track.is-deck .travel-grid { grid-template-columns: 1fr; gap: 22px; }
-        .about-scroll-track.is-deck .everyday-masonry { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .about-scroll-track.is-deck .masonry-item { height: 120px; }
-        .about-scroll-track.is-deck #tab-gallery > div:first-child { flex-wrap: wrap; gap: 4px; }
-        .about-scroll-track.is-deck .claude-container { min-height: 0; }
-        .about-scroll-track.is-deck .claude-greeting h3 { font-size: 1.8rem; }
-        .about-scroll-track.is-deck .browser-scroll-dots { margin-top: 2px; }
+        .bd-tile svg { width: 64%; height: auto; max-height: 60%; overflow: visible; pointer-events: none; }
+        .bd-tile:active { transform: scale(0.94); }
+        .bd-tile.lifting svg { opacity: 0; }
+        .bd-tile.used {
+            background: transparent;
+            box-shadow: inset 0 0 0 1.5px var(--ink-faint);
+            pointer-events: none;
+        }
+        .bd-tile.used > * { visibility: hidden; }
+        .bd-tile:not(.used) svg { animation: tileBob 2.6s ease-in-out infinite; animation-delay: var(--d); }
+        @keyframes tileBob { 50% { transform: translateY(-3px) rotate(-2deg); } }
+        .bd-ghost {
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 960;
+            pointer-events: none;
+            transform-origin: 50% 50%;
+            will-change: transform;
+            filter: drop-shadow(0 10px 12px rgba(0, 0, 0, 0.25));
+        }
+        .bd-ghost svg { display: block; width: 100%; height: 100%; overflow: visible; }
+        .bd-reset {
+            display: block;
+            margin: 8px auto 0;
+            border: none;
+            background: none;
+            font-family: var(--font-mono);
+            font-size: 0.66rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--ink-muted);
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+
+        /* the bottom sheet a part opens */
+        .build-sheet { position: fixed; inset: 0; z-index: 950; visibility: hidden; pointer-events: none; transition: visibility 0s linear 0.42s; }
+        .build-sheet.open { visibility: visible; pointer-events: auto; transition-delay: 0s; }
+        .bs-backdrop { position: absolute; inset: 0; background: rgba(12, 12, 12, 0.42); opacity: 0; transition: opacity 0.35s ease; }
+        .build-sheet.open .bs-backdrop { opacity: 1; }
+        .bs-panel {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            max-height: 88svh;
+            border-radius: 22px 22px 0 0;
+            background: var(--cream-card);
+            box-shadow: 0 -18px 40px rgba(0, 0, 0, 0.22);
+            transform: translate3d(0, 102%, 0);
+            transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+            will-change: transform;
+        }
+        .build-sheet.open .bs-panel { transform: translate3d(0, 0, 0); }
+        .bs-head {
+            position: relative;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 22px 18px 12px;
+            touch-action: none;
+        }
+        .bs-grip { position: absolute; top: 8px; left: 50%; width: 40px; height: 5px; margin-left: -20px; border-radius: 3px; background: var(--ink-faint); opacity: 0.6; }
+        .bs-title { display: flex; align-items: center; gap: 8px; font-size: 1.05rem; font-weight: 700; color: var(--ink-dark); }
+        .bs-close {
+            width: 34px;
+            height: 34px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(22, 22, 21, 0.07);
+            color: var(--ink-dark);
+            font-size: 0.9rem;
+        }
+        .bs-body {
+            flex: 1;
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
+            padding: 4px 18px max(26px, env(safe-area-inset-bottom));
+        }
+        .bs-body .tab-pane { display: block !important; animation: none; }
+        .bs-body .next-tab-floating-btn { display: none !important; }
+        .bs-body .tab-pane .editorial-sec-heading { font-size: 1.85rem !important; margin-bottom: 18px; }
+        .bs-body .bio-tab-grid { grid-template-columns: 1fr; gap: 22px; }
+        .bs-body .bio-polaroid { width: min(210px, 70%); margin: 10px auto 0; }
+        .bs-body .bio-polaroid img { height: 210px; }
+        .bs-body .bio-copy h3 { font-size: 1.85rem; }
+        .bs-body .bio-copy h3 span { display: block; font-size: 1.05rem !important; margin-top: 4px; }
+        .bs-body .bio-copy p { font-size: 0.95rem; line-height: 1.65; }
+        .bs-body .travel-grid { grid-template-columns: 1fr; gap: 22px; }
+        .bs-body .everyday-masonry { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .bs-body .masonry-item { height: 130px; }
+        .bs-body #tab-gallery > div:first-child { flex-wrap: wrap; gap: 4px; }
+        .bs-body .claude-container { min-height: 0; }
+        .bs-body .claude-greeting h3 { font-size: 1.8rem; }
         @media (prefers-color-scheme: dark) {
-            .about-scroll-track.is-deck .tab-pane { border-color: rgba(255, 255, 255, 0.08); box-shadow: inset 0 -6px 0 rgba(0, 0, 0, 0.25), 0 18px 30px -18px rgba(0, 0, 0, 0.6); }
+            .bs-close { background: rgba(255, 255, 255, 0.08); }
+            .bs-backdrop { background: rgba(0, 0, 0, 0.6); }
         }
 
         /* =========================================================
@@ -3798,8 +3900,154 @@
                 </div>
             </div>
 
-            <!-- phones: brick chips to jump between the cards below -->
-            <nav class="deck-chips" id="deckChips" aria-label="About sections"></nav>
+            <!-- phones: "Build Spandan". Each part snaps onto the minifig and opens a section -->
+            <div class="build-stage" id="buildStage">
+                <svg width="0" height="0" class="mf-defs" aria-hidden="true" focusable="false">
+                    <defs>
+                        <linearGradient id="mfSkin" x1="0" x2="1"><stop offset="0" stop-color="#FFE48A"/><stop offset="0.45" stop-color="#F8C72C"/><stop offset="1" stop-color="#D9A40E"/></linearGradient>
+                        <linearGradient id="mfJacket" x1="0" x2="1"><stop offset="0" stop-color="#E57A38"/><stop offset="0.5" stop-color="#C85D22"/><stop offset="1" stop-color="#A3461A"/></linearGradient>
+                        <linearGradient id="mfTee" x1="0" x2="1"><stop offset="0" stop-color="#F7EDDA"/><stop offset="1" stop-color="#DCC9A8"/></linearGradient>
+                        <linearGradient id="mfPants" x1="0" x2="1"><stop offset="0" stop-color="#3E4E7A"/><stop offset="1" stop-color="#222C49"/></linearGradient>
+                        <linearGradient id="mfHair" x1="0" y1="0" x2="0.6" y2="1"><stop offset="0" stop-color="#4C3626"/><stop offset="1" stop-color="#1B130D"/></linearGradient>
+                        <linearGradient id="mfGold" x1="0" x2="1"><stop offset="0" stop-color="#FFE68F"/><stop offset="0.5" stop-color="#E9B526"/><stop offset="1" stop-color="#B9820C"/></linearGradient>
+                        <linearGradient id="mfLeather" x1="0" x2="1"><stop offset="0" stop-color="#8E5832"/><stop offset="1" stop-color="#5C351A"/></linearGradient>
+                        <linearGradient id="mfPack" x1="0" x2="1"><stop offset="0" stop-color="#2F8150"/><stop offset="1" stop-color="#1D5733"/></linearGradient>
+
+                        <!-- hair: the dark swept-up quiff from the photos -->
+                        <g id="art-hair">
+                            <path d="M84 60 C78 30 96 10 121 10 C148 10 162 28 157 60 C153 48 146 41 138 39 C128 31 112 33 104 39 C96 41 89 48 84 60 Z" fill="url(#mfHair)" stroke="#1A1716" stroke-width="2.6" stroke-linejoin="round"/>
+                            <path d="M103 39 C111 25 133 20 148 30 C139 30 131 34 124 39 C117 35 109 36 103 39 Z" fill="#5B4130" stroke="#1A1716" stroke-width="1.8" stroke-linejoin="round"/>
+                            <path d="M112 22 C120 17 134 17 141 23" stroke="#7A5B44" stroke-width="2.2" stroke-linecap="round" fill="none" opacity="0.8"/>
+                            <path d="M86 52 L89 64 L94 62 L92 49 Z M154 52 L151 64 L146 62 L148 49 Z" fill="url(#mfHair)" stroke="#1A1716" stroke-width="1.8" stroke-linejoin="round"/>
+                        </g>
+                        <!-- briefcase, hangs from the left hand -->
+                        <g id="art-case">
+                            <path d="M43 188 V182 Q43 175 50 175 H58 Q65 175 65 182 V188" stroke="#1A1716" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+                            <rect x="28" y="186" width="52" height="36" rx="6" fill="url(#mfLeather)" stroke="#1A1716" stroke-width="2.6"/>
+                            <path d="M28 199 H80" stroke="#1A1716" stroke-width="1.6" opacity="0.55"/>
+                            <rect x="50" y="194" width="8" height="9" rx="1.6" fill="url(#mfGold)" stroke="#1A1716" stroke-width="1.4"/>
+                            <path d="M33 191 H48" stroke="#B57A4C" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+                        </g>
+                        <!-- backpack: the pack peeks out behind the body, straps over the jacket -->
+                        <g id="art-pack">
+                            <rect x="60" y="100" width="120" height="86" rx="17" fill="url(#mfPack)" stroke="#1A1716" stroke-width="2.6"/>
+                            <path d="M108 101 Q120 89 132 101" stroke="#1A1716" stroke-width="3.2" fill="none" stroke-linecap="round"/>
+                        </g>
+                        <g id="art-straps">
+                            <path d="M89 98 L83 152 L94 153 L99 98 Z M151 98 L157 152 L146 153 L141 98 Z" fill="#1F5A35" stroke="#1A1716" stroke-width="2" stroke-linejoin="round"/>
+                            <rect x="83" y="138" width="12" height="7" rx="1.5" fill="#B9BEC2" stroke="#1A1716" stroke-width="1.3"/>
+                            <rect x="145" y="138" width="12" height="7" rx="1.5" fill="#B9BEC2" stroke="#1A1716" stroke-width="1.3"/>
+                        </g>
+                        <g id="art-pack-icon">
+                            <path d="M322 14 Q330 3 338 14" stroke="#1A1716" stroke-width="3" fill="none" stroke-linecap="round"/>
+                            <rect x="304" y="13" width="52" height="61" rx="14" fill="url(#mfPack)" stroke="#1A1716" stroke-width="2.6"/>
+                            <path d="M304 34 Q330 22 356 34 V28 Q356 13 341 13 H319 Q304 13 304 28 Z" fill="#23663D" stroke="#1A1716" stroke-width="2" stroke-linejoin="round"/>
+                            <rect x="314" y="46" width="32" height="20" rx="6" fill="#23663D" stroke="#1A1716" stroke-width="2"/>
+                            <rect x="326" y="30" width="8" height="7" rx="1.5" fill="#B9BEC2" stroke="#1A1716" stroke-width="1.3"/>
+                        </g>
+                        <!-- trophy, stands on the right hand -->
+                        <g id="art-trophy">
+                            <path d="M175 137 Q164 138 166 147 Q168 154 176 152 M201 137 Q212 138 210 147 Q208 154 200 152" stroke="#1A1716" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+                            <path d="M174 132 H202 V146 Q202 161 188 163 Q174 161 174 146 Z" fill="url(#mfGold)" stroke="#1A1716" stroke-width="2.4" stroke-linejoin="round"/>
+                            <rect x="184" y="162" width="8" height="7" fill="url(#mfGold)" stroke="#1A1716" stroke-width="1.8"/>
+                            <rect x="177" y="168" width="22" height="7" rx="1.6" fill="#33302D" stroke="#1A1716" stroke-width="1.8"/>
+                            <path d="M188 139 L190.2 144.2 L195.6 144.6 L191.5 148 L192.8 153.2 L188 150.4 L183.2 153.2 L184.5 148 L180.4 144.6 L185.8 144.2 Z" fill="#FFF4C4"/>
+                            <path d="M178 136 V147" stroke="#FFF6D0" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+                        </g>
+                        <!-- camera on a neck strap -->
+                        <g id="art-camera">
+                            <path d="M107 96 L114 131 M133 96 L126 131" stroke="#1A1716" stroke-width="3" fill="none" stroke-linecap="round"/>
+                            <rect x="108" y="124" width="10" height="7" rx="1.6" fill="#2B2B2E" stroke="#1A1716" stroke-width="1.6"/>
+                            <rect x="102" y="128" width="36" height="24" rx="4" fill="#2B2B2E" stroke="#1A1716" stroke-width="2.2"/>
+                            <circle cx="122" cy="140" r="8.5" fill="#121214" stroke="#74747A" stroke-width="2.6"/>
+                            <circle cx="119.4" cy="137.4" r="2.2" fill="#fff" opacity="0.65"/>
+                            <rect x="128" y="131" width="6" height="4" rx="1" fill="#DADADA"/>
+                        </g>
+                        <!-- speech bubble, for the Claude chat -->
+                        <g id="art-bubble">
+                            <path d="M174 46 L163 61 L188 48 Z" fill="#fff" stroke="#1A1716" stroke-width="2.4" stroke-linejoin="round"/>
+                            <rect x="160" y="8" width="76" height="42" rx="15" fill="#fff" stroke="#1A1716" stroke-width="2.4"/>
+                            <path d="M176 47.5 L186 47.5" stroke="#fff" stroke-width="4"/>
+                            <text x="198" y="34" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="14" fill="#161615"><tspan fill="#D97757">✴ </tspan>ask me</text>
+                        </g>
+                    </defs>
+                </svg>
+
+                <div class="bd-figure">
+                    <svg class="mf" id="mfFigure" viewBox="0 0 240 290" role="img" aria-label="A minifigure of Spandan you build by adding parts">
+                        <!-- baseplate under the feet -->
+                        <ellipse cx="120" cy="268" rx="70" ry="8" fill="#000" opacity="0.14"/>
+                        <rect x="42" y="266" width="156" height="17" rx="3" fill="#00852B" stroke="#0B4F1E" stroke-width="2"/>
+                        <g fill="#0A9A3A" stroke="#0B4F1E" stroke-width="1.5">
+                            <rect x="47" y="260" width="16" height="7" rx="2"/><rect x="71" y="260" width="16" height="7" rx="2"/><rect x="95" y="260" width="16" height="7" rx="2"/>
+                            <rect x="129" y="260" width="16" height="7" rx="2"/><rect x="153" y="260" width="16" height="7" rx="2"/><rect x="177" y="260" width="16" height="7" rx="2"/>
+                        </g>
+
+                        <g class="mf-part" data-part="travel"><use href="#art-pack"/></g>
+
+                        <!-- legs and hips -->
+                        <path d="M70 184 H118 V256 H70 Z M122 184 H170 V256 H122 Z" fill="url(#mfPants)" stroke="#1A1716" stroke-width="2.6" stroke-linejoin="round"/>
+                        <path d="M78 190 V248" stroke="#5E6F9C" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
+                        <rect x="67" y="251" width="54" height="15" rx="3" fill="#1D263F" stroke="#1A1716" stroke-width="2.4"/>
+                        <rect x="119" y="251" width="54" height="15" rx="3" fill="#1D263F" stroke="#1A1716" stroke-width="2.4"/>
+                        <rect x="68" y="168" width="104" height="18" rx="4" fill="#2A3658" stroke="#1A1716" stroke-width="2.6"/>
+                        <rect x="113" y="177" width="14" height="11" rx="2" fill="#1D263F" stroke="#1A1716" stroke-width="1.8"/>
+
+                        <!-- neck and torso: orange jacket over a cream tee, like Hampi -->
+                        <rect x="106" y="86" width="28" height="12" rx="2" fill="#D9A40E" stroke="#1A1716" stroke-width="2"/>
+                        <path d="M86 96 H154 Q158 96 159 100 L171 170 H69 L81 100 Q82 96 86 96 Z" fill="url(#mfJacket)" stroke="#1A1716" stroke-width="2.6" stroke-linejoin="round"/>
+                        <path d="M108 97 H132 L137 169 H103 Z" fill="url(#mfTee)"/>
+                        <path d="M108 97 L103 169 M132 97 L137 169" stroke="#1A1716" stroke-width="1.8" opacity="0.6"/>
+                        <path d="M110 97 Q120 107 130 97" stroke="#C9B48C" stroke-width="2" fill="none"/>
+                        <path d="M91 104 L85 152" stroke="#fff" stroke-width="6" stroke-linecap="round" opacity="0.16"/>
+
+                        <g class="mf-part" data-part="travel"><use href="#art-straps"/></g>
+                        <g class="mf-part" data-part="gallery"><use href="#art-camera"/></g>
+
+                        <!-- left arm, briefcase, hand -->
+                        <path d="M85 106 Q67 128 56 166" stroke="#1A1716" stroke-width="30" stroke-linecap="round" fill="none"/>
+                        <path d="M85 106 Q67 128 56 166" stroke="#C85D22" stroke-width="24" stroke-linecap="round" fill="none"/>
+                        <path d="M80 112 Q66 130 58 156" stroke="#E98445" stroke-width="5" stroke-linecap="round" fill="none" opacity="0.7"/>
+                        <g class="mf-part" data-part="worklog"><use href="#art-case"/></g>
+                        <circle cx="53" cy="178" r="13" fill="url(#mfSkin)" stroke="#1A1716" stroke-width="2.6"/>
+                        <circle cx="53" cy="183" r="6" fill="#C9960F"/>
+
+                        <!-- right arm waves when the build is finished -->
+                        <g id="mfWave">
+                            <path d="M155 106 Q173 128 184 166" stroke="#1A1716" stroke-width="30" stroke-linecap="round" fill="none"/>
+                            <path d="M155 106 Q173 128 184 166" stroke="#B4501D" stroke-width="24" stroke-linecap="round" fill="none"/>
+                            <circle cx="187" cy="178" r="13" fill="url(#mfSkin)" stroke="#1A1716" stroke-width="2.6"/>
+                            <circle cx="187" cy="183" r="6" fill="#C9960F"/>
+                            <g class="mf-part" data-part="honors"><use href="#art-trophy"/></g>
+                        </g>
+
+                        <!-- head with the stud on top and a printed face -->
+                        <rect x="103" y="18" width="34" height="15" rx="4" fill="url(#mfSkin)" stroke="#1A1716" stroke-width="2.4"/>
+                        <rect x="86" y="29" width="68" height="62" rx="19" fill="url(#mfSkin)" stroke="#1A1716" stroke-width="2.6"/>
+                        <ellipse cx="99" cy="44" rx="6" ry="11" fill="#fff" opacity="0.35"/>
+                        <path d="M99 51 Q105 47 111 50 M129 50 Q135 47 141 51" stroke="#2B1B10" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+                        <ellipse cx="106" cy="59" rx="3.8" ry="4.8" fill="#1A1716"/>
+                        <ellipse cx="134" cy="59" rx="3.8" ry="4.8" fill="#1A1716"/>
+                        <circle cx="107.3" cy="57.4" r="1.4" fill="#fff"/>
+                        <circle cx="135.3" cy="57.4" r="1.4" fill="#fff"/>
+                        <circle cx="98" cy="69" r="4.5" fill="#E8833A" opacity="0.28"/>
+                        <circle cx="142" cy="69" r="4.5" fill="#E8833A" opacity="0.28"/>
+                        <path d="M111 68.5 Q120 65.5 129 68.5" stroke="#6B4A2E" stroke-width="2.2" stroke-linecap="round" fill="none" opacity="0.55"/>
+                        <path d="M107 72 Q120 85 133 72 Q120 77 107 72 Z" fill="#1A1716"/>
+                        <path d="M110 73 Q120 76.5 130 73" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none"/>
+                        <path d="M101 79 Q120 92 139 79" stroke="#B88A0C" stroke-width="1.6" fill="none" opacity="0.45" stroke-dasharray="1.5 3"/>
+
+                        <g class="mf-part" data-part="bio"><use href="#art-hair"/></g>
+                        <g class="mf-part" data-part="claude"><use href="#art-bubble"/></g>
+                    </svg>
+                    <div class="bd-plate" id="bdCount">0 / 6 PARTS</div>
+                    <div class="bd-stamp" aria-hidden="true">FULLY BUILT ✓</div>
+                </div>
+
+                <p class="bd-hint" id="bdHint">drag a part onto me</p>
+                <div class="bd-tray" id="bdTray"></div>
+                <button type="button" class="bd-reset" id="bdReset" hidden>take me apart</button>
+            </div>
 
             <div class="browser-shell" id="browserShell">
             <div class="chrome-window">
@@ -4167,11 +4415,15 @@
 
                 <div class="pg-colors" id="pgColors" role="radiogroup" aria-label="Brick colour"></div>
 
+                <label class="pg-letter">
+                    <input id="pgLetter" class="pg-letter-input" type="text" maxlength="2" value="S" autocomplete="off" autocapitalize="characters" spellcheck="false" enterkeyhint="done" aria-label="Type a letter to build it in bricks">
+                    <span>type a letter,<br>it turns to bricks</span>
+                </label>
+
                 <div class="pg-actions">
-                    <button type="button" class="pg-btn" data-art="heart">♥ heart</button>
-                    <button type="button" class="pg-btn" data-art="smile">☺ smiley</button>
                     <button type="button" class="pg-btn" data-art="surprise">✦ surprise me</button>
                     <button type="button" class="pg-btn pg-clear" data-art="clear">clear</button>
+                    <button type="button" class="pg-btn pg-dl" id="pgDownload">⬇ save my plate</button>
                 </div>
                 <div class="pg-count" id="pgCount">0 bricks</div>
             </div>
@@ -4269,6 +4521,19 @@
             </div>
         </div>
     </section>
+
+    <!-- phones: the section a part opens, as a bottom sheet -->
+    <div class="build-sheet" id="buildSheet" role="dialog" aria-modal="true" aria-labelledby="bsTitle">
+        <div class="bs-backdrop" id="bsBackdrop"></div>
+        <div class="bs-panel" id="bsPanel">
+            <div class="bs-head">
+                <span class="bs-grip" aria-hidden="true"></span>
+                <div class="bs-title"><span id="bsIcon" aria-hidden="true"></span><span id="bsTitle">about me</span></div>
+                <button type="button" class="bs-close" id="bsClose" aria-label="Close">✕</button>
+            </div>
+            <div class="bs-body" id="bsBody"></div>
+        </div>
+    </div>
 
     <script>
         /* =========================================================
@@ -5316,7 +5581,7 @@
         /* --- B. SCROLL-DRIVEN AUTO-SWITCHING MACOS BROWSER TABS --- */
         function tickAbout(aRect, aScrollable, vh) {
             // on iPhone the page scroll reads the tab instead; only swipes and taps switch
-            if (!aboutTrack.classList.contains('is-flow') && !aboutTrack.classList.contains('is-deck') && browserState === 'open'
+            if (!aboutTrack.classList.contains('is-flow') && !aboutTrack.classList.contains('is-build') && browserState === 'open'
                 && aRect.top <= 0 && aRect.bottom >= vh && Date.now() - manualOverrideTime > 1200) {
                 const aProg = Math.min(0.999, Math.max(0, -aRect.top / aScrollable));
                 const live = liveTabs();
@@ -5482,7 +5747,7 @@
                 tabId = live.find(t => tabOrder.indexOf(t) > tabOrder.indexOf(tabId)) || live[live.length - 1];
             }
             manualOverrideTime = Date.now();
-            if (isDeck()) { deckGo(tabId); return; }
+            if (isBuild()) return;   // phones open sections through the minifig instead
             currentAutoTabIdx = tabOrder.indexOf(tabId);
             activateBrowserTab(tabId);
 
@@ -5844,80 +6109,271 @@
             setTimeout(dismissHint, 4200);
         }, { threshold: 0.45 }).observe(chromeWindow);
 
-        /* --- phones: the about section is a swipeable deck of cards, one per tab --- */
-        const deckChips = document.getElementById('deckChips');
-        const DECK = tabOrder.filter(t => t !== 'figma');   // a drag-around canvas doesn't belong on a phone
-        const DECK_LABEL = { bio: 'about', worklog: 'work', travel: 'travel', honors: 'wins', gallery: 'gallery', claude: 'ask AI' };
-        const DECK_COLOR = { bio: '#D01012', worklog: '#0A5BC4', travel: '#00852B', honors: '#F6C51B', gallery: '#F57D20', claude: '#A0A5A9' };
-        const LIGHT_CHIPS = ['honors', 'claude'];
-        const isDeck = () => aboutTrack.classList.contains('is-deck');
-        const deckPane = (id) => document.getElementById(`tab-${id}`);
-        let deckActive = 'bio';
+        /* --- phones: "Build Spandan". Snap a part onto the minifig, its section opens in a sheet --- */
+        const PARTS = [
+            { id: 'bio', piece: 'hair', title: 'about me', icon: '👤', art: 'art-hair', crop: '76 6 88 60' },
+            { id: 'worklog', piece: 'briefcase', title: 'work log', icon: '💼', art: 'art-case', crop: '22 170 64 56' },
+            { id: 'travel', piece: 'backpack', title: 'travel & reset', icon: '🏔️', art: 'art-pack-icon', crop: '298 0 64 78' },
+            { id: 'honors', piece: 'trophy', title: 'wins & certs', icon: '🏆', art: 'art-trophy', crop: '158 126 60 54' },
+            { id: 'gallery', piece: 'camera', title: 'gallery', icon: '📸', art: 'art-camera', crop: '94 92 52 64' },
+            { id: 'claude', piece: 'speech bubble', title: 'ask Claude', icon: '✴️', art: 'art-bubble', crop: '156 4 84 60' }
+        ];
+        const buildStage = document.getElementById('buildStage');
+        const bdFigure = buildStage.querySelector('.bd-figure');
+        const mfFigure = document.getElementById('mfFigure');
+        const mfWave = document.getElementById('mfWave');
+        const bdTray = document.getElementById('bdTray');
+        const bdCount = document.getElementById('bdCount');
+        const bdHint = document.getElementById('bdHint');
+        const bdReset = document.getElementById('bdReset');
+        const sheet = document.getElementById('buildSheet');
+        const bsPanel = document.getElementById('bsPanel');
+        const bsBody = document.getElementById('bsBody');
+        const bsBackdrop = document.getElementById('bsBackdrop');
+        function isBuild() { return aboutTrack.classList.contains('is-build'); }
 
-        deckChips.innerHTML = DECK.map(id => {
-            const t = phoneTabs.find(x => x.id === id);
-            return `<button type="button" class="deck-chip studs${LIGHT_CHIPS.includes(id) ? ' light' : ''}" data-tab="${id}" style="--c:${DECK_COLOR[id]}"><span aria-hidden="true">${t.icon}</span>${DECK_LABEL[id]}</button>`;
-        }).join('');
-        const chips = deckChips.querySelectorAll('.deck-chip');
+        let built;
+        try { built = new Set(JSON.parse(localStorage.getItem('pf-build')) || []); } catch { built = new Set(); }
+        let celebrated = built.size === PARTS.length;
+        let flying = false;
 
-        // the deck is only as tall as the card you're on, so short cards don't leave a gap below
-        function fitDeck() {
-            if (!isDeck()) return;
-            const cs = getComputedStyle(browserViewport);
-            browserViewport.style.height = `${deckPane(deckActive).offsetHeight + parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom)}px`;
-        }
+        bdTray.innerHTML = PARTS.map((pt, i) => `
+            <button type="button" class="bd-tile" data-part="${pt.id}" style="--d:${i * -0.4}s" aria-label="Attach the ${pt.piece}, opens ${pt.title}">
+                <svg viewBox="${pt.crop}" aria-hidden="true"><use href="#${pt.art}"/></svg>
+                <span>${pt.piece}</span>
+            </button>`).join('');
 
-        function deckFocus(id) {
-            deckActive = id;
-            currentAutoTabIdx = tabOrder.indexOf(id);
-            chips.forEach(c => {
-                const on = c.dataset.tab === id;
-                c.classList.toggle('on', on);
-                if (on) {
-                    c.setAttribute('aria-current', 'true');
-                    deckChips.scrollTo({ left: c.offsetLeft - (deckChips.clientWidth - c.offsetWidth) / 2, behavior: reducedMotion ? 'auto' : 'smooth' });
-                } else c.removeAttribute('aria-current');
+        const partEls = (id) => mfFigure.querySelectorAll(`.mf-part[data-part="${id}"]`);
+        function paintBuild() {
+            PARTS.forEach(pt => {
+                partEls(pt.id).forEach(g => g.classList.toggle('on', built.has(pt.id)));
+                bdTray.querySelector(`[data-part="${pt.id}"]`).classList.toggle('used', built.has(pt.id));
             });
-            document.querySelectorAll('#browserDots .b-dot').forEach(d => d.classList.toggle('active', +d.dataset.i === currentAutoTabIdx));
-            fitDeck();
+            bdCount.textContent = `${built.size} / ${PARTS.length} PARTS`;
+            bdReset.hidden = built.size === 0;
+            const done = built.size === PARTS.length;
+            buildStage.classList.toggle('complete', done && celebrated);
+            bdHint.textContent = done ? 'tap a part to read it again' : built.size ? 'keep going' : 'drag a part onto me';
+        }
+        const saveBuild = () => { try { localStorage.setItem('pf-build', JSON.stringify([...built])); } catch { /* private mode */ } };
+
+        function attach(id) {
+            built.add(id);
+            saveBuild();
+            paintBuild();
+            mfFigure.classList.remove('snap');
+            void mfFigure.getBoundingClientRect();
+            mfFigure.classList.add('snap');
+            sfx.clack(0.9);
+            buzz(12);
+            setTimeout(() => openSheet(id), 300);
         }
 
-        function deckGo(id) {
-            if (!DECK.includes(id)) id = DECK[0];
-            const pad = parseFloat(getComputedStyle(browserViewport).paddingLeft);
-            browserViewport.scrollTo({ left: deckPane(id).offsetLeft - pad, behavior: reducedMotion ? 'auto' : 'smooth' });
+        function celebrate() {
+            celebrated = true;
+            buildStage.classList.remove('quiet');
+            paintBuild();
+            mfWave.classList.remove('waving');
+            void mfWave.getBoundingClientRect();
+            mfWave.classList.add('waving');
+            sfx.rattle();
+            buzz([12, 50, 12, 50, 24]);
         }
 
-        chips.forEach(c => c.addEventListener('click', () => deckGo(c.dataset.tab)));
-        // the card that's mostly in view is the current one; swiping is fully native
-        const deckSeen = new IntersectionObserver((entries) => {
-            if (!isDeck()) return;
-            entries.forEach(en => { if (en.isIntersecting && en.intersectionRatio >= 0.6) deckFocus(en.target.id.slice(4)); });
-        }, { root: browserViewport, threshold: [0.6] });
-        // cards change height when Claude answers or images load
-        const deckSize = new ResizeObserver(() => fitDeck());
-        DECK.forEach(id => { deckSeen.observe(deckPane(id)); deckSize.observe(deckPane(id)); });
+        // --- moving a part: a floating copy flies (or is dragged) onto the figure ---
+        function makeGhost(tile) {
+            const icon = tile.querySelector('svg');
+            const r = icon.getBoundingClientRect();
+            const g = document.createElement('div');
+            g.className = 'bd-ghost';
+            g.style.width = `${r.width}px`;
+            g.style.height = `${r.height}px`;
+            g.appendChild(icon.cloneNode(true));
+            g.style.transform = `translate3d(${r.left}px, ${r.top}px, 0)`;
+            document.body.appendChild(g);
+            return { el: g, x: r.left, y: r.top, w: r.width, h: r.height };
+        }
+
+        function flyGhost(ghost, fromX, fromY, id, done) {
+            const target = partEls(id)[0].getBoundingClientRect();
+            const scale = Math.max(0.5, Math.min(1.6, target.width / ghost.w));
+            const tx = target.left + target.width / 2 - ghost.w / 2;
+            const ty = target.top + target.height / 2 - ghost.h / 2;
+            const anim = ghost.el.animate([
+                { transform: `translate3d(${fromX}px, ${fromY}px, 0) scale(1.12)` },
+                { transform: `translate3d(${(fromX + tx) / 2}px, ${Math.min(fromY, ty) - 70}px, 0) scale(${(1.12 + scale) / 2 * 1.1}) rotate(-10deg)`, offset: 0.55 },
+                { transform: `translate3d(${tx}px, ${ty}px, 0) scale(${scale})` }
+            ], { duration: reducedMotion ? 1 : 560, easing: 'cubic-bezier(0.45, 0.05, 0.3, 1)', fill: 'forwards' });
+            anim.onfinish = () => { ghost.el.remove(); done(); };
+        }
+
+        function flyBack(ghost, fromX, fromY, tile) {
+            const anim = ghost.el.animate([
+                { transform: `translate3d(${fromX}px, ${fromY}px, 0) scale(1.12)` },
+                { transform: `translate3d(${ghost.x}px, ${ghost.y}px, 0) scale(1)` }
+            ], { duration: reducedMotion ? 1 : 320, easing: 'cubic-bezier(0.3, 1.3, 0.5, 1)', fill: 'forwards' });
+            anim.onfinish = () => { ghost.el.remove(); tile.classList.remove('lifting'); flying = false; };
+        }
+
+        const overFigure = (x, y) => {
+            const r = bdFigure.getBoundingClientRect();
+            return x > r.left - 30 && x < r.right + 30 && y > r.top - 40 && y < r.bottom + 10;
+        };
+
+        let _drag = null;
+        bdTray.addEventListener('pointerdown', (e) => {
+            const tile = e.target.closest('.bd-tile:not(.used)');
+            if (!tile || flying) return;
+            _drag = { tile, id: tile.dataset.part, x: e.clientX, y: e.clientY, moved: false, ghost: null, gx: 0, gy: 0 };
+            tile.setPointerCapture(e.pointerId);
+        });
+        bdTray.addEventListener('pointermove', (e) => {
+            const d = _drag;
+            if (!d) return;
+            const dx = e.clientX - d.x, dy = e.clientY - d.y;
+            if (!d.moved) {
+                if (Math.hypot(dx, dy) < 8) return;
+                d.moved = true;
+                d.ghost = makeGhost(d.tile);
+                d.tile.classList.add('lifting');
+            }
+            d.gx = d.ghost.x + dx;
+            d.gy = d.ghost.y + dy;
+            d.ghost.el.style.transform = `translate3d(${d.gx}px, ${d.gy}px, 0) scale(1.12)`;
+            bdFigure.classList.toggle('aiming', overFigure(e.clientX, e.clientY));
+        });
+        const endDrag = (e, cancelled) => {
+            const d = _drag;
+            if (!d) return;
+            _drag = null;
+            bdFigure.classList.remove('aiming');
+            flying = true;
+            if (!d.moved) {
+                // a tap: the part hops from the tray onto the figure by itself
+                const g = makeGhost(d.tile);
+                d.tile.classList.add('lifting');
+                flyGhost(g, g.x, g.y, d.id, () => { flying = false; d.tile.classList.remove('lifting'); attach(d.id); });
+                return;
+            }
+            if (!cancelled && overFigure(e.clientX, e.clientY)) {
+                flyGhost(d.ghost, d.gx, d.gy, d.id, () => { flying = false; d.tile.classList.remove('lifting'); attach(d.id); });
+            } else {
+                flyBack(d.ghost, d.gx, d.gy, d.tile);
+            }
+        };
+        bdTray.addEventListener('pointerup', (e) => endDrag(e, false));
+        bdTray.addEventListener('pointercancel', (e) => endDrag(e, true));
+        bdTray.addEventListener('contextmenu', (e) => e.preventDefault());
+
+        // tapping a part that's already on reopens its section
+        mfFigure.addEventListener('click', (e) => {
+            const part = e.target.closest('.mf-part.on');
+            if (part) openSheet(part.dataset.part);
+        });
+
+        bdReset.addEventListener('click', () => {
+            built.clear();
+            celebrated = false;
+            saveBuild();
+            paintBuild();
+            sfx.rattle();
+        });
+
+        // --- the sheet: a section is moved in while open, and back to the browser when you leave phone size ---
+        const markers = {};
+        let sheetId = null;
+        function takePane(id) {
+            const pane = document.getElementById(`tab-${id}`);
+            if (!markers[id]) {
+                markers[id] = document.createComment(`pane:${id}`);
+                pane.before(markers[id]);
+            }
+            bsBody.appendChild(pane);
+        }
+        function returnPane(id) {
+            if (!markers[id]) return;
+            markers[id].replaceWith(document.getElementById(`tab-${id}`));
+            delete markers[id];
+        }
+
+        function openSheet(id) {
+            const pt = PARTS.find(x => x.id === id);
+            if (sheetId && sheetId !== id) returnPane(sheetId);
+            takePane(id);
+            sheetId = id;
+            document.getElementById('bsIcon').textContent = pt.icon;
+            document.getElementById('bsTitle').textContent = pt.title;
+            bsBody.scrollTop = 0;
+            sheet.classList.add('open');
+            document.documentElement.classList.add('sheet-open');
+        }
+        function closeSheet() {
+            if (!sheet.classList.contains('open')) return;
+            sheet.classList.remove('open');
+            document.documentElement.classList.remove('sheet-open');
+            if (built.size === PARTS.length && !celebrated) setTimeout(celebrate, 380);
+        }
+        document.getElementById('bsClose').addEventListener('click', closeSheet);
+        bsBackdrop.addEventListener('click', closeSheet);
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSheet(); });
+
+        // swipe the sheet down to close: from the handle anywhere, from the content only when it's scrolled to the top
+        let _sw = null;
+        bsPanel.addEventListener('touchstart', (e) => {
+            const fromHead = !!e.target.closest('.bs-head');
+            if (!fromHead && bsBody.scrollTop > 0) return;
+            _sw = { y: e.touches[0].clientY, t: performance.now(), fromHead, dy: 0, active: false };
+        }, { passive: true });
+        bsPanel.addEventListener('touchmove', (e) => {
+            const sw = _sw;
+            if (!sw) return;
+            const dy = e.touches[0].clientY - sw.y;
+            if (!sw.active) {
+                if (dy < 6) { if (dy < -4 && !sw.fromHead) _sw = null; return; }
+                if (!sw.fromHead && bsBody.scrollTop > 0) { _sw = null; return; }
+                sw.active = true;
+                bsPanel.style.transition = 'none';
+            }
+            e.preventDefault();
+            sw.dy = Math.max(0, dy);
+            bsPanel.style.transform = `translate3d(0, ${sw.dy}px, 0)`;
+            bsBackdrop.style.opacity = String(1 - Math.min(1, sw.dy / 420));
+        }, { passive: false });
+        bsPanel.addEventListener('touchend', () => {
+            const sw = _sw;
+            _sw = null;
+            if (!sw || !sw.active) return;
+            bsPanel.style.transition = '';
+            bsBackdrop.style.opacity = '';
+            const fast = sw.dy / (performance.now() - sw.t) > 0.6;
+            bsPanel.style.transform = '';
+            if (sw.dy > 110 || fast) closeSheet();
+        });
+
+        if (built.size === PARTS.length) buildStage.classList.add('quiet');
+        paintBuild();
 
         function applyBrowserSkin() {
-            const deck = window.matchMedia('(max-width: 760px)').matches;
-            if (deck && browserState !== 'open') reopenBrowser();
-            if (deck) {
+            const phone = window.matchMedia('(max-width: 760px)').matches;
+            if (phone && browserState !== 'open') reopenBrowser();
+            if (phone) {
                 restoreAllTabs();
                 aboutSticky.classList.remove('is-max');
+            } else {
+                // leaving phone size: put any section that was in the sheet back into the browser
+                sheet.classList.remove('open');
+                document.documentElement.classList.remove('sheet-open');
+                Object.keys(markers).forEach(returnPane);
+                sheetId = null;
             }
             chromeWindow.classList.remove('skin-safari', 'skin-chrome-m');
             aboutTrack.classList.remove('is-flow');
-            aboutTrack.classList.toggle('is-deck', deck);
+            aboutTrack.classList.toggle('is-build', phone);
             relabelNextButtons(false);
             browserViewport.style.zoom = '';
             browserViewport.style.height = '';
             closeTabGrid();
-            if (deck) {
-                browserViewport.scrollLeft = 0;
-                deckFocus('bio');
-            } else {
-                activateBrowserTab(tabOrder[currentAutoTabIdx] === 'figma' ? 'figma' : tabOrder[currentAutoTabIdx]);
-            }
+            if (!phone) activateBrowserTab(tabOrder[currentAutoTabIdx]);
         }
         window.matchMedia('(max-width: 760px)').addEventListener('change', applyBrowserSkin);
         applyBrowserSkin();
@@ -5980,11 +6436,12 @@
             chips.forEach(c => c.disabled = true);
 
             const log = document.getElementById('claudeChatLog');
-            const viewport = log.closest('.browser-viewport');
             const stick = () => {
                 manualOverrideTime = Date.now();   // keep scroll-driven tab switching from yanking us away
-                if (!aboutTrack.classList.contains('is-flow') && !isDeck()) {
-                    viewport.scrollTop = viewport.scrollHeight;
+                // the chat lives in the browser on a laptop, in the bottom sheet on a phone
+                const scroller = log.closest('.bs-body') || log.closest('.browser-viewport');
+                if (!aboutTrack.classList.contains('is-flow')) {
+                    scroller.scrollTop = scroller.scrollHeight;
                     return;
                 }
                 // iPhone: the page scrolls, keep the newest line just above the glass bar
@@ -6113,15 +6570,43 @@
             savePlate();
         });
 
-        // presets, drawn brick by brick
-        const ART = {
-            heart: { r: '#D01012', rows: [
-                '................', '...rrr...rrr....', '..rrrrr.rrrrr...', '..rrrrrrrrrrr...', '..rrrrrrrrrrr...',
-                '...rrrrrrrrr....', '....rrrrrrr.....', '.....rrrrr......', '......rrr.......', '.......r........'] },
-            smile: { y: '#F6C51B', k: '#161615', rows: [
-                '......yyyy......', '....yyyyyyyy....', '...yykyyyykyy...', '..yyykyyyykyyy..', '..yyyyyyyyyyyy..',
-                '..ykyyyyyyyyky..', '..yykyyyyyykyy..', '...yykkkkkkyy...', '....yyyyyyyy....', '......yyyy......'] }
-        };
+        // a typed letter, rasterised into the 16x10 stud grid
+        const pgLetter = document.getElementById('pgLetter');
+        function letterPlan(ch, color) {
+            const S = 24, W = PG_COLS * S, H = PG_ROWS * S;
+            const c = document.createElement('canvas');
+            c.width = W;
+            c.height = H;
+            const x = c.getContext('2d', { willReadFrequently: true });
+            const font = (px) => `800 ${px}px "DM Sans", system-ui, sans-serif`;
+            let size = H;
+            x.font = font(size);
+            let m = x.measureText(ch);
+            // fit the ink inside the plate with a one-stud margin
+            const inkW = m.actualBoundingBoxLeft + m.actualBoundingBoxRight;
+            const inkH = m.actualBoundingBoxAscent + m.actualBoundingBoxDescent;
+            if (!inkW || !inkH) return [];
+            size *= Math.min((H - 2 * S) / inkH, (W - 2 * S) / inkW);
+            x.font = font(size);
+            m = x.measureText(ch);
+            x.textAlign = 'left';
+            x.textBaseline = 'alphabetic';
+            const px = (W - (m.actualBoundingBoxLeft + m.actualBoundingBoxRight)) / 2 + m.actualBoundingBoxLeft;
+            const py = (H - (m.actualBoundingBoxAscent + m.actualBoundingBoxDescent)) / 2 + m.actualBoundingBoxAscent;
+            x.fillText(ch, px, py);
+            const data = x.getImageData(0, 0, W, H).data;
+            const plan = [];
+            for (let r = 0; r < PG_ROWS; r++) {
+                for (let col = 0; col < PG_COLS; col++) {
+                    let ink = 0;
+                    for (let yy = r * S; yy < (r + 1) * S; yy += 2) {
+                        for (let xx = col * S; xx < (col + 1) * S; xx += 2) if (data[(yy * W + xx) * 4 + 3] > 128) ink++;
+                    }
+                    if (ink / ((S / 2) * (S / 2)) > 0.42) plan.push([r * PG_COLS + col, color]);
+                }
+            }
+            return plan;
+        }
         let artTimers = [];
         function drawArt(name) {
             artTimers.forEach(clearTimeout);
@@ -6139,9 +6624,10 @@
                 for (let i = 0; i < spots.length; i++) if (Math.random() < 0.3) plan.push([i, cols[Math.floor(Math.random() * cols.length)]]);
                 say('abstract. very modern.');
             } else {
-                const art = ART[name];
-                art.rows.forEach((row, r) => [...row].forEach((ch, c) => { if (art[ch]) plan.push([r * PG_COLS + c, art[ch]]); }));
-                say(name === 'heart' ? 'aw. 🧡' : "that's my face when the build passes.");
+                const ch = pgLetter.value.trim();
+                if (!ch) { savePlate(); return; }
+                plan = letterPlan(ch, pgColor);
+                say(plan.length ? `"${ch}", in ${plan.length} bricks.` : "can't build that one. try a letter?");
             }
             plan.forEach(([i, color], k) => artTimers.push(setTimeout(() => {
                 putBrick(i, color);
@@ -6149,7 +6635,88 @@
             }, 220 + k * 9)));
             savePlate();
         }
-        document.querySelectorAll('.pg-btn').forEach(b => b.addEventListener('click', () => drawArt(b.dataset.art)));
+        document.querySelectorAll('.pg-btn[data-art]').forEach(b => b.addEventListener('click', () => drawArt(b.dataset.art)));
+
+        pgLetter.addEventListener('input', () => {
+            // keep just the last character typed, so typing over it swaps the letter
+            const ch = [...pgLetter.value.trim()].pop() || '';
+            pgLetter.value = ch.toLocaleUpperCase();
+            if (ch) drawArt('letter');
+        });
+        pgLetter.addEventListener('focus', () => pgLetter.select());
+        pgLetter.addEventListener('keydown', (e) => { if (e.key === 'Enter') pgLetter.blur(); });
+
+        // a first visit starts with an "S" on the plate
+        if (!placedCount() && localStorage.getItem('pf-playground') === null) {
+            letterPlan('S', '#D01012').forEach(([i, c]) => putBrick(i, c));
+        }
+
+        // render the plate to a PNG: share sheet on phones (save to Photos), a download elsewhere
+        function plateImage() {
+            const cell = 44, pad = 28, foot = 48;
+            const W = PG_COLS * cell + pad * 2, H = PG_ROWS * cell + pad * 2 + foot;
+            const c = document.createElement('canvas');
+            c.width = W * 2;
+            c.height = H * 2;
+            const x = c.getContext('2d');
+            x.scale(2, 2);
+            x.fillStyle = '#F3EFE6';
+            x.fillRect(0, 0, W, H);
+            x.fillStyle = '#00852B';
+            x.beginPath();
+            x.roundRect(pad - 10, pad - 10, PG_COLS * cell + 20, PG_ROWS * cell + 20, 14);
+            x.fill();
+            x.fillStyle = 'rgba(0, 0, 0, 0.18)';
+            x.fillRect(pad - 10, pad + PG_ROWS * cell + 4, PG_COLS * cell + 20, 6);
+            spots.forEach((color, i) => {
+                const cx = pad + (i % PG_COLS) * cell, cy = pad + Math.floor(i / PG_COLS) * cell;
+                if (color) {
+                    x.fillStyle = color;
+                    x.beginPath();
+                    x.roundRect(cx + 1, cy + 1, cell - 2, cell - 2, 4);
+                    x.fill();
+                    x.fillStyle = 'rgba(0, 0, 0, 0.16)';
+                    x.fillRect(cx + 1, cy + cell - 6, cell - 2, 5);
+                    x.strokeStyle = 'rgba(0, 0, 0, 0.14)';
+                    x.lineWidth = 1;
+                    x.strokeRect(cx + 1.5, cy + 1.5, cell - 3, cell - 3);
+                }
+                // the stud, on a brick or on the bare plate
+                x.fillStyle = color ? 'rgba(0, 0, 0, 0.2)' : 'rgba(0, 0, 0, 0.24)';
+                x.beginPath(); x.arc(cx + cell / 2, cy + cell * 0.56, cell * 0.3, 0, Math.PI * 2); x.fill();
+                x.fillStyle = color || '#0A9A3A';
+                x.beginPath(); x.arc(cx + cell / 2, cy + cell * 0.46, cell * 0.28, 0, Math.PI * 2); x.fill();
+                x.fillStyle = 'rgba(255, 255, 255, 0.3)';
+                x.beginPath(); x.arc(cx + cell * 0.42, cy + cell * 0.38, cell * 0.09, 0, Math.PI * 2); x.fill();
+            });
+            x.fillStyle = '#6E6C67';
+            x.font = '600 15px "JetBrains Mono", monospace';
+            x.textAlign = 'center';
+            x.fillText(`BUILT IN SPANDAN'S PLAYGROUND · ${placedCount()} BRICKS`, W / 2, H - 20);
+            return new Promise(res => c.toBlob(res, 'image/png'));
+        }
+        document.getElementById('pgDownload').addEventListener('click', async () => {
+            const blob = await plateImage();
+            if (!blob) return;
+            const file = new File([blob], 'my-brick-plate.png', { type: 'image/png' });
+            if (window.matchMedia('(pointer: coarse)').matches && navigator.canShare && navigator.canShare({ files: [file] })) {
+                try {
+                    await navigator.share({ files: [file], title: 'my brick plate' });
+                    say('saved. frame it.');
+                    return;
+                } catch (err) {
+                    if (err.name === 'AbortError') return;   // they closed the share sheet
+                }
+            }
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'my-brick-plate.png';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+            say('saved. frame it.');
+        });
         savePlate();
 
         /* =========================================================
