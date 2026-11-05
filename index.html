@@ -3148,7 +3148,7 @@
         .mf.snap { animation: mfSnap 0.36s cubic-bezier(0.3, 1.6, 0.5, 1); }
         @keyframes mfSnap { 40% { transform: translateY(-7px) scale(1.015); } }
         .bd-figure.aiming .mf { transform: scale(1.03); transition: transform 0.2s ease; }
-        #mfWave { transform-box: view-box; transform-origin: 155px 106px; }
+        #mfWave { transform-box: view-box; transform-origin: 149px 106px; }
         #mfWave.waving { animation: mfWave 1.3s ease-in-out 2; }
         @keyframes mfWave {
             0%, 100% { transform: rotate(0); }
@@ -3230,7 +3230,7 @@
             -webkit-user-select: none;
             transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        .bd-tile svg { width: 64%; height: auto; max-height: 60%; overflow: visible; pointer-events: none; }
+        .bd-tile svg { width: 64%; height: auto; max-height: 60%; overflow: visible; pointer-events: none; text-transform: none; }
         .bd-tile:active { transform: scale(0.94); }
         .bd-tile.lifting svg { opacity: 0; }
         .bd-tile.used {
@@ -3252,6 +3252,7 @@
             filter: drop-shadow(0 10px 12px rgba(0, 0, 0, 0.25));
         }
         .bd-ghost svg { display: block; width: 100%; height: 100%; overflow: visible; }
+        .bd-reset[hidden] { display: none; }
         .bd-reset {
             display: block;
             margin: 8px auto 0;
@@ -3918,7 +3919,6 @@
                             <path d="M84 60 C78 30 96 10 121 10 C148 10 162 28 157 60 C153 48 146 41 138 39 C128 31 112 33 104 39 C96 41 89 48 84 60 Z" fill="url(#mfHair)" stroke="#1A1716" stroke-width="2.6" stroke-linejoin="round"/>
                             <path d="M103 39 C111 25 133 20 148 30 C139 30 131 34 124 39 C117 35 109 36 103 39 Z" fill="#5B4130" stroke="#1A1716" stroke-width="1.8" stroke-linejoin="round"/>
                             <path d="M112 22 C120 17 134 17 141 23" stroke="#7A5B44" stroke-width="2.2" stroke-linecap="round" fill="none" opacity="0.8"/>
-                            <path d="M86 52 L89 64 L94 62 L92 49 Z M154 52 L151 64 L146 62 L148 49 Z" fill="url(#mfHair)" stroke="#1A1716" stroke-width="1.8" stroke-linejoin="round"/>
                         </g>
                         <!-- briefcase, hangs from the left hand -->
                         <g id="art-case">
@@ -3983,42 +3983,42 @@
                             <rect x="129" y="260" width="16" height="7" rx="2"/><rect x="153" y="260" width="16" height="7" rx="2"/><rect x="177" y="260" width="16" height="7" rx="2"/>
                         </g>
 
-                        <g class="mf-part" data-part="travel"><use href="#art-pack"/></g>
+                        <g class="mf-part" data-part="travel"><use href="#art-pack" transform="translate(120 0) scale(0.84 1) translate(-120 0)"/></g>
 
                         <!-- legs and hips -->
-                        <path d="M70 184 H118 V256 H70 Z M122 184 H170 V256 H122 Z" fill="url(#mfPants)" stroke="#1A1716" stroke-width="2.6" stroke-linejoin="round"/>
-                        <path d="M78 190 V248" stroke="#5E6F9C" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
-                        <rect x="67" y="251" width="54" height="15" rx="3" fill="#1D263F" stroke="#1A1716" stroke-width="2.4"/>
-                        <rect x="119" y="251" width="54" height="15" rx="3" fill="#1D263F" stroke="#1A1716" stroke-width="2.4"/>
-                        <rect x="68" y="168" width="104" height="18" rx="4" fill="#2A3658" stroke="#1A1716" stroke-width="2.6"/>
+                        <path d="M80 184 H118 V256 H80 Z M122 184 H160 V256 H122 Z" fill="url(#mfPants)" stroke="#1A1716" stroke-width="2.6" stroke-linejoin="round"/>
+                        <path d="M87 190 V248" stroke="#5E6F9C" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
+                        <rect x="77" y="251" width="44" height="15" rx="3" fill="#1D263F" stroke="#1A1716" stroke-width="2.4"/>
+                        <rect x="119" y="251" width="44" height="15" rx="3" fill="#1D263F" stroke="#1A1716" stroke-width="2.4"/>
+                        <rect x="78" y="168" width="84" height="18" rx="4" fill="#2A3658" stroke="#1A1716" stroke-width="2.6"/>
                         <rect x="113" y="177" width="14" height="11" rx="2" fill="#1D263F" stroke="#1A1716" stroke-width="1.8"/>
 
                         <!-- neck and torso: orange jacket over a cream tee, like Hampi -->
                         <rect x="106" y="86" width="28" height="12" rx="2" fill="#D9A40E" stroke="#1A1716" stroke-width="2"/>
-                        <path d="M86 96 H154 Q158 96 159 100 L171 170 H69 L81 100 Q82 96 86 96 Z" fill="url(#mfJacket)" stroke="#1A1716" stroke-width="2.6" stroke-linejoin="round"/>
-                        <path d="M108 97 H132 L137 169 H103 Z" fill="url(#mfTee)"/>
-                        <path d="M108 97 L103 169 M132 97 L137 169" stroke="#1A1716" stroke-width="1.8" opacity="0.6"/>
+                        <path d="M92 96 H148 Q152 96 153 100 L163 170 H77 L87 100 Q88 96 92 96 Z" fill="url(#mfJacket)" stroke="#1A1716" stroke-width="2.6" stroke-linejoin="round"/>
+                        <path d="M110 97 H130 L134 169 H106 Z" fill="url(#mfTee)"/>
+                        <path d="M110 97 L106 169 M130 97 L134 169" stroke="#1A1716" stroke-width="1.8" opacity="0.6"/>
                         <path d="M110 97 Q120 107 130 97" stroke="#C9B48C" stroke-width="2" fill="none"/>
-                        <path d="M91 104 L85 152" stroke="#fff" stroke-width="6" stroke-linecap="round" opacity="0.16"/>
+                        <path d="M94 104 L88 150" stroke="#fff" stroke-width="6" stroke-linecap="round" opacity="0.16"/>
 
-                        <g class="mf-part" data-part="travel"><use href="#art-straps"/></g>
+                        <g class="mf-part" data-part="travel"><use href="#art-straps" transform="translate(120 0) scale(0.86 1) translate(-120 0)"/></g>
                         <g class="mf-part" data-part="gallery"><use href="#art-camera"/></g>
 
                         <!-- left arm, briefcase, hand -->
-                        <path d="M85 106 Q67 128 56 166" stroke="#1A1716" stroke-width="30" stroke-linecap="round" fill="none"/>
-                        <path d="M85 106 Q67 128 56 166" stroke="#C85D22" stroke-width="24" stroke-linecap="round" fill="none"/>
-                        <path d="M80 112 Q66 130 58 156" stroke="#E98445" stroke-width="5" stroke-linecap="round" fill="none" opacity="0.7"/>
-                        <g class="mf-part" data-part="worklog"><use href="#art-case"/></g>
-                        <circle cx="53" cy="178" r="13" fill="url(#mfSkin)" stroke="#1A1716" stroke-width="2.6"/>
-                        <circle cx="53" cy="183" r="6" fill="#C9960F"/>
+                        <path d="M91 106 Q75 128 66 164" stroke="#1A1716" stroke-width="25" stroke-linecap="round" fill="none"/>
+                        <path d="M91 106 Q75 128 66 164" stroke="#C85D22" stroke-width="20" stroke-linecap="round" fill="none"/>
+                        <path d="M87 112 Q75 130 68 154" stroke="#E98445" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.7"/>
+                        <g class="mf-part" data-part="worklog"><use href="#art-case" transform="translate(10 -2)"/></g>
+                        <circle cx="63" cy="176" r="11.5" fill="url(#mfSkin)" stroke="#1A1716" stroke-width="2.6"/>
+                        <circle cx="63" cy="181" r="5" fill="#C9960F"/>
 
                         <!-- right arm waves when the build is finished -->
                         <g id="mfWave">
-                            <path d="M155 106 Q173 128 184 166" stroke="#1A1716" stroke-width="30" stroke-linecap="round" fill="none"/>
-                            <path d="M155 106 Q173 128 184 166" stroke="#B4501D" stroke-width="24" stroke-linecap="round" fill="none"/>
-                            <circle cx="187" cy="178" r="13" fill="url(#mfSkin)" stroke="#1A1716" stroke-width="2.6"/>
-                            <circle cx="187" cy="183" r="6" fill="#C9960F"/>
-                            <g class="mf-part" data-part="honors"><use href="#art-trophy"/></g>
+                            <path d="M149 106 Q165 128 174 164" stroke="#1A1716" stroke-width="25" stroke-linecap="round" fill="none"/>
+                            <path d="M149 106 Q165 128 174 164" stroke="#B4501D" stroke-width="20" stroke-linecap="round" fill="none"/>
+                            <circle cx="177" cy="176" r="11.5" fill="url(#mfSkin)" stroke="#1A1716" stroke-width="2.6"/>
+                            <circle cx="177" cy="181" r="5" fill="#C9960F"/>
+                            <g class="mf-part" data-part="honors"><use href="#art-trophy" transform="translate(-10 -2)"/></g>
                         </g>
 
                         <!-- head with the stud on top and a printed face -->
